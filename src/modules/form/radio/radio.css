@@ -1,0 +1,63 @@
+.ly-radio {
+    --ly-radio_border-color_icon: #333;
+    --ly-radio_color_active: var(--ly-form_color_blue);
+    --ly-radio_height: 32px;
+}
+
+.ly-radio .ly-radio_list {
+    margin: 0;
+    padding: 0;
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item {
+    display: inline-flex;
+    align-items: center;
+    height: var(--ly-radio_height);
+    line-height: var(--ly-radio_height);
+    margin-right: 20px;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item-active {
+    color: var(--ly-radio_color_active);
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item > .ly-radio_item-icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--ly-radio_border-color_icon);
+    margin-right: 4px;
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item > .ly-radio_item-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: transform 0.15s ease-in;
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item:hover {
+    color: var(--ly-radio_color_active);
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item:hover > .ly-radio_item-icon {
+    border-color: var(--ly-radio_color_active);
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item-active > .ly-radio_item-icon {
+    border-color: var(--ly-radio_color_active);
+    background-color: var(--ly-radio_color_active);
+}
+
+.ly-radio .ly-radio_list > .ly-radio_item-active > .ly-radio_item-icon::after {
+    transform: translate(-50%, -50%) scale(1);
+}

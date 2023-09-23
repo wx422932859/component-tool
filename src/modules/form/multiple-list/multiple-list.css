@@ -1,0 +1,95 @@
+.ly-multiple-list .ly-multiple-list_input-content {
+    display: flex;
+    width: calc(100% - 24px);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.ly-multiple-list .ly-multiple-list_input-content > .ly-multiple-list_input {
+    display: none;
+    align-items: center;
+}
+
+.ly-multiple-list
+    .ly-multiple-list_input-content[data-count='0']
+    > .ly-multiple-list_input {
+    display: inline-flex;
+}
+
+.ly-multiple-list
+    .ly-multiple-list_input-content
+    > .ly-multiple-list_checked-text {
+    display: inline-flex;
+    align-items: center;
+    max-width: calc(100% - 32px);
+    margin: 4px 0;
+    padding: 0 5px;
+    background-color: #f1f1f1;
+    border: 1px solid #ededed;
+    border-radius: 2px;
+}
+
+.ly-multiple-list
+    .ly-multiple-list_input-content[data-count='0']
+    > .ly-multiple-list_checked-text {
+    display: none;
+}
+
+.ly-multiple-list .ly-multiple-list_checked-text > span {
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    max-width: calc(100% - 22px);
+    margin-right: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ly-multiple-list .ly-multiple-list_checked-text > .ly-icon_remove {
+    --color: #333;
+    --background-color: transparent;
+}
+
+.ly-multiple-list .ly-multiple-list_checked-text > .ly-icon_remove:hover {
+    --color: #fff;
+    --background-color: var(--ly-form_color_icon);
+}
+
+.ly-multiple-list
+    .ly-multiple-list_input-content
+    > .ly-multiple-list_checked-num {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 4px;
+    margin: 4px 0 4px 4px;
+    border: 1px solid #ededed;
+    border-radius: 2px;
+    background-color: #f1f1f1;
+}
+
+.ly-multiple-list
+    .ly-multiple-list_input-content[data-count='0']
+    > .ly-multiple-list_checked-num,
+.ly-multiple-list
+    .ly-multiple-list_input-content[data-count='1']
+    > .ly-multiple-list_checked-num {
+    display: none;
+}
+
+.ly-multiple-list .ly-multiple-list_checked-num > span {
+    float: left;
+    color: #333;
+}
+
+.ly-multiple-list .ly-multiple-list_checked-num > span:nth-child(1) {
+    margin-right: 2px;
+}
+
+/* 选中效果 */
+.ly-multiple-list .ly-drop-list_item.ly-drop-list_item-active > .ly-icon_check {
+    display: inline-block;
+    --ly-form_color_icon: var(--ly-form_color_blue);
+}

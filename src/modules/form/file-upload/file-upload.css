@@ -1,0 +1,45 @@
+.ly-file-upload {
+    display: flex;
+    flex-wrap: wrap;
+
+    --ly-file-upload_height: 40px;
+}
+
+.ly-file-upload > .fu_add-file {
+    position: relative;
+    display: inline-flex;
+    width: var(--ly-file-upload_height);
+    height: var(--ly-file-upload_height);
+    margin: 5px 12px 5px 0;
+    border: 1px solid #999;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.ly-file-upload > .fu_add-file::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1px;
+    height: 60%;
+    border-left: 1px dashed #999;
+    box-sizing: border-box;
+}
+
+.ly-file-upload > .fu_add-file::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 1px;
+    border-top: 1px dashed #999;
+    box-sizing: border-box;
+}
+
+.ly-file-upload > .fu_add-file > input[type='file'] {
+    display: none;
+}

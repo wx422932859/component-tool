@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>form/popup/popup.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,31 +37,61 @@
 
 <div id="main">
     
+    <h1 class="page-title">form/popup/popup.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './popup.css';
+import Component from '../../component.js';
 
+class Popup extends Component {
+    /**
+     * Creates an instance of Popup.
+     * @param {*} selector
+     */
+    constructor(selector) {
+        super(selector);
+    }
 
-    <section class="package">
-        <h3> </h3>		
+    /**
+     * 加载成功
+     */
+    _mounted() {
+        this.on();
+    }
+
+    on() {
+        this.node.on('click', '.ly-icon_close', () => {
+            this.node.hide();
+        });
+    }
+
+    load() {
+        this.node.css('display', 'flex');
+    }
+}
+
+Popup._template = `&lt;div class="ly-form ly-popup">
+    &lt;div class="ly-popup_container">
+        &lt;div class="ly-popup_header">
+            &lt;span class="ly-popup_title">&lt;/span>
+            &lt;i class="ly-icon_close">&lt;/i>
+        &lt;/div>
+        &lt;div class="ly-popup_center">&lt;/div>
+        &lt;div class="ly-popup_footer">&lt;/div>
+    &lt;/div>
+&lt;/div>`;
+
+export default Popup;
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
 
 
 
