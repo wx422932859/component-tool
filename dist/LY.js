@@ -1,3 +1,8 @@
+/*!
+ * name: component-tool
+ * version: 1.0.0
+ * export: LY
+ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
