@@ -1,0 +1,65 @@
+.ly-pagination {
+    display: flex;
+    margin: 20px 12px;
+}
+
+.ly-pagination > .ly-pagination_list {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.ly-pagination > .ly-pagination_list > .ly-pagination_item {
+    display: inline-flex;
+}
+
+.ly-pagination .ly-pagination_page {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin-left: -1px;
+    border: 1px solid #ddd;
+    font-size: var(--ly-form_font-size);
+    color: var(--ly-form_color_blue);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ly-pagination .ly-pagination_page:hover {
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+    text-decoration: none;
+}
+
+.ly-pagination .ly-pagination_page-input {
+    width: 46px;
+    padding: 0 5px;
+    font-size: var(--ly-form_font-size);
+    margin-left: -1px;
+    border: 1px solid #ddd !important;
+    text-align: center;
+    color: #666;
+    background-color: unset;
+    outline: none;
+}
+
+.ly-pagination .ly-pagination_error-page {
+    color: red;
+}
+
+.ly-pagination .ly-pagination_current-page,
+.ly-pagination .ly-pagination_current-page:hover {
+    color: #fff;
+    background-color: var(--ly-form_color_blue);
+    border-color: var(--ly-form_color_blue);
+    cursor: default;
+}
+
+.ly-pagination .ly-pagination_disabled-page,
+.ly-pagination .ly-pagination_disabled-page:hover {
+    color: #999;
+    border-color: #ddd;
+    cursor: not-allowed;
+}

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>base/task-queue.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,31 +37,74 @@
 
 <div id="main">
     
+    <h1 class="page-title">base/task-queue.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Util from './util.js';
 
+/**
+ * 任务队列
+ * @author wang.xin
+ */
+class TaskQueue {
+    /**
+     * Creates an instance of TaskQueue.
+     */
+    constructor() {
+        this.queue = [];
+        Util.monitor(
+            this,
+            'free',
+            (value) => {
+                value &amp;&amp; this.execute(); // 空闲的时候执行任务
+            },
+            true
+        );
+    }
 
-    <section class="package">
-        <h3> </h3>		
+    /**
+     * 添加任务
+     * @param {*} fn
+     * @param {*} [params=[]]
+     * @return {*}
+     */
+    add(fn, params = []) {
+        this.queue.push({
+            fn,
+            params,
+        });
+        this.free = this.free;
+        return this;
+    }
+
+    /**
+     * 执行任务
+     */
+    execute() {
+        let task = this.queue.shift();
+
+        if (task) {
+            this.free = false;
+            try {
+                task.fn(...task.params).finally(() => (this.free = true));
+            } catch (err) {
+                this.free = true;
+            }
+        }
+    }
+}
+
+export default TaskQueue;
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
 
 
 
