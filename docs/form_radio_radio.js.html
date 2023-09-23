@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>form/radio/radio.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,31 +37,234 @@
 
 <div id="main">
     
+    <h1 class="page-title">form/radio/radio.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './radio.css';
+import Form from '../form.js';
 
+/**
+ * @description 单选框
+ * @author wang.xin
+ * @extends {Form}
+ * @example
+ * new Radio({
+ *     elem: '',
+ *     list: [],
+ *     change: (value, prev, target) => {}
+ * });
+ */
+class Radio extends Form {
+    /**
+     * @description Creates an instance of Radio.
+     * @param {object} [option={}] 配置参数
+     * @param {string | Node | MyNode} option.elem CSS选择器、Node节点、MyNode
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {boolean} option.required 是否必选
+     * @param {string} option.relation 组件放置关系
+     */
+    constructor(option = {}) {
+        super({
+            elem: option.elem,
+            relation: option.relation,
+            template: Radio._template,
+        });
 
-    <section class="package">
-        <h3> </h3>		
+        // 若在缓存中则直接返回缓存中的实例
+        if (Radio._cache.get(this.node[0])) {
+            return Radio._cache.get(this.node[0]);
+        }
+        Radio._cache.set(this.node[0], this);
+
+        this.init();
+        this.load(option);
+    }
+
+    /**
+     * 初始化
+     */
+    init() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * @description 设置监听属性
+     */
+    monitor() {
+        /**
+         * @member {string} label 标签
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('label', (value) => {
+            this.setLabel(value);
+        });
+
+        /**
+         * @member {array} list 数据列表
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('list', (value) => {
+            this.standardList = this.formatList(value);
+        });
+
+        /**
+         * @member {array} standardList 格式化的数据列表
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('standardList', () => {
+            this.setList();
+        });
+
+        /**
+         * @member {*} value 值
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('value', (value, prev) => {
+            this.updateCheckItem();
+            this.change(value, prev, this);
+        });
+
+        /**
+         * @member {number} pos 在列表中的位置
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('pos', (value) => {
+            this.value = value != -1 ? this.list[value] : null;
+        });
+
+        /**
+         * @member {*} check 选中项
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('check', (value) => {
+            this.pos = this.findItem(value, this.standardList);
+        });
+
+        /**
+         * @member {boolean} required 是否必选
+         * @memberof Radio
+         * @inner
+         */
+        this._observe('required', false);
+    }
+
+    /**
+     * @description 事件
+     */
+    on() {
+        this.node.on('click', '.ly-radio_item', (e, target) => {
+            if (
+                this.required == false &amp;&amp;
+                target.hasClass('ly-radio_item-active')
+            ) {
+                this.check = null;
+            } else {
+                this.check = target.posOfSiblings();
+            }
+        });
+    }
+
+    /**
+     * @description 加载
+     * @param {object} [option={}] 入参
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     */
+    load(option = {}) {
+        this.change = option.change || (() => {});
+        this.label = option.label;
+        this.list = option.list || [];
+        this.check = option.check;
+        this.required = option.required || this.required;
+        if (this.required) {
+            if (this.value == null &amp;&amp; this.list.length != 0) {
+                this.check = 0;
+            }
+        }
+    }
+
+    /**
+     * @description 更新数据列表
+     */
+    setList() {
+        let htmlStr = '';
+
+        this.standardList.forEach((item) => {
+            htmlStr += `&lt;li class="ly-radio_item" title="${item.value}">
+                            &lt;i class="ly-radio_item-icon">&lt;/i>
+                            &lt;span>${item.value}&lt;/span>
+                        &lt;/li>`;
+        });
+
+        this.node.find('.ly-radio_list').html(htmlStr);
+    }
+
+    /**
+     * @description 更新选中样式
+     */
+    updateCheckItem() {
+        this.node
+            .find('.ly-radio_item-active')
+            .removeClass('ly-radio_item-active');
+
+        if (this.pos !== -1) {
+            this.node
+                .find('.ly-radio_item')
+                .eq(this.pos)
+                .addClass('ly-radio_item-active');
+        }
+    }
+}
+
+/**
+ * @member {Map} _cache 缓存
+ * @memberof Radio
+ * @static
+ */
+Radio._cache = new Map();
+
+/**
+ * @member {string} _template 模版
+ * @memberof Radio
+ * @static
+ * @example
+ * &lt;div class="ly-form ly-radio">
+ *   &lt;label class="ly-form_label">&lt;/label>
+ *   &lt;div class="ly-form_content">
+ *      &lt;ul class="ly-radio_list">&lt;/ul>
+ *   &lt;/div>
+ * &lt;/div>
+ */
+Radio._template = `&lt;div class="ly-form ly-radio">
+    &lt;label class="ly-form_label">&lt;/label>
+    &lt;div class="ly-form_content">
+        &lt;ul class="ly-radio_list">&lt;/ul>
+    &lt;/div>
+&lt;/div>`;
+
+export default Radio;
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
 
 
 

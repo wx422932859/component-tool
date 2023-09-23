@@ -1,0 +1,125 @@
+.ly-drop-list {
+    --ly-form_height_drop-list: 0;
+}
+
+.ly-drop-list .ly-form_input-container {
+    justify-content: space-between;
+    width: 200px;
+}
+
+.ly-drop-list .ly-form_input {
+    width: calc(100% - 24px);
+}
+
+.ly-drop-list .ly-drop-list_container {
+    position: absolute;
+    top: 100%;
+    left: -8px;
+    width: auto;
+    min-width: calc(100% + 16px);
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s;
+    z-index: 2;
+}
+
+.ly-drop-list .ly-drop-list_container > .ly-drop-list_space {
+    position: relative;
+    width: calc(100% - 16px);
+    height: 12px;
+    margin: 0 auto;
+}
+
+.ly-drop-list .ly-drop-list_container > .ly-drop-list_space::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    transform: translateY(50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+    border-top: 1px solid var(--ly-form_box-shadow-color);
+    border-left: 1px solid var(--ly-form_box-shadow-color);
+}
+
+.ly-drop-list .ly-drop-list_container > .ly-drop-list_content {
+    min-height: 52px;
+    padding: 10px 0;
+    margin: 0 8px;
+    background-color: #fff;
+    border-radius: 2px;
+    border: 1px solid #e4e7ed;
+    box-shadow: var(--ly-form_box-shadow);
+}
+
+.ly-drop-list .ly-drop-list_container > .ly-drop-list_content:empty::after {
+    content: '暂无数据';
+    display: inline-flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 8px;
+    width: calc(100% - 52px);
+    height: var(--ly-form_line-height);
+    padding: 0 10px;
+    margin: 2px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.ly-drop-list
+    .ly-drop-list_container
+    > .ly-drop-list_content
+    > .ly-drop-list_item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: var(--ly-form_line-height);
+    color: #333;
+    white-space: nowrap;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.ly-drop-list .ly-drop-list_item > .ly-icon_check {
+    display: none;
+}
+
+.ly-drop-list
+    .ly-drop-list_container
+    > .ly-drop-list_content
+    > .ly-drop-list_item:hover {
+    background-color: #e1eeff;
+}
+
+.ly-drop-list
+    .ly-drop-list_container
+    > .ly-drop-list_content
+    > .ly-drop-list_item
+    > span {
+    display: inline-block;
+    width: 100%;
+    font-size: var(--ly-form_font-size);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ly-drop-list[data-status='up'] .ly-form_input-container {
+    border-color: var(--ly-form_color_blue);
+}
+
+.ly-drop-list .ly-icon_arrow-down {
+    transition: transform 0.2s;
+}
+
+.ly-drop-list[data-status='up'] .ly-icon_arrow-down {
+    transform: rotate(-180deg);
+}
+
+.ly-drop-list[data-status='up'] .ly-drop-list_container {
+    height: var(--ly-form_height_drop-list);
+}

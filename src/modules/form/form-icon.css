@@ -1,0 +1,115 @@
+.ly-svg-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+.ly-icon_arrow-down {
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+
+.ly-icon_arrow-down::after {
+    content: '';
+    position: absolute;
+    transform: translate(50%, 25%) rotate(-135deg);
+    width: 50%;
+    height: 50%;
+    border-left: 1px solid var(--ly-form_color_icon);
+    border-top: 1px solid var(--ly-form_color_icon);
+    box-sizing: border-box;
+}
+
+.ly-icon_triangle-down {
+    display: inline-block;
+    border-top: 6px solid;
+    border-top-color: var(--ly-form_color_icon);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+}
+
+.ly-icon_check {
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+
+.ly-icon_check::after {
+    content: '';
+    position: absolute;
+    transform: translate(10%, 50%) rotate(135deg);
+    width: 80%;
+    height: 40%;
+    border-right: 1px solid var(--ly-form_color_icon);
+    border-top: 1px solid var(--ly-form_color_icon);
+    box-sizing: border-box;
+}
+
+.ly-icon_close {
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+
+.ly-icon_close::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 2px;
+    height: 100%;
+    background-color: var(--ly-form_color_icon);
+}
+
+.ly-icon_close::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(135deg);
+    width: 2px;
+    height: 100%;
+    background-color: var(--ly-form_color_icon);
+}
+
+.ly-icon_remove {
+    --color: #fff;
+    --background-color: var(--ly-form_color_icon);
+
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--background-color);
+}
+
+.ly-icon_remove::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 1px;
+    height: 50%;
+    background-color: var(--color);
+}
+
+.ly-icon_remove::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%) rotate(135deg);
+    width: 1px;
+    height: 50%;
+    background-color: var(--color);
+}
