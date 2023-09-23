@@ -1,4 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
+const packageInfo = require('./package.json');
+const markInfo = [
+    `name: ${packageInfo.name}`,
+    `version: ${packageInfo.version}`,
+    `export: LY`,
+];
 
 module.exports = {
     entry: './src/index.js',
@@ -30,4 +37,5 @@ module.exports = {
             },
         ],
     },
+    plugins: [new webpack.BannerPlugin(markInfo.join('\n'))],
 };
