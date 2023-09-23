@@ -3,3 +3,4 @@ dist
 test
 .svn
 .settings
+.project
