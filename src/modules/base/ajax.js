@@ -308,7 +308,7 @@ Ajax.load = function () {
     }
     formNode.innerHTML = htmlStr;
     formNode.setAttribute('action', opts.url);
-    formNode.setAttribute('method', 'post');
+    formNode.setAttribute('method', opts.type || 'post');
     document.body.appendChild(formNode);
     if (document.querySelector('iframe[name="loadError"]') == null) {
         let iframeNode = document.createElement('iframe');

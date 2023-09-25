@@ -9,17 +9,25 @@ import Util from './modules/base/util.js';
 import VC from './modules/base/vc.js';
 import Watcher from './modules/base/watcher.js';
 import Form from './modules/form/index.js';
+import Extend from './modules/extend/index.js';
 
-export default {
-    Ajax,
-    Util,
-    VC,
-    Component,
-    EventBus,
-    MyNode,
-    Observe,
-    TaskQueue,
-    Time,
-    Watcher,
-    Form,
-};
+/**
+ * 全局变量
+ * @namespace
+ */
+const LY = {};
+
+LY.Ajax = Ajax;
+LY.Util = Util;
+LY.Extend = Extend;
+LY.VC = VC;
+LY.Component = Component;
+LY.EventBus = EventBus;
+LY.MyNode = MyNode;
+LY.Observe = Observe;
+LY.TaskQueue = TaskQueue;
+LY.Time = Time;
+LY.Watcher = Watcher;
+LY.Form = Form;
+
+export default LY;
