@@ -8,10 +8,10 @@
     },
     "source": {
         "include": [
-            "./src/modules/"
+            "./src/"
         ],
-        "includePattern": ".+\\.js(doc)?$",
-        "excludePattern": "(^|\\/|\\\\)_"
+        "includePattern": "\\.js$",
+        "excludePattern": "(assets)"
     },
     "plugins": [],
     "templates": {
@@ -29,6 +29,11 @@
     },
     "docdash": {
         "collapse": true,
-        "search": true
+        "search": true,
+        "sectionOrder": [
+            "Namespaces",
+            "Modules",
+            "Classes"
+        ]
     }
 }
