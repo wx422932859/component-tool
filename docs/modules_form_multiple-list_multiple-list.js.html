@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Watcher - Documentation</title>
+    <title>modules/form/multiple-list/multiple-list.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,226 +37,343 @@
 
 <div id="main">
     
-    <h1 class="page-title">Watcher</h1>
+    <h1 class="page-title">modules/form/multiple-list/multiple-list.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-            Watcher
-        
-        </h2>
-        
-            <div class="class-description usertext">观察者</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Watcher"><span class="type-signature"></span>new Watcher<span class="signature">(data, watch)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of Watcher.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_watcher.js.html">modules/base/watcher.js</a>, <a href="modules_base_watcher.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>wang.xin</li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>watch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './multiple-list.css';
+import MyNode from '../../base/my-node.js';
+import DropList from '../drop-list/drop-list.js';
+import Util from '../../base/util.js';
+
+/**
+ * 下拉多选列表
+ * @author wang.xin
+ * @extends {DropList}
+ * @example
+ * new MultipleList({
+ *     elem: '',
+ *     list: [],
+ *     change: (value, prev, target) => {}
+ * });
+ */
+class MultipleList extends DropList {
+    /**
+     * Creates an instance of MultipleList.
+     * @param {object} [option={}] 配置参数
+     * @param {string | Node | MyNode} option.elem CSS选择器、Node节点、MyNode
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object | array} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {boolean} option.hover 是否悬浮显示
+     * @param {number} option.maxCount 最多可选个数
+     * @param {function} option.error 错误触发事件
+     * @param {string} option.relation 组件放置关系
+     */
+    constructor(option = {}) {
+        super(
+            Object.assign(option, {
+                template: option.template || MultipleList._template,
+            })
+        );
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {boolean} show 是否显示下拉列表
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('show', (value) => {
+            this.node.attr('data-status', value ? 'up' : 'down');
+        });
+
+        /**
+         * @member {string} label 标签
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('label', (value) => {
+            this.setLabel(value);
+        });
+
+        /**
+         * @member {array} list 数据列表
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('list', (value) => {
+            this.standardList = this.formatList(value);
+        });
+
+        /**
+         * @member {array} standardList 格式化的数据列表
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('standardList', () => {
+            this.setList();
+        });
+
+        /**
+         * @member {*} value 值
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('value', (value, prev) => {
+            this.updateCheckItem();
+            this.change(value, prev, this);
+        });
+
+        /**
+         * @member {number[]} pos 在列表中的位置
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('pos', (value) => {
+            this.value = value.map((item) => this.list[item]);
+        });
+
+        /**
+         * @member {*} check 选中项
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('check', [], (value) => {
+            let pos = this.findItem(value, this.standardList);
+
+            this.pos = Util.type(pos) === 'array' ? pos : [pos];
+        });
+
+        /**
+         * @member {boolean} hover 是否悬浮显示
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('hover', (value) => {});
+
+        /**
+         * @member {number} maxCount 最多可选个数
+         * @memberof MultipleList
+         * @inner
+         */
+        this._observe('maxCount', -1);
+
+        /**
+         * @member {function} change 切换点检项触发事件
+         * @memberof MultipleList
+         * @inner
+         */
+        this.change = (value, prev, target) => {};
+
+        /**
+         * @member {function} error 错误触发事件
+         * @memberof MultipleList
+         * @inner
+         * @example
+         * type = 1, 代表选中的个数已经达到最大值
+         */
+        this.error = (type) => {};
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        // 点击输入框
+        this.node.on(
+            'click',
+            '.ly-form_content',
+            (e, target, listener, source) => {
+                let show = this.show;
+                this.constructor._hideAll();
+
+                if (
+                    source.hasClass('ly-drop-list_item') ||
+                    source.parents('.ly-drop-list_item').length != 0
+                ) {
+                    // 当触发源是下拉列表项时，不改变显示状态
+                    this.show = show;
+                } else if (source.hasClass('ly-icon_remove')) {
+                    // 当触发源是删除按钮时，不改变现实状态，并删除
+                    this.show = show;
+                    let list = Util.proxyToJSON(this.check);
+                    list.shift();
+                    this.check = list;
+                } else if (this.hover != true) {
+                    // 当未做悬浮触发时，隐藏下拉列表
+                    this.show = !show;
+                }
+            }
+        );
+
+        // 切换列表项
+        this.node.on('click', '.ly-drop-list_item', (e, target) => {
+            if (
+                this.maxCount != -1 &amp;&amp;
+                this.check.length == this.maxCount &amp;&amp;
+                !target.hasClass('ly-drop-list_item-active')
+            ) {
+                this.error(0);
+                return;
+            }
+
+            target.toggleClass('ly-drop-list_item-active');
+            this.check = this.node
+                .find('.ly-drop-list_item-active')
+                .map((item, index, list) => list.eq(index).posOfSiblings());
+        });
+
+        // 鼠标滑入
+        this.node.on('mouseover', '.ly-form_content', () => {
+            if (this.hover == true) {
+                this.show = true;
+            }
+        });
+
+        // 鼠标滑出
+        this.node.on('mouseout', '.ly-form_content', () => {
+            if (this.hover == true) {
+                this.show = false;
+            }
+        });
+    }
+
+    /**
+     * 加载
+     * @param {object} [option={}] 入参
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object | array} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {boolean} option.hover 是否悬浮显示
+     * @param {number} option.maxCount 最多可选个数
+     * @param {function} option.error 错误触发事件
+     */
+    load(option = {}) {
+        this.show = false;
+        this.label = option.label;
+        this.list = option.list || [];
+        this.hover = option.hover || false;
+        this.maxCount = option.maxCount || this.maxCount;
+        if (typeof option.error == 'function') {
+            this.error = option.error;
+        }
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
+        if (option.check != null) {
+            this.check = option.check;
+        }
+    }
+
+    /**
+     * 更新选中内容
+     */
+    updateCheckItem() {
+        // 先重置为未选中再选中指定的节点
+        this.node
+            .find('.ly-drop-list_item')
+            .removeClass('ly-drop-list_item-active');
+
+        // 选中当前项
+        this.pos.forEach((element) => {
+            // 更新列表中选中状态
+            this.node
+                .find('.ly-drop-list_item')
+                .eq(element)
+                .addClass('ly-drop-list_item-active');
+        });
+        this.node
+            .find('.ly-multiple-list_input-content')
+            .attr('data-count', this.pos.length);
+
+        if (this.pos.length > 0) {
+            let text = this.standardList[this.pos[0]].value;
+            this.node
+                .find('.ly-multiple-list_checked-text>span')
+                .text(text)
+                .attr('title', text);
+            this.node
+                .find('.ly-multiple-list_checked-num>span')
+                .eq(1)
+                .text(this.pos.length);
+        }
+    }
+}
+
+/**
+ * 模板
+ * @member {string} _template
+ * @memberof MultipleList
+ * @static
+ * @example
+ *  &lt;div class="ly-form ly-drop-list ly-multiple-list">
+ *      &lt;label class="ly-form_label">&lt;/label>
+ *      &lt;div class="ly-form_content">
+ *          &lt;div class="ly-form_input-container">
+ *              &lt;div class="ly-multiple-list_input-content" data-count="0">
+ *              &lt;div class="ly-multiple-list_input">
+ *                   &lt;input class="ly-form_input" type="text" placeholder="请选择" readonly />
+ *              &lt;/div>
+ *              &lt;div class="ly-multiple-list_checked-text">
+ *                  &lt;span>&lt;/span>
+ *                  &lt;i class="ly-icon_remove">&lt;/i>
+ *              &lt;/div>
+ *              &lt;div class="ly-multiple-list_checked-num">
+ *                  &lt;span>+&lt;/span>
+ *                  &lt;span>&lt;/span>
+ *              &lt;/div>
+ *         &lt;/div>
+ *         &lt;i class="ly-icon_arrow-down">&lt;/i>
+ *      &lt;/div>
+ *      &lt;div class="ly-drop-list_container">
+ *          &lt;div class="ly-drop-list_space">&lt;/div>
+ *              &lt;ul class="ly-drop-list_content">&lt;/ul>
+ *          &lt;/div>
+ *      &lt;/div>
+ *  &lt;/div>
+ */
+MultipleList._template = `&lt;div class="ly-form ly-drop-list ly-multiple-list">
+    &lt;label class="ly-form_label">&lt;/label>
+    &lt;div class="ly-form_content">
+        &lt;div class="ly-form_input-container">
+            &lt;div class="ly-multiple-list_input-content" data-count="0">
+                &lt;div class="ly-multiple-list_input">
+                    &lt;input class="ly-form_input" type="text" placeholder="请选择" readonly />
+                &lt;/div>
+                &lt;div class="ly-multiple-list_checked-text">
+                    &lt;span>&lt;/span>
+                    &lt;i class="ly-icon_remove">&lt;/i>
+                &lt;/div>
+                &lt;div class="ly-multiple-list_checked-num">
+                    &lt;span>+&lt;/span>
+                    &lt;span>&lt;/span>
+                &lt;/div>
+            &lt;/div>
+            &lt;i class="ly-icon_arrow-down">&lt;/i>
+        &lt;/div>
+        &lt;div class="ly-drop-list_container">
+            &lt;div class="ly-drop-list_space">&lt;/div>
+            &lt;ul class="ly-drop-list_content">&lt;/ul>
+        &lt;/div>
+    &lt;/div>
+&lt;/div>`;
+
+export default MultipleList;
+</code></pre>
+        </article>
+    </section>
 
 
 

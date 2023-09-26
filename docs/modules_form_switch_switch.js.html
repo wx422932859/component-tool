@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Watcher - Documentation</title>
+    <title>modules/form/switch/switch.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,226 +37,141 @@
 
 <div id="main">
     
-    <h1 class="page-title">Watcher</h1>
+    <h1 class="page-title">modules/form/switch/switch.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-            Watcher
-        
-        </h2>
-        
-            <div class="class-description usertext">观察者</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Watcher"><span class="type-signature"></span>new Watcher<span class="signature">(data, watch)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of Watcher.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_watcher.js.html">modules/base/watcher.js</a>, <a href="modules_base_watcher.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>wang.xin</li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>watch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './switch.css';
+import Form from '../form.js';
+
+/**
+ * @description 单选框
+ * @author wang.xin
+ * @extends {Form}
+ * @example
+ * new Switch({
+ *     elem: '',
+ *     change: (value, prev, target) => {}
+ * });
+ */
+class Switch extends Form {
+    /**
+     * @description Creates an instance of Switch.
+     * @param {object} [option={}] 配置参数
+     * @param {string | Node | MyNode} option.elem CSS选择器、Node节点、MyNode
+     * @param {string} option.label 标签
+     * @param {boolean} option.value 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {string} option.relation 组件放置关系
+     */
+    constructor(option = {}) {
+        super({
+            elem: option.elem,
+            relation: option.relation,
+            template: Switch._template,
+        });
+
+        // 若在缓存中则直接返回缓存中的实例
+        if (Switch._cache.get(this.node[0])) {
+            return Switch._cache.get(this.node[0]);
+        }
+        Switch._cache.set(this.node[0], this);
+
+        this.init();
+        this.load(option);
+    }
+
+    /**
+     * 初始化
+     */
+    init() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * @description 设置监听属性
+     */
+    monitor() {
+        /**
+         * @member {string} label 标签
+         * @memberof Switch
+         * @inner
+         */
+        this._observe('label', (value) => {
+            this.setLabel(value);
+        });
+
+        /**
+         * @member {*} value 值
+         * @memberof Switch
+         * @inner
+         */
+        this._observe('value', (value, prev) => {
+            this.node.find('.ly-switch_btn').attr('data-status', value ? 1 : 0);
+            this.change(value, prev, this);
+        });
+    }
+
+    /**
+     * @description 事件
+     */
+    on() {
+        this.node.on('click', '.ly-switch_btn', () => {
+            this.value = !this.value;
+        });
+    }
+
+    /**
+     * @description 加载
+     * @param {object} [option={}] 入参
+     * @param {string} option.label 标签
+     * @param {boolean} option.value 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     */
+    load(option = {}) {
+        this.change = option.change || (() => {});
+        this.label = option.label;
+        this.value = option.value;
+    }
+}
+
+/**
+ * @member {Map} _cache 缓存
+ * @memberof Switch
+ * @static
+ */
+Switch._cache = new Map();
+
+/**
+ * @member {string} _template 模版
+ * @memberof Switch
+ * @static
+ * @example
+ * &lt;div class="ly-form ly-switch">
+ *   &lt;label class="ly-form_label">&lt;/label>
+ *   &lt;div class="ly-form_content">
+ *      &lt;span class="ly-switch_btn" data-status="0">&lt;/span>
+ *   &lt;/div>
+ * &lt;/div>
+ */
+Switch._template = `&lt;div class="ly-form ly-switch">
+    &lt;label class="ly-form_label">&lt;/label>
+    &lt;div class="ly-form_content">
+        &lt;span class="ly-switch_btn" data-status="0">&lt;/span>
+    &lt;/div>
+&lt;/div>`;
+
+export default Switch;
+</code></pre>
+        </article>
+    </section>
 
 
 

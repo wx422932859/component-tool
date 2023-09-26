@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Watcher - Documentation</title>
+    <title>modules/form/file-preview/file-preview.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,226 +37,199 @@
 
 <div id="main">
     
-    <h1 class="page-title">Watcher</h1>
+    <h1 class="page-title">modules/form/file-preview/file-preview.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-            Watcher
-        
-        </h2>
-        
-            <div class="class-description usertext">观察者</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Watcher"><span class="type-signature"></span>new Watcher<span class="signature">(data, watch)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of Watcher.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_watcher.js.html">modules/base/watcher.js</a>, <a href="modules_base_watcher.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>wang.xin</li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>watch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './file-preview.css';
+import Component from '../../base/component.js';
+
+/**
+ * 文件预览
+ * @extends {Component}
+ */
+class FilePreview extends Component {
+    constructor(selector) {
+        super(selector);
+        this.init();
+    }
+
+    /**
+     * 初始化
+     */
+    init() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * 监听属性
+     */
+    monitor() {
+        /**
+         * @member {DOM[]} fileList 文件列表
+         * @memberof FilePreview
+         * @inner
+         * @default []
+         */
+        this._observe('fileList', [], () => {}, false);
+
+        /**
+         * @member {boolean} round 是否循环查看
+         * @memberof FilePreview
+         * @inner
+         * @default true
+         */
+        this._observe('round', true, () => {});
+
+        /**
+         * @member {number} index 序号
+         * @memberof FilePreview
+         * @inner
+         * @default 0
+         */
+        this._observe('index', 0, (value) => {
+            this.preview(this.fileList[value] || '');
+            this.node
+                .find('.ly-file-preview_tip')
+                .text(`${value + 1} / ${this.fileList.length}`);
+        });
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        // 关闭
+        this.node.on('click', '[data-action="close"]', () => {
+            this.unload();
+        });
+
+        // 非功能区域
+        this.node.on('click', (e) => {
+            let classList = e.target.classList;
+
+            if (
+                classList.contains('ly-file-preview') ||
+                classList.contains('ly-file-preview_content')
+            ) {
+                this.unload();
+            }
+        });
+
+        // 上一张
+        this.node.on('click', '[data-action="prev"]', () => {
+            if (this.round) {
+                this.index =
+                    (this.index + this.fileList.length - 1) %
+                    this.fileList.length;
+            } else {
+                this.index = Math.max(this.index - 1, 0);
+            }
+        });
+
+        // 下一张
+        this.node.on('click', '[data-action="next"]', () => {
+            if (this.round) {
+                this.index = (this.index + 1) % this.fileList.length;
+            } else {
+                this.index = Math.min(this.index + 1, this.fileList.length - 1);
+            }
+        });
+    }
+
+    /**
+     * 重置
+     */
+    reset() {
+        this.fileList = [];
+        this.index = 0;
+    }
+
+    /**
+     * 加载
+     * @param {DOM} file 文件
+     * @param {DOM[]} fileList 文件列表
+     * @param {boolean} round 是否循环查看
+     */
+    load(file, fileList, round = this.round) {
+        this.fileList = fileList;
+        this.round = round;
+        this.index = this.find(file);
+        this.node.show();
+    }
+
+    /**
+     * 卸载
+     */
+    unload() {
+        this.reset();
+        this.node.hide();
+    }
+
+    /**
+     * 查找当前文件序号
+     */
+    find(file) {
+        let fileList = this.fileList,
+            result = 0;
+
+        if (Object.prototype.toString.call(file) === '[object Number]') {
+            result = Math.max(0, file - 1);
+        } else {
+            for (let i = 0; i &lt; fileList.length; i++) {
+                if (file === fileList[i]) {
+                    result = i;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 预览
+     */
+    preview(file) {
+        let htmlStr = '';
+
+        if (file.nodeName === 'IMG') {
+            htmlStr = `&lt;img class="ly-file-preview_item" src="${file.src}" />`;
+        } else if (file.nodeName === 'VIDEO') {
+            htmlStr = `&lt;video class="ly-file-preview_item" src="${file.src}" controls>&lt;/video>`;
+        } else if (file.nodeName === 'AUDIO') {
+            htmlStr = `&lt;audio class="ly-file-preview_item" src="${file.src}" controls>&lt;/audio>`;
+        }
+
+        this.node.find('.ly-file-preview_content').html(htmlStr);
+    }
+}
+
+/**
+ * 模板
+ * @member {string} _template
+ * @memberof DropList
+ * @static
+ */
+FilePreview._template = `&lt;div class="ly-form ly-file-preview">
+    &lt;i data-action="prev">&lt;/i>
+    &lt;i data-action="next">&lt;/i>
+    &lt;i data-action="close">&lt;/i>
+    &lt;div class="ly-file-preview_content">&lt;/div>
+    &lt;div class="ly-file-preview_tip">0 / 0&lt;/div>
+&lt;/div>`;
+
+export default FilePreview;
+</code></pre>
+        </article>
+    </section>
 
 
 

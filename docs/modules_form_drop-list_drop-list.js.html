@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Watcher - Documentation</title>
+    <title>modules/form/drop-list/drop-list.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,226 +37,326 @@
 
 <div id="main">
     
-    <h1 class="page-title">Watcher</h1>
+    <h1 class="page-title">modules/form/drop-list/drop-list.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-            Watcher
-        
-        </h2>
-        
-            <div class="class-description usertext">观察者</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Watcher"><span class="type-signature"></span>new Watcher<span class="signature">(data, watch)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of Watcher.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_watcher.js.html">modules/base/watcher.js</a>, <a href="modules_base_watcher.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>wang.xin</li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>watch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './drop-list.css';
+import MyNode from '../../base/my-node.js';
+import Form from '../form.js';
+
+/**
+ * 下拉列表
+ * @author wang.xin
+ * @extends {Form}
+ * @example
+ * new DropList({
+ *     elem: '',
+ *     list: [],
+ *     change: (value, prev, target) => {}
+ * });
+ */
+class DropList extends Form {
+    /**
+     * Creates an instance of DropList.
+     * @param {object} [option={}] 配置参数
+     * @param {string | Node | MyNode} option.elem CSS选择器、Node节点、MyNode
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {boolean} option.hover 是否悬浮显示
+     * @param {string} option.relation 组件放置关系
+     */
+    constructor(option = {}) {
+        super({
+            elem: option.elem,
+            relation: option.relation,
+            template: option.template || DropList._template,
+        });
+
+        // 若在缓存中则直接返回缓存中的实例
+        if (DropList._cache.get(this.node[0])) {
+            return DropList._cache.get(this.node[0]);
+        }
+        DropList._cache.set(this.node[0], this);
+
+        this.init();
+        this.load(option);
+    }
+
+    /**
+     * 初始化
+     */
+    init() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {boolean} show 是否显示下拉列表
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('show', (value) => {
+            this.node.attr('data-status', value ? 'up' : 'down');
+        });
+
+        /**
+         * @member {string} label 标签
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('label', (value) => {
+            this.setLabel(value);
+        });
+
+        /**
+         * @member {array} list 数据列表
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('list', (value) => {
+            this.standardList = this.formatList(value);
+        });
+
+        /**
+         * @member {array} standardList 格式化的数据列表
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('standardList', () => {
+            this.setList();
+        });
+
+        /**
+         * @member {*} value 值
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('value', (value, prev) => {
+            this.updateCheckItem();
+            this.change(value, prev, this);
+        });
+
+        /**
+         * @member {number} pos 在列表中的位置
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('pos', '-1', (value) => {
+            this.value = value != -1 ? this.list[value] : null;
+        });
+
+        /**
+         * @member {*} check 选中项
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('check', (value) => {
+            this.pos = this.findItem(value, this.standardList);
+        });
+
+        /**
+         * @member {boolean} hover 是否悬浮显示
+         * @memberof DropList
+         * @inner
+         */
+        this._observe('hover', (value) => {});
+
+        /**
+         * @member {function} change 切换点检项触发事件
+         * @memberof DropList
+         * @inner
+         */
+        this.change = (value, prev, target) => {};
+    }
+
+    /**
+     * 加载
+     * @param {object} [option={}] 入参
+     * @param {string} option.label 标签
+     * @param {array} option.list 数据列表
+     * @param {number | string | object} option.check 选中项
+     * @param {function} option.change 切换选中项后触发的事件
+     * @param {boolean} option.hover 是否悬浮显示
+     */
+    load(option = {}) {
+        this.show = false;
+        this.label = option.label;
+        this.list = option.list || [];
+        this.hover = option.hover || false;
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
+        if (option.check != null) {
+            this.check = option.check;
+        }
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        // 点击输入框
+        this.node.on('click', '.ly-form_content', () => {
+            if (this.hover != true) {
+                let show = this.show;
+                DropList._hideAll();
+                this.show = !show;
+            }
+        });
+
+        // 切换列表项
+        this.node.on('click', '.ly-drop-list_item', (e, target) => {
+            this.check = target.posOfSiblings();
+        });
+
+        // 鼠标滑入
+        this.node.on('mouseover', '.ly-form_content', () => {
+            if (this.hover == true) {
+                this.show = true;
+            }
+        });
+
+        // 鼠标滑出
+        this.node.on('mouseout', '.ly-form_content', () => {
+            if (this.hover == true) {
+                this.show = false;
+            }
+        });
+    }
+
+    /**
+     * 设置数据列表
+     */
+    setList() {
+        let htmlStr = '',
+            height = this.standardList.length * 32 || 32;
+
+        this.standardList.forEach((item) => {
+            htmlStr += `&lt;li class="ly-drop-list_item" title="${item.value}">
+                        &lt;span>${item.value}&lt;/span>
+                        &lt;i class="ly-icon_check">&lt;/i>
+                    &lt;/li>`;
+        });
+
+        this.node
+            .css('--ly-form_height_drop-list', `${height + 40}px`)
+            .find('.ly-drop-list_content')
+            .html(htmlStr);
+    }
+
+    /**
+     * 更新选中内容
+     */
+    updateCheckItem() {
+        // 取消选中项
+        this.node
+            .find('.ly-drop-list_item-active')
+            .removeClass('ly-drop-list_item-active');
+
+        // 选中当前项
+        let text = '';
+        if (this.pos > -1) {
+            this.node
+                .find('.ly-drop-list_item')
+                .eq(this.pos)
+                .addClass('ly-drop-list_item-active');
+            text = this.standardList[this.pos].value;
+        }
+        this.node.find('.ly-form_input').val(text).attr('title', text);
+        this.hover === false &amp;&amp; (this.show = false);
+    }
+
+    /**
+     * 获取选中项
+     * @deprecated
+     * @returns {*}
+     */
+    getCheckItem() {
+        return this.value;
+    }
+}
+
+// 当点击的不是下拉列表的时候，关闭下拉列表
+if (typeof document != 'undefined') {
+    document.addEventListener('click', (e) => {
+        let elem = new MyNode(e.target);
+
+        // 当点击的不是下拉列表的时候
+        if (elem.parents('.ly-drop-list .ly-form_content').length == 0) {
+            DropList._hideAll();
+        }
+    });
+}
+
+/**
+ * 关闭所有下拉列表
+ * @member {function} _hideAll
+ * @memberof DropList
+ * @static
+ */
+DropList._hideAll = function () {
+    DropList._cache.forEach((item) => (item.show = false));
+};
+
+/**
+ * 缓存
+ * @member {Map} _cache
+ * @memberof DropList
+ * @static
+ */
+DropList._cache = new Map();
+
+/**
+ * 模板
+ * @member {string} _template
+ * @memberof DropList
+ * @static
+ * @example
+ * &lt;div class="ly-form ly-drop-list">
+ *     &lt;label class="ly-form_label">&lt;/label>
+ *     &lt;div class="ly-form_content">
+ *         &lt;div class="ly-form_input-container">
+ *             &lt;input class="ly-form_input" type="text" placeholder="请选择" readonly />
+ *             &lt;i class="ly-icon_arrow-down">&lt;/i>
+ *         &lt;/div>
+ *         &lt;div class="ly-drop-list_container">
+ *             &lt;div class="ly-drop-list_space">&lt;/div>
+ *             &lt;ul class="ly-drop-list_content">&lt;/ul>
+ *         &lt;/div>
+ *     &lt;/div>
+ * &lt;/div>
+ */
+DropList._template = `&lt;div class="ly-form ly-drop-list">
+    &lt;label class="ly-form_label">&lt;/label>
+    &lt;div class="ly-form_content">
+        &lt;div class="ly-form_input-container">
+            &lt;input class="ly-form_input" type="text" placeholder="请选择" readonly />
+            &lt;i class="ly-icon_arrow-down">&lt;/i>
+        &lt;/div>
+        &lt;div class="ly-drop-list_container">
+            &lt;div class="ly-drop-list_space">&lt;/div>
+            &lt;ul class="ly-drop-list_content">&lt;/ul>
+        &lt;/div>
+    &lt;/div>
+&lt;/div>`;
+
+export default DropList;
+</code></pre>
+        </article>
+    </section>
 
 
 
