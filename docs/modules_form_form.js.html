@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Watcher - Documentation</title>
+    <title>modules/form/form.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,226 +37,157 @@
 
 <div id="main">
     
-    <h1 class="page-title">Watcher</h1>
+    <h1 class="page-title">modules/form/form.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-            Watcher
-        
-        </h2>
-        
-            <div class="class-description usertext">观察者</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Watcher"><span class="type-signature"></span>new Watcher<span class="signature">(data, watch)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of Watcher.</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_watcher.js.html">modules/base/watcher.js</a>, <a href="modules_base_watcher.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>wang.xin</li>
-        </ul>
-    </dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>watch</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './form-theme.css';
+import './form.css';
+import './form-icon.css';
+import Util from '../base/util.js';
+import MyNode from '../base/my-node.js';
+import Component from '../base/component.js';
+
+/**
+ * 表单组件基类
+ * @extends { Component }
+ * @param {object} option 入参
+ * @param {string | Node | MyNode} option.elem Node节点、CSS选择器、MyNode
+ * @param {string} option.relation 嵌入关系
+ * @param {string} option.template 表单模版
+ */
+class Form extends Component {
+    /**
+     * Creates an instance of Form.
+     * @param {*} option
+     */
+    constructor(option) {
+        const { elem, template, relation } = option;
+        const templateNode = new MyNode(template);
+        super(elem);
+
+        if (this.node.length === 0) {
+            this.node = templateNode;
+        } else {
+            if (Util.isFunction(this.node[relation])) {
+                this.node[relation](templateNode);
+                this.node = templateNode;
+            }
+        }
+    }
+
+    /**
+     * 设置标签
+     * @param {string | boolean} label 标签，为false时，代表没有标签
+     */
+    setLabel(label) {
+        let labelNode = this.node.find('.ly-form_label');
+
+        if (label === false) {
+            labelNode.remove();
+            return;
+        }
+
+        if (labelNode.length === 0) {
+            this.node.prepend('&lt;label class="ly-form_label">&lt;/label>');
+        }
+        this.node.find('.ly-form_label').html(label);
+    }
+
+    /**
+     * 格式化列表
+     * @param {string[] | number[] | object[] } list 列表
+     */
+    formatList(list) {
+        let res = [];
+
+        if (Util.type(list) === 'array') {
+            switch (Util.type(list[0])) {
+                case 'object': // 元素是对象
+                    list.forEach((item, index) => {
+                        res.push({
+                            key: item.key == null ? index + 1 : item.key, // 键
+                            value: item.value, // 值
+                            info: item.info || '', // 附加信息
+                        });
+                    });
+                    break;
+
+                case 'string': // 元素是字符串
+                case 'number': // 元素是数字
+                    list.forEach((item, index) => {
+                        res.push({
+                            key: index + 1, // 键
+                            value: item, // 值
+                            info: '', // 附加信息
+                        });
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 查找指定项
+     * @param {number | string | object | array} item 指定项
+     * @param {array} list 格式化之后的数据列表
+     * @returns {number} 指定项对应的下标
+     */
+    findItem(item, list) {
+        let res = -1; // 找不到默认为-1
+
+        if (Util.type(item) === 'object') {
+            // 传入的是对象
+            switch (item.key) {
+                case 'key': // key
+                    res = list.map((i) => i.key).indexOf(item.value);
+                    break;
+
+                case 'value': // 值
+                    res = list.map((i) => i.value).indexOf(item.value);
+                    break;
+
+                default: // 下标
+                    res =
+                        0 &lt;= item.value &amp;&amp; item.value &lt; list.length
+                            ? parseInt(item.value)
+                            : res;
+                    break;
+            }
+        } else if (Util.type(item) === 'number') {
+            // 传入的是数字
+            res = 0 &lt;= item &amp;&amp; item &lt; list.length ? parseInt(item) : res;
+        } else if (Util.type(item) === 'string') {
+            // 传入的是字符串
+            res = list.map((i) => i.value).indexOf(item);
+        } else if (Util.type(item) === 'array') {
+            res = item.reduce((prev, cur) => {
+                let pos = this.findItem(cur, list);
+                if (pos != -1) {
+                    prev.push(pos);
+                }
+                return prev;
+            }, []);
+        }
+
+        return res;
+    }
+}
+
+export default Form;
+</code></pre>
+        </article>
+    </section>
 
 
 
