@@ -10,7 +10,9 @@ import Component from '../../base/component';
  *     parent: dom, // 水印容器，即水印添加到哪个元素中，建议与iframe并列
  *     show: true, // 是否显示水印
  *     position: 'absolute', // 水印显示方式，['fixed', 'absolute']
- *     getMarkInfo: () => {}, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
+ *     getMarkInfo: () => {
+ *         return [];
+ *     }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
  *     interval: 1000, // 刷新频率，单位ms
  * });
  */
@@ -218,7 +220,6 @@ class CanvasMark extends Component {
      */
     _mounted() {
         this.monitor();
-        this.initCanvas();
     }
 
     /**
@@ -266,18 +267,6 @@ class CanvasMark extends Component {
     }
 
     /**
-     * 初始化 Canvas 样式
-     */
-    initCanvas() {
-        this.node.css({
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%) rotate(-30deg)',
-        });
-    }
-
-    /**
      * 渲染
      * @param {object} infoList 信息列表
      * @todo 1. 清除画布内容
@@ -287,9 +276,14 @@ class CanvasMark extends Component {
      */
     render(infoList) {
         let context = this.context,
-            padding = 240,
-            rowCount = this.height / padding,
-            cowCount = this.width / padding;
+            padding = {
+                row: 240, // 行间距
+                col: 160, // 列间距
+            },
+            count = {
+                row: this.height / padding.row,
+                col: this.width / padding.col,
+            };
 
         this.canvas.width = this.width;
         this.canvas.height = this.height;
@@ -297,19 +291,29 @@ class CanvasMark extends Component {
         context.fillStyle = this.fillStyle;
         infoList = this.calcPosition(infoList);
 
-        for (let row = 0; row < rowCount; row++) {
-            context.setTransform();
-            context.translate(0, row * padding);
-            infoList.forEach((info) => {
-                context.fillText(info.text, info.x, info.y);
-            });
-            for (let col = 0; col < cowCount; col++) {
-                context.translate(300, 0);
-                infoList.forEach((info) => {
-                    context.fillText(info.text, info.x, info.y);
-                });
+        for (let row = 0; row < count.row; row++) {
+            for (let col = 0; col < count.col; col++) {
+                this.drawFont(infoList, row * padding.row, col * padding.col);
             }
         }
+    }
+
+    /**
+     * 绘制文字
+     * @param {object[]} infoList 文字信息
+     * @param {number} left 左侧距离
+     * @param {number} top 顶部距离
+     * @param {number} rotate 旋转角度
+     */
+    drawFont(infoList, left = 0, top = 0, rotate = (-30 * Math.PI) / 360) {
+        let context = this.context;
+
+        context.setTransform();
+        context.translate(left, top);
+        context.rotate(rotate);
+        infoList.forEach((info) => {
+            context.fillText(info.text, info.x, info.y);
+        });
     }
 
     /**

@@ -1,10 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const packageInfo = require('./package.json');
+const moment = require('moment');
 const markInfo = [
     `name: ${packageInfo.name}`,
+    `package: ${moment().format('YYYY-MM-DD HH:mm:SS')}`,
     `version: ${packageInfo.version}`,
-    `export: LY`,
+    `exports: LY`,
 ];
 
 module.exports = {

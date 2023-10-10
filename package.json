@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "webpack-dev-server --config webpack.config.dev.js",
-        "build": "webpack --mode=none",
+        "build": "webpack --mode=none && npm run docs",
         "build:pro": "webpack --mode=production",
         "docs": "jsdoc -c ./jsdoc.conf.json"
     },
@@ -24,6 +24,7 @@
         "docdash": "^2.0.2",
         "html-webpack-plugin": "^5.5.0",
         "mini-css-extract-plugin": "^2.7.5",
+        "moment": "^2.29.4",
         "optimize-css-assets-webpack-plugin": "^6.0.1",
         "style-loader": "^3.3.2",
         "url-loader": "^4.1.1",
