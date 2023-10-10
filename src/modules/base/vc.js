@@ -6,7 +6,7 @@ import Time from './time.js';
 /**
  * 视图组件
  * @author wang.xin
- * @namespace
+ * @exports VC
  * @property {object} config 配置项
  * @property {string} [config.basicPath=''] 基地址
  */
