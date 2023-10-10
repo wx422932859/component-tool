@@ -3,9 +3,9 @@ import Observe from './observe.js';
 import loading from '../../assets/img/loading.gif';
 
 /**
- * 接口请求相关方法
+ * 常用工具方法
  * @author wang.xin
- * @namespace
+ * @exports Util
  */
 let Util = {};
 
