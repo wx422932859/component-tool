@@ -276,14 +276,18 @@ class CanvasMark extends Component {
      */
     render(infoList) {
         let context = this.context,
+            base = {
+                x: 50,
+                y: 50,
+            },
             padding = {
-                row: 240, // 行间距
-                col: 160, // 列间距
+                x: 240, // 行间距
+                y: 180, // 列间距
             },
             count = {
-                row: this.height / padding.row,
-                col: this.width / padding.col,
-            };
+                x: this.height / padding.x,
+                y: this.width / padding.y,
+            }; // 个数
 
         this.canvas.width = this.width;
         this.canvas.height = this.height;
@@ -291,9 +295,13 @@ class CanvasMark extends Component {
         context.fillStyle = this.fillStyle;
         infoList = this.calcPosition(infoList);
 
-        for (let row = 0; row < count.row; row++) {
-            for (let col = 0; col < count.col; col++) {
-                this.drawFont(infoList, row * padding.row, col * padding.col);
+        for (let row = 0; row < count.x; row++) {
+            for (let col = 0; col < count.y; col++) {
+                this.drawFont(
+                    infoList,
+                    base.x + row * padding.x,
+                    base.y + col * padding.y
+                );
             }
         }
     }
