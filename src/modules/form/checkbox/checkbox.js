@@ -181,6 +181,36 @@ class Checkbox extends Form {
          * type = 1, 代表选中的个数已经达到最大值
          */
         this.error = (type) => {};
+
+        /**
+         * @member {*} disabled 不可更改项
+         * @memberof Checkbox
+         * @inner
+         */
+        this._observe('disabled', (value) => {
+            let pos = this.findItem(value, this.standardList);
+
+            this.disabledPos = Util.type(pos) === 'array' ? pos : [pos];
+        });
+
+        /**
+         * @member {number[]} disabledPos 不可更改项在列表中的位置
+         * @memberof Checkbox
+         * @inner
+         */
+        this._observe('disabledPos', (value) => {
+            this.node
+                .find('.ly-checkbox_item')
+                .removeClass('ly-checkbox_item-disabled');
+            value.forEach((elem) => {
+                let node = this.node.find('.ly-checkbox_item').eq(elem);
+
+                if (this.all !== false) {
+                    node = this.node.find('.ly-checkbox_item').eq(elem + 1);
+                }
+                node.addClass('ly-checkbox_item-disabled');
+            });
+        });
     }
 
     /**
@@ -190,7 +220,7 @@ class Checkbox extends Form {
         // 单个选项
         this.node.on(
             'click',
-            '.ly-checkbox_item[data-type="single"]',
+            '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)',
             (e, target) => {
                 if (
                     this.maxCount != -1 &&
@@ -220,9 +250,13 @@ class Checkbox extends Form {
         );
 
         // 全选按钮
-        this.node.on('click', '.ly-checkbox_item[data-type="all"]', () => {
-            this.allCheck = !this.allCheck;
-        });
+        this.node.on(
+            'click',
+            '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)',
+            () => {
+                this.allCheck = !this.allCheck;
+            }
+        );
     }
 
     /**
@@ -232,6 +266,7 @@ class Checkbox extends Form {
      * @param {array} option.list 数据列表
      * @param {string} [option.all] 全选项名称（当传参的时候，代表有全选）
      * @param {number | string | object | array} option.check 选中项
+     * @param {number | string | object | array} option.disabled 不可更改项
      * @param {boolean} [option.allCheck] 全选（true 代表选中）
      * @param {function} option.change 切换选中项后触发的事件
      * @param {number} option.maxCount 最多可选个数
@@ -242,6 +277,7 @@ class Checkbox extends Form {
         this.list = option.list || [];
         this.all = option.all || false;
         this.check = option.check != undefined ? option.check : [];
+        this.disabled = option.disabled != undefined ? option.disabled : [];
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
