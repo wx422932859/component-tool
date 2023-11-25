@@ -64,7 +64,8 @@ Ajax.req = function (opts) {
             beforeSend = opts.beforeSend || (() => {}), // 请求之前的操作
             complete = opts.complete || (() => {}), // 请求结束的操作
             success = opts.success || (() => {}), // 请求成功的操作
-            error = opts.error || (() => {}); // 请求失败的操作
+            error = opts.error || (() => {}), // 请求失败的操作
+            header = opts.header || {}; // 请求头
 
         // 设置超时
         if (Util.type(opts.timeout) == 'number') {
@@ -87,11 +88,15 @@ Ajax.req = function (opts) {
             xhr.setRequestHeader('content-Type', contentType);
         }
 
+        // 添加请求头
+        for (let key in header) {
+            xhr.setRequestHeader(key, header[key]);
+        }
+
         // 监听请求过程
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                let responseData = null,
-                    responseType = xhr.getResponseHeader('Content-Type');
+                let responseData = null;
 
                 if (
                     (xhr.status >= 200 && xhr.status < 300) ||
