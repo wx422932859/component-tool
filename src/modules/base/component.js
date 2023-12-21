@@ -26,6 +26,10 @@ class Component {
          */
         this.node = new MyNode(selector);
 
+        if (this.__proto__.constructor._version != undefined) {
+            this.node.attr(`vc-${this.__proto__.constructor._version}`, '');
+        }
+
         /**
          * @member {EventBus} _bus 事件总线
          * @memberof Component
@@ -101,8 +105,7 @@ class Component {
                             parent = parent._parent;
                         }
                     } else {
-                        parent instanceof Component &&
-                            parent._listen_msg(self, ...params);
+                        parent instanceof Component && parent._listen_msg(self, ...params);
                     }
 
                     return Reflect.apply(...arguments);
@@ -206,8 +209,7 @@ class Component {
         // 有父节点
         if (this._parent instanceof Component) {
             for (let key in this._parent._children) {
-                this._parent._children[key] === this &&
-                    delete this._parent._children[key];
+                this._parent._children[key] === this && delete this._parent._children[key];
             }
         }
     }
@@ -290,12 +292,7 @@ class Component {
             }
 
             // 定义实例化名称
-            name =
-                name ||
-                componentName.replace(
-                    componentName[0],
-                    componentName[0].toLowerCase()
-                );
+            name = name || componentName.replace(componentName[0], componentName[0].toLowerCase());
 
             if (eval(`typeof ${componentName} == 'undefined'`) && src != null) {
                 taskQueue.add(VC.imports, [
@@ -394,10 +391,7 @@ class Component {
     _reset_root(component) {
         component._root = this._root;
         for (let key in component._children) {
-            if (
-                component instanceof Component &&
-                component._children[key] instanceof Component
-            ) {
+            if (component instanceof Component && component._children[key] instanceof Component) {
                 component._reset_root(component._children[key]);
             }
         }

@@ -76,10 +76,7 @@ Util.toArray = function (obj) {
 Util.compare = function (obj1, obj2) {
     let res = true;
 
-    if (
-        Object.prototype.toString.call(obj1) ===
-        Object.prototype.toString.call(obj2)
-    ) {
+    if (Object.prototype.toString.call(obj1) === Object.prototype.toString.call(obj2)) {
         switch (Object.prototype.toString.call(obj1)) {
             case '[object Object]': // 对象
                 if (Object.keys(obj1).length !== Object.keys(obj2).length) {
@@ -186,11 +183,7 @@ Util.importFile = function (filePath, sign = true) {
  * @returns {String}
  */
 Util.formatPath = function (path) {
-    let arr = path
-            .split('/')
-            .filter(
-                (item, index) => item !== '.' && (index === 0 || item !== '')
-            ),
+    let arr = path.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
         pos = arr.indexOf('..');
 
     while (pos > 0) {
@@ -335,16 +328,7 @@ Util.request = (function () {
  * @param {Boolean} deep 是否进行深度监听
  * @return {Proxy}
  */
-Util.monitor = function (
-    target,
-    property,
-    callback,
-    value,
-    immediate,
-    delay,
-    isModifiable,
-    deep
-) {
+Util.monitor = function (target, property, callback, value, immediate, delay, isModifiable, deep) {
     if (arguments.length === 1) {
         return new Observe(...arguments).watcher;
     } else {
@@ -499,6 +483,26 @@ Util.eval = function (code) {
         code = code;
     }
     return code;
+};
+
+/**
+ * 计算字符串长度
+ */
+Util.calStringLength = function (str) {
+    str = String(str);
+    let length = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        let code = str.charCodeAt(i);
+        if ((code >= 0 && code <= 255) || (code >= 0xff61 && code <= 0xff9f)) {
+            // 非中文字符
+            length++;
+        } else {
+            length += 2;
+        }
+    }
+
+    return length;
 };
 
 export default Util;
