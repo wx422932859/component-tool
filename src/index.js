@@ -10,6 +10,7 @@ import Time from './modules/base/time.js';
 import Watcher from './modules/base/watcher.js';
 import Form from './modules/form/index.js';
 import Extend from './modules/extend/index.js';
+import XMLNode from './modules/base/xml-node.js';
 
 /**
  * 对外暴露的全局变量
@@ -88,5 +89,11 @@ LY.Watcher = Watcher;
  * @see Form
  */
 LY.Form = Form;
+
+/**
+ * XML 节点
+ * @see XMLNode
+ */
+LY.XMLNode = XMLNode;
 
 export default LY;
