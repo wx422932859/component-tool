@@ -299,6 +299,9 @@ VC.handleComponentPackage = function (taskQueue, componentPackage) {
             globalName = elem.attr('data-alias') || componentName,
             unique = new Time().format('HHMMSS') + Math.floor(Math.random() * 1000);
 
+        // 处理component
+        VC.handleComponentNode(taskQueue, elem.children('component'));
+
         // 处理script
         VC.handleScriptNode(taskQueue, elem.children('script'), componentName, globalName);
 
