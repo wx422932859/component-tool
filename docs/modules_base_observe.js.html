@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>modules/base/observe.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="LY.html">LY</a></li></ul><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Ajax.html#.filterHTML">filterHTML</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatData">formatData</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatParam">formatParam</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.load">load</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.req">req</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.request">request</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.upload">upload</a></li></ul></li><li><a href="module-Extend.html">Extend</a></li><li><a href="module-Util.html">Util</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Util.html#.calStringLength">calStringLength</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.class2type">class2type</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.compare">compare</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.debounce">debounce</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.deepClone">deepClone</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.eval">eval</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.exitFullScreen">exitFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.formatPath">formatPath</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.importFile">importFile</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isArrayLike">isArrayLike</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isFunction">isFunction</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isWindow">isWindow</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.proxyToJSON">proxyToJSON</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.setTimeout">setTimeout</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.throttle">throttle</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toArray">toArray</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toFullScreen">toFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toLowerUpper">toLowerUpper</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.type">type</a></li></ul></li><li><a href="module-VC.html">VC</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSRules">handleCSSRules</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSStyleRule">handleCSSStyleRule</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleComponentNode">handleComponentNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleComponentPackage">handleComponentPackage</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleFileNode">handleFileNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleScriptNode">handleScriptNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleStyleNode">handleStyleNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleStyleNodeItem">handleStyleNodeItem</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleTemplateNode">handleTemplateNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.imports">imports</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="CanvasMark.html">CanvasMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CanvasMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#calcPosition">calcPosition</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#drawFont">drawFont</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#render">render</a></li></ul></li><li><a href="CdataSectionNode.html">CdataSectionNode</a></li><li><a href="Checkbox.html">Checkbox</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Checkbox.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setAllItem">setAllItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="CommentNode.html">CommentNode</a></li><li><a href="Component.html">Component</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Component.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Component.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Component.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Component.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Component.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Component.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Component.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch_props">_watch_props</a></li></ul></li><li><a href="DropList.html">DropList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="DropList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="DropList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="DropList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="DropList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="DropList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="ElementNode.html">ElementNode</a></li><li><a href="EventBus.html">EventBus</a><ul class='methods'><li data-type='method' style='display: none;'><a href="EventBus.html#emit">emit</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#off">off</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#on">on</a></li></ul></li><li><a href="FileNode.html">FileNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileNode.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderAudio">renderAudio</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderImage">renderImage</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderVideo">renderVideo</a></li></ul></li><li><a href="FilePreview.html">FilePreview</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FilePreview.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#find">find</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#preview">preview</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#unload">unload</a></li></ul></li><li><a href="FileUpload.html">FileUpload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileUpload.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#addFileNode">addFileNode</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#allowFileTypeByName">allowFileTypeByName</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileCount">getFileCount</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileList">getFileList</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#unload">unload</a></li></ul></li><li><a href="Form.html">Form</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Form.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Form.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Form.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Form.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Form.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Form.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Form.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Form.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Form.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Form.html#setLabel">setLabel</a></li></ul></li><li><a href="MultipleList.html">MultipleList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MultipleList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="MyNode.html">MyNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MyNode.html#after">after</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#before">before</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#includes">includes</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#prepend">prepend</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#replaceWith">replaceWith</a></li></ul></li><li><a href="Observe.html">Observe</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Observe.html#addCallback">addCallback</a></li><li data-type='method' style='display: none;'><a href="Observe.html#create">create</a></li><li data-type='method' style='display: none;'><a href="Observe.html#defineObject">defineObject</a></li><li data-type='method' style='display: none;'><a href="Observe.html#monitorMethodsOfArray">monitorMethodsOfArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyArray">proxyArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyObject">proxyObject</a></li></ul></li><li><a href="Pagination.html">Pagination</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Pagination.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createOmit">createOmit</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createPageLabel">createPageLabel</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#render">render</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderGotoPage">renderGotoPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderNextPage">renderNextPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPage">renderPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPreviousPage">renderPreviousPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderTip">renderTip</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#valid">valid</a></li></ul></li><li><a href="Popup.html">Popup</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Popup.html#_mounted">_mounted</a></li></ul></li><li><a href="Radio.html">Radio</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Radio.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Radio.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Radio.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Radio.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Radio.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Radio.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="RootNode.html">RootNode</a></li><li><a href="Slider.html">Slider</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Slider.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Slider.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Slider.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Slider.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Slider.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Slider.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Slider.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Slider.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Slider.html#update">update</a></li></ul></li><li><a href="Switch.html">Switch</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Switch.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Switch.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Switch.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Switch.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Switch.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Switch.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Switch.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Switch.html#setLabel">setLabel</a></li></ul></li><li><a href="TaskQueue.html">TaskQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TaskQueue.html#add">add</a></li><li data-type='method' style='display: none;'><a href="TaskQueue.html#execute">execute</a></li></ul></li><li><a href="TextNode.html">TextNode</a></li><li><a href="Time.html">Time</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Time.html#dateCount">dateCount</a></li><li data-type='method' style='display: none;'><a href="Time.html#firstDate">firstDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#format">format</a></li><li data-type='method' style='display: none;'><a href="Time.html#forward">forward</a></li><li data-type='method' style='display: none;'><a href="Time.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Time.html#lastDate">lastDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#transform">transform</a></li></ul></li><li><a href="Watcher.html">Watcher</a></li><li><a href="WaterMark.html">WaterMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="WaterMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#addLinkedNode">addLinkedNode</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#init">init</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#listenNodeChange">listenNodeChange</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#load">load</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#updateMark">updateMark</a></li></ul></li><li><a href="XMLNode.html">XMLNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="XMLNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="XMLNode.html#toJson">toJson</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/base/observe.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Util from './util.js';
+import EventBus from './event-bus.js';
+
+/**
+ * 监听器
+ * @author wang.xin
+ */
+class Observe {
+    /**
+     * Creates an instance of Observe.
+     * @param {object} params
+     * @param {object | array | function} params.target 监听对象
+     * @param {string} params.property 属性
+     * @param {function | object} params.callback 回调函数或回调函数集合
+     * @param {*} params.value 值
+     * @param {boolean} params.immediate 是否在初始化的时候，执行回调函数，默认不执行
+     * @param {number} params.delay 延迟时间，单位毫秒，防抖操作，-1代表不进行防抖操作
+     * @param {boolean} params.isModifiable 是否可以改变数据类型
+     * @param {boolean} params.deep 是否进行深度监听
+     */
+    constructor(params = {}) {
+        Object.defineProperty(this, '_data', {
+            enumerable: false,
+            value: {},
+        }); // 数据仓库
+        this.eventBus = new EventBus(false); // 事件总线
+        this.watcher = null; // 监听器
+        this.immediate = params.immediate == true;
+        this.delay = params.delay || -1;
+        this.isModifiable = params.isModifiable != false;
+        this.deep = params.deep == true;
+        this.create(params);
+    }
+
+    /**
+     * 构建watcher
+     */
+    create(params) {
+        let { target, callback } = params;
+
+        switch (Util.type(target)) {
+            case 'array': // 数组
+                this.watcher = this.proxyArray(target, callback);
+                break;
+
+            case 'object': // 对象
+            case 'function': // 函数
+                this.watcher = this.defineObject(params);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 采用 Object.defineProperty 监听对象
+     * @param {object} params
+     * @param {object | function} params.target 监听对象
+     * @param {function} params.callback 回调函数
+     * @param {*} params.value 初始值
+     * @param {boolean} [params.deep=false] 是否深度监听
+     */
+    defineObject(params) {
+        let self = this,
+            { target, property, callback = {}, value, deep = false } = params;
+
+        if (property == undefined) {
+            // 针对 target 进行监听，此时 callback 是个 map
+            for (let prop in target) {
+                this.defineObject({
+                    target,
+                    property: prop,
+                    callback: callback[prop],
+                    value: target[prop],
+                    deep,
+                });
+            }
+        } else if (Util.type(property) == 'object') {
+            // 针对 target 进行监听，此时 property 是个 map
+            for (let prop in property) {
+                this.defineObject({
+                    target,
+                    property: prop,
+                    callback: callback[prop],
+                    value: property[prop],
+                    deep,
+                });
+            }
+        } else {
+            // 针对 target[property] 进行监听
+            value = value !== undefined ? value : target[property];
+            self._data[property] = value; // 缓存初始值
+            let type = Util.type(value);
+
+            Object.defineProperty(target, property, {
+                configurable: true,
+                enumerable: true,
+                get() {
+                    return self._data[property];
+                },
+                set(value) {
+                    if (Util.type(value) === type || self.isModifiable) {
+                        let oldValue = self._data[property];
+                        self._data[property] = value;
+                        self.eventBus.emit(property, value, oldValue);
+
+                        // 判断是否需要进行深度监听
+                        if (self.deep &amp;&amp; deep) {
+                            // 当赋值为 Array | Object | Function 时，需要进一步注册事件
+                            if (Util.type(value) === 'array') {
+                                self._data[property] = self.proxyArray(
+                                    value,
+                                    callback[property],
+                                    property
+                                );
+                            } else if (
+                                ['object', 'function'].includes(
+                                    Util.type(value)
+                                )
+                            ) {
+                                self._data[property] = self.proxyObject(
+                                    value,
+                                    callback[property],
+                                    property
+                                );
+                            }
+                        }
+                    } else {
+                        console.log(
+                            `属性【${property}】：初始类型【${type}】，赋值类型【${Util.type(
+                                value
+                            )}，修改无效！`
+                        );
+                    }
+                },
+            });
+            target[property] = value; // 执行一次 set()
+
+            this.addCallback(property, callback, target);
+        }
+        return target;
+    }
+
+    /**
+     * 采用 Proxy 监听数组
+     * @param {array} target 监听对象
+     * @param {function} callback 数据发生改变后的回调函数
+     * @param {string} eventName 事件名称
+     * @return {Proxy}
+     */
+    proxyArray(target, callback, eventName) {
+        let self = this,
+            proxy = null,
+            name = eventName || 'change',
+            methods = [
+                'push',
+                'pop',
+                'shift',
+                'unshift',
+                'splice',
+                'sort',
+                'reverse',
+            ];
+
+        proxy = new Proxy(target, {
+            set(t, p, v, r) {
+                // 当修改的是方法，直接赋值返回，不触发响应
+                if (methods.includes(p)) return Reflect.set(t, p, v, r);
+
+                // 当监听对象是对象 A 的属性时，返回的对象 A 改变前后的值，否则返回自身改变前后的值
+                let value = self._data[name] || t,
+                    value1 = Util.proxyToJSON(value),
+                    res = Reflect.set(t, p, v, r),
+                    value2 = Util.proxyToJSON(value);
+
+                self.eventBus.emit(name, value2, value1);
+                return res;
+            },
+        });
+        this.monitorMethodsOfArray(methods, proxy, name);
+
+        // 添加监听事件
+        if (!eventName) {
+            this.addCallback(name, callback, proxy);
+            this.immediate &amp;&amp; this.eventBus.emit(name, target);
+        }
+
+        return proxy;
+    }
+
+    /**
+     * 采用 Proxy 监听对象
+     * @param {object | function} target 监听对象
+     * @param {function} callback 数据发生改变后的回调函数
+     * @param {string} eventName 事件名称
+     * @return {Proxy}
+     */
+    proxyObject(target, callback, eventName) {
+        let self = this,
+            proxy = null,
+            name = eventName || 'change';
+
+        proxy = new Proxy(target, {
+            set(t, p, v, r) {
+                // 当监听对象是对象 A 的属性时，返回的对象 A 改变前后的值，否则返回自身改变前后的值
+                let value = self._data[name] || t,
+                    type1 = Util.type(t[p]),
+                    type2 = Util.type(v),
+                    proxyValue = v;
+
+                if (type1 === type2 || self.isModifiable) {
+                    // 当赋值为 Array | Object | Function 时，需要进一步注册事件
+                    if (Util.type(proxyValue) === 'array') {
+                        proxyValue = self.proxyArray(
+                            proxyValue,
+                            callback,
+                            name
+                        );
+                    } else if (
+                        ['object', 'function'].includes(Util.type(proxyValue))
+                    ) {
+                        proxyValue = self.proxyObject(
+                            proxyValue,
+                            callback,
+                            name
+                        );
+                    }
+
+                    let value1 = Util.proxyToJSON(value),
+                        res = Reflect.set(t, p, proxyValue, r),
+                        value2 = Util.proxyToJSON(value);
+
+                    self.eventBus.emit(name, value2, value1);
+                    return res;
+                }
+
+                console.log(
+                    `属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`
+                );
+                return false;
+            },
+        });
+
+        for (let prop in target) {
+            if (Util.type(target[prop]) === 'array') {
+                target[prop] = this.proxyArray(target[prop], callback, name);
+            } else if (
+                ['object', 'function'].includes(Util.type(target[prop]))
+            ) {
+                target[prop] = this.proxyObject(target[prop], callback, name);
+            }
+        }
+
+        // 添加监听事件
+        if (!eventName) {
+            this.addCallback(name, callback, proxy);
+            this.immediate &amp;&amp; this.eventBus.emit(name, target);
+        }
+
+        return proxy;
+    }
+
+    /**
+     * 往事件总线中注册事件，且在 delay 毫秒内，回调函数只会执行一次。
+     * @param {string} eventName 事件名称
+     * @param {function} callback 回调函数
+     * @param {object | array | function} target 回调函数绑定对象
+     */
+    addCallback(eventName, callback, target) {
+        if (Util.type(callback) === 'function') {
+            if (this.delay !== -1) {
+                this.eventBus.on(
+                    eventName,
+                    Util.debounce(callback, this.delay).bind(target)
+                );
+            } else {
+                this.eventBus.on(eventName, callback.bind(target));
+            }
+        }
+    }
+
+    /**
+     * 监听数组的方法
+     * @param {string[]} methods 需要监听的方法列表
+     * @param {Proxy} proxy 代理对象
+     * @param {string} name 属性名称
+     */
+    monitorMethodsOfArray(methods, proxy, name) {
+        let self = this;
+
+        methods.forEach((method) => {
+            if (proxy.hasOwnProperty(method)) return;
+            Object.defineProperty(proxy, method, {
+                configurable: false,
+                enumerable: false,
+                value: new Proxy(proxy.__proto__[method], {
+                    apply(target, thisArg, arrArray) {
+                        if (self.watcher[name] == null) {
+                            // 当属性值为null的时候不需要重写
+                            return Reflect.apply(...arguments);
+                        }
+
+                        let result = Util.proxyToJSON(self.watcher[name]);
+                        if (typeof result[method] !== 'function') return;
+                        result[method](...arrArray);
+                        self.watcher[name] = result;
+                    },
+                }),
+            });
+        });
+    }
+}
+
+export default Observe;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sun Jan 14 2024 15:45:03 GMT+0800 (GMT+08:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

@@ -6,7 +6,7 @@ import Time from './time.js';
 /**
  * 视图组件
  * @author wang.xin
- * @namespace
+ * @exports VC
  * @property {object} config 配置项
  * @property {string} [config.basicPath=''] 基地址
  */
@@ -26,12 +26,7 @@ const VC = {
  * @returns {Promise}
  */
 VC.imports = function (option) {
-    let {
-        basicPath = VC.config.basicPath,
-        filePath,
-        handle = () => {},
-        alias,
-    } = option;
+    let { basicPath = VC.config.basicPath, filePath, handle = () => {}, alias } = option;
 
     filePath = Util.eval(filePath);
 
@@ -80,25 +75,21 @@ VC.imports = function (option) {
         .then((response) => response.text())
         .then((res) => {
             let myNode = new MyNode(`<div>${res}</div>`),
-                unique =
-                    new Time().format('HHMMSS') +
-                    Math.floor(Math.random() * 1000);
+                unique = new Time().format('HHMMSS') + Math.floor(Math.random() * 1000);
 
             return new Promise((resolve) => {
                 let taskQueue = new TaskQueue();
 
                 taskQueue.free = false;
                 try {
-                    // 定义引入的名称
+                    // 处理component-package
+                    VC.handleComponentPackage(taskQueue, myNode.children('component-package'));
 
                     // 处理file
                     VC.handleFileNode(taskQueue, myNode.children('file'));
 
                     // 处理component
-                    VC.handleComponentNode(
-                        taskQueue,
-                        myNode.children('component')
-                    );
+                    VC.handleComponentNode(taskQueue, myNode.children('component'));
 
                     // 处理script
                     VC.handleScriptNode(
@@ -117,20 +108,14 @@ VC.imports = function (option) {
                     );
 
                     // 处理style
-                    VC.handleStyleNode(
-                        taskQueue,
-                        myNode.children('style'),
-                        unique
-                    );
+                    VC.handleStyleNode(taskQueue, myNode.children('style'), unique);
 
                     taskQueue.add(() =>
                         new Promise((resolve) => {
                             resolve();
                         }).then(() => {
                             handle.call(VC, {
-                                template: eval(
-                                    `typeof ${globalName} != 'undefined'`
-                                )
+                                template: eval(`typeof ${globalName} != 'undefined'`)
                                     ? eval(globalName)._template
                                     : '',
                             });
@@ -187,12 +172,7 @@ VC.handleComponentNode = function (taskQueue, component) {
  * @param {string} componentName 组件名称
  * @param {string} globalName 最终引入全局变量名称
  */
-VC.handleScriptNode = function (
-    taskQueue,
-    scriptNode,
-    componentName,
-    globalName
-) {
+VC.handleScriptNode = function (taskQueue, scriptNode, componentName, globalName) {
     taskQueue.add(() => {
         return new Promise((resolve) => {
             scriptNode.forEach((elem) => {
@@ -242,20 +222,28 @@ VC.handleTemplateNode = function (taskQueue, template, globalName, unique) {
  * @param {string} unique 唯一标识
  */
 VC.handleStyleNode = function (taskQueue, styleNode, unique) {
-    styleNode.forEach((item, index, list) => {
-        let elem = list.eq(index);
-
-        if (elem.attr('disabled') != null) return;
-        taskQueue.add(() => {
-            return new Promise((resolve) => {
-                document.querySelector('body').appendChild(item);
-                if (elem.attr('scoped') != null) {
-                    VC.handleCSSRules(item.sheet.cssRules, unique);
-                }
-                resolve();
+    taskQueue.add(() => {
+        return new Promise((resolve) => {
+            styleNode.forEach((item, index, list) => {
+                VC.handleStyleNodeItem(list.eq(index), unique);
             });
         });
     });
+};
+
+/**
+ * 处理style
+ * @param {MyNode} elem 元素
+ * @param {string} unique 唯一标识
+ */
+VC.handleStyleNodeItem = function (elem, unique) {
+    let node = elem[0];
+
+    if (elem.attr('disabled') != null) return;
+    document.querySelector('body').appendChild(node);
+    if (elem.attr('scoped') != null) {
+        VC.handleCSSRules(node.sheet.cssRules, unique);
+    }
 };
 
 /**
@@ -294,11 +282,35 @@ VC.handleCSSStyleRule = function (selectorText, unique) {
 
     return selectorList
         .map((selector) => {
-            return selector
-                .trim()
-                .replace(req, (item) => `${item}[vc-${unique}]`);
+            return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
         })
         .join(',');
+};
+
+/**
+ * 处理组件包
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode[]} componentPackage 组件包
+ */
+VC.handleComponentPackage = function (taskQueue, componentPackage) {
+    componentPackage.forEach((item, index, list) => {
+        let elem = list.eq(index),
+            componentName = elem.attr('data-name'),
+            globalName = elem.attr('data-alias') || componentName,
+            unique = new Time().format('HHMMSS') + Math.floor(Math.random() * 1000);
+
+        // 处理component
+        VC.handleComponentNode(taskQueue, elem.children('component'));
+
+        // 处理script
+        VC.handleScriptNode(taskQueue, elem.children('script'), componentName, globalName);
+
+        // 处理template
+        VC.handleTemplateNode(taskQueue, elem.children('template').html(), globalName, unique);
+
+        // 处理style
+        VC.handleStyleNode(taskQueue, elem.children('style'), unique);
+    });
 };
 
 // 缓存已经引入的组件地址，避免重复引入
