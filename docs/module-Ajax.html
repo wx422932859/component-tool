@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>TaskQueue - Documentation</title>
+    <title>Ajax - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">TaskQueue</h1>
+    <h1 class="page-title">Ajax</h1>
     
 
     
@@ -49,15 +49,6 @@
 
 <header>
     
-        <h2>
-        
-            TaskQueue
-        
-        </h2>
-        
-            <div class="class-description usertext">任务队列</div>
-        
-    
 </header>
 
 <article>
@@ -66,27 +57,16 @@
         
             
 
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="TaskQueue"><span class="type-signature"></span>new TaskQueue<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>Creates an instance of TaskQueue.</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>接口请求相关方法</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_task-queue.js.html">modules/base/task-queue.js</a>, <a href="modules_base_task-queue.js.html#line7">line 7</a>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -131,32 +111,11 @@
 
 
 
+            
+                <div class="description usertext">接口请求相关方法</div>
+            
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
         
         </div>
     
@@ -174,6 +133,77 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".intercept"><span class="type-signature type-signature-static">(static) </span>intercept<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>拦截请求，默认为 null，不拦截请求键 => 接口地址值 => 处理方法，参数是请求属性</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line345">line 345</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    拦截请求，默认为 null，不拦截请求键 => 接口地址值 => 处理方法，参数是请求属性
+</div>
+
+
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -183,7 +213,7 @@
 
     
 
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(fn, params<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id=".filterHTML"><span class="type-signature type-signature-static">(static) </span>filterHTML<span class="signature">(object, rule)</span><span class="type-signature"></span></h4>
 
     
 
@@ -193,13 +223,13 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>添加任务</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>设置 XSS 过滤</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_task-queue.js.html">modules/base/task-queue.js</a>, <a href="modules_base_task-queue.js.html#line29">line 29</a>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -259,11 +289,7 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
-        
-        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -275,13 +301,19 @@
 
         <tr>
             
-                <td class="name"><code>fn</code></td>
+                <td class="name"><code>object</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
+|
+
+<span class="param-type">array</span>
 
 
 
@@ -289,35 +321,23 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"></td>
+            <td class="description last">过滤对象</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>params</code></td>
+                <td class="name"><code>rule</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">object</span>
 
 
 
@@ -325,26 +345,304 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last">过滤规则</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".formatData"><span class="type-signature type-signature-static">(static) </span>formatData<span class="signature">(data, contentType)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>数据格式化</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line142">line 142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
             
 
             
-                <td class="default">
-                
-                    <code>[]</code>
-                
-                </td>
+
+            <td class="description last">数据</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contentType</code></td>
             
 
-            <td class="description last"></td>
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">数据格式</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".formatParam"><span class="type-signature type-signature-static">(static) </span>formatParam<span class="signature">(obj)</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>参数格式化</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line215">line 215</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">参数</td>
         </tr>
 
     
@@ -369,6 +667,10 @@
 <h5 class="h5-returns">Returns:</h5>
 
         
+<div class="param-desc">
+    res 指定对象
+</div>
+
 
 
 <dl class="param-type">
@@ -377,7 +679,7 @@
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">object</span>
 
 
 
@@ -393,7 +695,7 @@
 
     
 
-    <h4 class="name" id="execute"><span class="type-signature"></span>execute<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".load"><span class="type-signature type-signature-static">(static) </span>load<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -403,13 +705,318 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>执行任务</li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li>文件下载接受 string、object、array 形式的入参，最后统一根据 arguments 属性对入参进行处理</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_base_task-queue.js.html">modules/base/task-queue.js</a>, <a href="modules_base_task-queue.js.html#line41">line 41</a>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line295">line 295</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".req"><span class="type-signature type-signature-static">(static) </span>req<span class="signature">(opts)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>原生封装请求</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">入参</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".request"><span class="type-signature type-signature-static">(static) </span>request<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>用Promise封装请求接受 string、object、array 形式的入参，最后统一根据 arguments 属性对入参进行处理</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line262">line 262</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".upload"><span class="type-signature type-signature-static">(static) </span>upload<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li>文件上传接受 string、object、array 形式的入参，最后统一根据 arguments 属性对入参进行处理</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="modules_base_ajax.js.html">modules/base/ajax.js</a>, <a href="modules_base_ajax.js.html#line333">line 333</a>
     </li></ul></dd>
     
 

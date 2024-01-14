@@ -1,7 +1,8 @@
 /*!
  * name: component-tool
+ * package: 2024-01-14 15:44:33
  * version: 1.0.0
- * export: LY
+ * exports: LY
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -30,7 +31,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 接口请求相关方法
  * @author wang.xin
- * @namespace
+ * @exports Ajax
  */
 const Ajax = {};
 
@@ -91,7 +92,8 @@ Ajax.req = function (opts) {
             beforeSend = opts.beforeSend || (() => {}), // 请求之前的操作
             complete = opts.complete || (() => {}), // 请求结束的操作
             success = opts.success || (() => {}), // 请求成功的操作
-            error = opts.error || (() => {}); // 请求失败的操作
+            error = opts.error || (() => {}), // 请求失败的操作
+            header = opts.header || {}; // 请求头
 
         // 设置超时
         if (_util__WEBPACK_IMPORTED_MODULE_0__["default"].type(opts.timeout) == 'number') {
@@ -114,11 +116,15 @@ Ajax.req = function (opts) {
             xhr.setRequestHeader('content-Type', contentType);
         }
 
+        // 添加请求头
+        for (let key in header) {
+            xhr.setRequestHeader(key, header[key]);
+        }
+
         // 监听请求过程
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                let responseData = null,
-                    responseType = xhr.getResponseHeader('Content-Type');
+                let responseData = null;
 
                 if (
                     (xhr.status >= 200 && xhr.status < 300) ||
@@ -335,7 +341,7 @@ Ajax.load = function () {
     }
     formNode.innerHTML = htmlStr;
     formNode.setAttribute('action', opts.url);
-    formNode.setAttribute('method', 'post');
+    formNode.setAttribute('method', opts.type || 'post');
     document.body.appendChild(formNode);
     if (document.querySelector('iframe[name="loadError"]') == null) {
         let iframeNode = document.createElement('iframe');
@@ -387,9 +393,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * 接口请求相关方法
+ * 常用工具方法
  * @author wang.xin
- * @namespace
+ * @exports Util
  */
 let Util = {};
 
@@ -460,10 +466,7 @@ Util.toArray = function (obj) {
 Util.compare = function (obj1, obj2) {
     let res = true;
 
-    if (
-        Object.prototype.toString.call(obj1) ===
-        Object.prototype.toString.call(obj2)
-    ) {
+    if (Object.prototype.toString.call(obj1) === Object.prototype.toString.call(obj2)) {
         switch (Object.prototype.toString.call(obj1)) {
             case '[object Object]': // 对象
                 if (Object.keys(obj1).length !== Object.keys(obj2).length) {
@@ -570,11 +573,7 @@ Util.importFile = function (filePath, sign = true) {
  * @returns {String}
  */
 Util.formatPath = function (path) {
-    let arr = path
-            .split('/')
-            .filter(
-                (item, index) => item !== '.' && (index === 0 || item !== '')
-            ),
+    let arr = path.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
         pos = arr.indexOf('..');
 
     while (pos > 0) {
@@ -719,16 +718,7 @@ Util.request = (function () {
  * @param {Boolean} deep 是否进行深度监听
  * @return {Proxy}
  */
-Util.monitor = function (
-    target,
-    property,
-    callback,
-    value,
-    immediate,
-    delay,
-    isModifiable,
-    deep
-) {
+Util.monitor = function (target, property, callback, value, immediate, delay, isModifiable, deep) {
     if (arguments.length === 1) {
         return new _observe_js__WEBPACK_IMPORTED_MODULE_1__["default"](...arguments).watcher;
     } else {
@@ -885,6 +875,26 @@ Util.eval = function (code) {
     return code;
 };
 
+/**
+ * 计算字符串长度
+ */
+Util.calStringLength = function (str) {
+    str = String(str);
+    let length = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        let code = str.charCodeAt(i);
+        if ((code >= 0 && code <= 255) || (code >= 0xff61 && code <= 0xff9f)) {
+            // 非中文字符
+            length++;
+        } else {
+            length += 2;
+        }
+    }
+
+    return length;
+};
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Util);
 
 
@@ -929,7 +939,7 @@ class Observe {
         this.immediate = params.immediate == true;
         this.delay = params.delay || -1;
         this.isModifiable = params.isModifiable != false;
-        this.deep = params.deep != false;
+        this.deep = params.deep == true;
         this.create(params);
     }
 
@@ -960,11 +970,11 @@ class Observe {
      * @param {object | function} params.target 监听对象
      * @param {function} params.callback 回调函数
      * @param {*} params.value 初始值
-     * @param {boolean} [params.deep=true] 是否深度监听
+     * @param {boolean} [params.deep=false] 是否深度监听
      */
     defineObject(params) {
         let self = this,
-            { target, property, callback = {}, value, deep = true } = params;
+            { target, property, callback = {}, value, deep = false } = params;
 
         if (property == undefined) {
             // 针对 target 进行监听，此时 callback 是个 map
@@ -1304,419 +1314,329 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _observe_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _my_node_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var _event_bus_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2);
-/* harmony import */ var _vc_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8);
-/* harmony import */ var _task_queue_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9);
-
-
+/* harmony import */ var _task_queue_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
+/* harmony import */ var _time_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9);
 
 
 
 
 
 /**
- * 组件基类
+ * 视图组件
  * @author wang.xin
+ * @exports VC
+ * @property {object} config 配置项
+ * @property {string} [config.basicPath=''] 基地址
  */
-class Component {
-    /**
-     * Creates an instance of Component.
-     * @param {string | DOM | MyNode} selector 选择器
-     */
-    constructor(selector) {
-        let self = this;
+const VC = {
+    config: {
+        basicPath: '',
+    },
+};
 
-        selector = selector || this.__proto__.constructor._template;
+/**
+ * @description 引入组件
+ * @param {object} option 配置项
+ * @param {string} option.basicPath 基地址
+ * @param {string} option.filePath 文件路径
+ * @param {function} option.handle 引入后执行的方法
+ * @param {string} option.alias 别名，当组件名称重复时，可使用别名
+ * @returns {Promise}
+ */
+VC.imports = function (option) {
+    let { basicPath = VC.config.basicPath, filePath, handle = () => {}, alias } = option;
 
-        /**
-         * @member {MyNode} node 组件根节点
-         * @memberof Component
-         * @inner
-         */
-        this.node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+    filePath = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(filePath);
 
-        /**
-         * @member {EventBus} _bus 事件总线
-         * @memberof Component
-         * @inner
-         */
-        this._bus = new _event_bus_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    // 当是HTTP请求时，不再增加基地址
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+        basicPath = '';
+    }
 
-        /**
-         * @member {Component} _parent 指向父组件
-         * @memberof Component
-         * @inner
-         */
-        this._parent = null;
+    let path = `${basicPath}${filePath}`,
+        realPath = path.split('?ver')[0],
+        componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
 
-        /**
-         * @member {Component} _root 指向根组件
-         * @memberof Component
-         * @inner
-         */
-        this._root = this;
+    if (componentName && componentName[1]) {
+        componentName = componentName[1];
+    } else {
+        console.log(`组件${path}获取失败：文件后缀应该为".vc"！`);
+        return;
+    }
 
-        /**
-         * @member {Proxy} _children 存放子组件的代理对象
-         * @memberof Component
-         * @inner
-         */
-        this._children = new Proxy(
-            {},
-            {
-                get: Reflect.get,
-                set(target, prop, value) {
-                    if (value instanceof Component) {
-                        value._parent = self;
-                        self._reset_root(value);
-                    }
-                    return Reflect.set(target, prop, value);
-                },
-            }
-        );
-
-        /**
-         * @member {function} _destroyed 销毁
-         * @memberof Component
-         * @inner
-         */
-        Object.defineProperty(this, '_destroyed', {
-            writable: false,
-            enumerable: false,
-            value: new Proxy(this._destroyed, {
-                apply(target, thisArg, params) {
-                    let res = Reflect.apply(...arguments);
-                    self._after_destroyed();
-                    return res;
-                },
-            }),
+    let globalName = alias || componentName; // 最终引入全局变量的名称
+    if (
+        filePath == undefined ||
+        eval(`typeof ${globalName} !== 'undefined'`) ||
+        VC.cache.includes(realPath)
+    ) {
+        return new Promise((resolve) => {
+            handle.call(VC, {
+                template: eval(`typeof ${globalName} != 'undefined'`)
+                    ? eval(globalName)._template
+                    : '',
+            });
+            resolve();
         });
-
-        /**
-         * @member {function} _send_msg 发送消息
-         * @memberof Component
-         * @inner
-         */
-        Object.defineProperty(this, '_send_msg', {
-            writable: false,
-            enumerable: false,
-            value: new Proxy(this._send_msg, {
-                apply(target, thisArg, params) {
-                    let parent = self._parent;
-
-                    if (params[1] === true) {
-                        while (parent instanceof Component) {
-                            parent._listen_msg(self, ...params);
-                            parent = parent._parent;
-                        }
-                    } else {
-                        parent instanceof Component &&
-                            parent._listen_msg(self, ...params);
-                    }
-
-                    return Reflect.apply(...arguments);
-                },
-            }),
-        });
-
-        /**
-         * @member {function} _o 监听器
-         * @memberof Component
-         * @inner
-         */
-        Object.defineProperty(this, '_o', {
-            value: new _observe_js__WEBPACK_IMPORTED_MODULE_0__["default"]({
-                target: this,
-                property: {},
-                callback: {},
-            }),
-        });
-
-        this._watch_data();
-        this._watch_props();
-        this._mount_component();
     }
 
-    /**
-     * 子组件内加载完成后执行的函数
-     */
-    _mounted() {}
-
-    /**
-     * 注册事件
-     */
-    _event() {}
-
-    /**
-     * 设置属性
-     */
-    _data() {}
-
-    /**
-     * 设置监听
-     */
-    _watch() {}
-
-    /**
-     * 计算属性
-     */
-    _computed() {}
-
-    /**
-     * 设置传参
-     */
-    _props() {
-        return {};
+    if (globalName == componentName) {
+        // 仅当没有别名的时候才进行缓存
+        VC.cache.push(realPath);
     }
 
-    /**
-     * 设置监听属性
-     */
-    _watch_data() {
-        let res = this._data(),
-            methods = this._watch();
-
-        if (res != null) {
-            for (let key in res) {
-                let callback = () => {};
-
-                if (methods && methods[key]) {
-                    callback = methods[key];
-                }
-                this._observe(key, res[key], callback);
-            }
-        }
+    if (!filePath.includes('?ver')) {
+        path += `?ver=${Math.random()}`;
     }
 
-    /**
-     * 监听入参
-     */
-    _watch_props() {
-        let props = this._props();
+    return fetch(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].formatPath(path))
+        .then((response) => response.text())
+        .then((res) => {
+            let myNode = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](`<div>${res}</div>`),
+                unique = new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') + Math.floor(Math.random() * 1000);
 
-        if (props != null) {
-            for (let key in props) {
-                this._observe(key, props[key]);
-            }
-        }
-    }
+            return new Promise((resolve) => {
+                let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
 
-    /**
-     * 销毁组件
-     */
-    _destroyed() {}
+                taskQueue.free = false;
+                try {
+                    // 处理component-package
+                    VC.handleComponentPackage(taskQueue, myNode.children('component-package'));
 
-    /**
-     * 销毁后执行移除节点，并删除引用
-     */
-    _after_destroyed() {
-        this.node.remove();
+                    // 处理file
+                    VC.handleFileNode(taskQueue, myNode.children('file'));
 
-        // 有父节点
-        if (this._parent instanceof Component) {
-            for (let key in this._parent._children) {
-                this._parent._children[key] === this &&
-                    delete this._parent._children[key];
-            }
-        }
-    }
+                    // 处理component
+                    VC.handleComponentNode(taskQueue, myNode.children('component'));
 
-    /**
-     * 发送消息，仅限用于子组件给父组件传递消息
-     * @param {object} 消息
-     * @example
-     * this._send_msg({
-     *     action: '动作'
-     *     info: '消息'
-     * })
-     */
-    _send_msg(msg) {}
+                    // 处理script
+                    VC.handleScriptNode(
+                        taskQueue,
+                        myNode.children('script'),
+                        componentName,
+                        globalName
+                    );
 
-    /**
-     * 监听消息，仅限用于父组件监听子组件，使用时重写该方法
-     * @param {Component} component 消息来源组件
-     * @param {object} msg 消息
-     */
-    _listen_msg(component, msg) {}
+                    // 处理template
+                    VC.handleTemplateNode(
+                        taskQueue,
+                        myNode.children('template').html(),
+                        globalName,
+                        unique
+                    );
 
-    /**
-     * 监听属性
-     * @param {string} property 属性
-     * @param {*} value 值
-     * @param {*} callback 响应方法
-     * @param {boolean} [deep=true] 是否深度监听
-     */
-    _observe(property, value, callback = () => {}, deep = true) {
-        if (arguments.length == 1) {
-            this._observe(property, undefined, callback);
-        } else if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) === 'function') {
-            this._observe(property, undefined, value);
-        } else {
-            if (property in this) {
-                if (value != undefined) {
-                    this[property] = value;
-                }
-                this._o.addCallback(property, callback, this);
-            } else {
-                this._o.defineObject({
-                    target: this,
-                    property,
-                    value,
-                    callback: callback.bind(this),
-                    deep,
-                });
-            }
-        }
-    }
+                    // 处理style
+                    VC.handleStyleNode(taskQueue, myNode.children('style'), unique);
 
-    /**
-     * 挂载组件
-     */
-    _mount_component() {
-        let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
-
-        taskQueue.free = false;
-        this.node.find('slot').forEach((elem, index, list) => {
-            let slot = list.eq(index), // 插槽
-                componentName = slot.attr('data-component'), // 组件类名
-                name = slot.attr('data-name'), // 实例化名称
-                prop = slot.attr('data-prop'), // 关联属性
-                src = slot.attr('data-src'); // 组件地址
-
-            if (componentName == null || componentName == '') {
-                // 当没有定义 data-component 时，根据 data-src 解析地址
-                if (src == null || src == '') {
-                    return;
-                }
-                let path = _util_js__WEBPACK_IMPORTED_MODULE_3__["default"].eval(src);
-                componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
-                if (componentName && componentName[1]) {
-                    componentName = componentName[1];
-                } else {
-                    console.log('组件文件后缀应该为".vc"！');
-                    return;
-                }
-            }
-
-            // 定义实例化名称
-            name =
-                name ||
-                componentName.replace(
-                    componentName[0],
-                    componentName[0].toLowerCase()
-                );
-
-            if (eval(`typeof ${componentName} == 'undefined'`) && src != null) {
-                taskQueue.add(_vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].imports, [
-                    {
-                        filePath: src,
-                        handle: () => {
-                            this._instantiate_component({
-                                name,
-                                componentName,
-                                slot,
-                                prop,
+                    taskQueue.add(() =>
+                        new Promise((resolve) => {
+                            resolve();
+                        }).then(() => {
+                            handle.call(VC, {
+                                template: eval(`typeof ${globalName} != 'undefined'`)
+                                    ? eval(globalName)._template
+                                    : '',
                             });
-                        },
-                    },
-                ]);
-            } else {
-                // 已存在指定的组件变量
-                this._instantiate_component({
-                    name,
-                    componentName,
-                    slot,
-                    prop,
-                });
-            }
-        });
-        taskQueue.add(() => {
-            try {
-                this._mounted();
-            } catch (err) {
-                console.log(err);
-            }
-        });
-        taskQueue.add(() => this._event());
-        taskQueue.free = true;
-    }
+                            resolve();
+                        })
+                    );
 
-    /**
-     * 实例化子组件
-     * @param {object} params 入参
-     * @param {string} params.name 组件实例化变量名
-     * @param {string} params.componentName 组件类名
-     * @param {string} params.prop 关联属性
-     * @param {MyNode} params.slot 插槽
-     */
-    _instantiate_component(params) {
-        let { name, componentName, slot, prop } = params;
-
-        if (
-            eval(`typeof ${componentName} == 'undefined'`) ||
-            !eval(`${componentName}.prototype instanceof Component`)
-        ) {
-            console.log(`${componentName}未定义！`);
-            return;
-        }
-
-        this._children[name] = eval(`new ${componentName}()`);
-        this._children[name].node.addClass(slot.attr('class'));
-        slot.replaceWith(this._children[name].node);
-
-        // 处理关联参数
-        if (prop != undefined && prop != '') {
-            let self = this,
-                proxyProperty = '__' + prop;
-            Object.defineProperty(this, proxyProperty, {
-                value: new Proxy(
-                    {},
-                    {
-                        set(target, p, newValue, receiver) {
-                            let res = Reflect.set(...arguments);
-                            if (p in self._children[name]) {
-                                self._children[name][p] = newValue;
-                            }
-                            return res;
-                        },
-                    }
-                ),
-            });
-            this._observe(prop, (value) => {
-                if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) == 'object') {
-                    for (let key in value) {
-                        this[proxyProperty][key] = value[key];
-                    }
+                    taskQueue.free = true;
+                } catch (err) {
+                    console.log(err);
                 }
             });
-            if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(this[prop]) == 'object') {
-                for (let key in this[prop]) {
-                    this[proxyProperty][key] = this[prop][key];
+        });
+};
+
+/**
+ * 处理file
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode} file file节点
+ */
+VC.handleFileNode = function (taskQueue, file) {
+    file.forEach((item, index, list) => {
+        let elem = list.eq(index),
+            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src'));
+
+        taskQueue.add(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].importFile, [src]);
+    });
+};
+
+/**
+ * 处理component
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode} component component节点
+ */
+VC.handleComponentNode = function (taskQueue, component) {
+    component.forEach((item, index, list) => {
+        let elem = list.eq(index),
+            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src')),
+            alias = elem.attr('data-alias');
+
+        // 是否添加随机数
+        if (elem.attr('random') != undefined) {
+            src += `?ver=${Math.random()}`;
+        }
+
+        taskQueue.add(VC.imports, [{ filePath: src, alias }]);
+    });
+};
+
+/**
+ * 处理script
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode} scriptNode script节点
+ * @param {string} componentName 组件名称
+ * @param {string} globalName 最终引入全局变量名称
+ */
+VC.handleScriptNode = function (taskQueue, scriptNode, componentName, globalName) {
+    taskQueue.add(() => {
+        return new Promise((resolve) => {
+            scriptNode.forEach((elem) => {
+                let script = document.createElement('script');
+                script.innerHTML = `(function() {
+                        ${elem.innerHTML.trim()};
+                        if (typeof ${componentName} != 'undefined') {
+                            window['${globalName}'] = window['${globalName}'] || ${componentName};
+                        }
+                    }());`;
+                document.querySelector('body').appendChild(script);
+            });
+            resolve();
+        });
+    });
+};
+
+/**
+ * 处理template
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {string} template 模板字符串
+ * @param {string} globalName 组件名称
+ */
+VC.handleTemplateNode = function (taskQueue, template, globalName, unique) {
+    taskQueue.add(() => {
+        return new Promise((resolve) => {
+            let node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](template);
+
+            if (eval(`typeof ${globalName} != 'undefined'`)) {
+                if (node.length == 0) {
+                    node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](eval(`${globalName}._template`));
+                }
+                if (node.length != 0) {
+                    node.attr(`vc-${unique}`, '');
+                    eval(globalName)._template = node[0].outerHTML;
                 }
             }
+            resolve();
+        });
+    });
+};
+
+/**
+ * 处理style
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode} styleNode 样式字符串
+ * @param {string} unique 唯一标识
+ */
+VC.handleStyleNode = function (taskQueue, styleNode, unique) {
+    taskQueue.add(() => {
+        return new Promise((resolve) => {
+            styleNode.forEach((item, index, list) => {
+                VC.handleStyleNodeItem(list.eq(index), unique);
+            });
+        });
+    });
+};
+
+/**
+ * 处理style
+ * @param {MyNode} elem 元素
+ * @param {string} unique 唯一标识
+ */
+VC.handleStyleNodeItem = function (elem, unique) {
+    let node = elem[0];
+
+    if (elem.attr('disabled') != null) return;
+    document.querySelector('body').appendChild(node);
+    if (elem.attr('scoped') != null) {
+        VC.handleCSSRules(node.sheet.cssRules, unique);
+    }
+};
+
+/**
+ * @description 处理CSSRules
+ * @param {string} cssRules CSS规则
+ * @param {string} unique 唯一标识
+ */
+VC.handleCSSRules = function (cssRules, unique) {
+    for (let i = 0; i < cssRules.length; i++) {
+        switch (cssRules[i].__proto__) {
+            case CSSStyleRule.prototype: // 规则
+                cssRules[i].selectorText = this.handleCSSStyleRule(
+                    cssRules[i].selectorText,
+                    unique
+                );
+                break;
+
+            case CSSMediaRule.prototype: // 媒体查询
+                this.handleCSSRules(cssRules[i].cssRules, unique);
+                break;
+
+            default:
+                break;
         }
     }
+};
 
-    /**
-     * 重置根组件
-     */
-    _reset_root(component) {
-        component._root = this._root;
-        for (let key in component._children) {
-            if (
-                component instanceof Component &&
-                component._children[key] instanceof Component
-            ) {
-                component._reset_root(component._children[key]);
-            }
-        }
-    }
-}
+/**
+ * @description 处理CSSStyleRule
+ * @param {string} selectorText 样式字符串
+ * @param {string} unique 唯一标识
+ */
+VC.handleCSSStyleRule = function (selectorText, unique) {
+    let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
+        selectorList = selectorText.split(',');
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Component);
+    return selectorList
+        .map((selector) => {
+            return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
+        })
+        .join(',');
+};
+
+/**
+ * 处理组件包
+ * @param {TaskQueue} taskQueue 任务队列
+ * @param {MyNode[]} componentPackage 组件包
+ */
+VC.handleComponentPackage = function (taskQueue, componentPackage) {
+    componentPackage.forEach((item, index, list) => {
+        let elem = list.eq(index),
+            componentName = elem.attr('data-name'),
+            globalName = elem.attr('data-alias') || componentName,
+            unique = new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') + Math.floor(Math.random() * 1000);
+
+        // 处理component
+        VC.handleComponentNode(taskQueue, elem.children('component'));
+
+        // 处理script
+        VC.handleScriptNode(taskQueue, elem.children('script'), componentName, globalName);
+
+        // 处理template
+        VC.handleTemplateNode(taskQueue, elem.children('template').html(), globalName, unique);
+
+        // 处理style
+        VC.handleStyleNode(taskQueue, elem.children('style'), unique);
+    });
+};
+
+// 缓存已经引入的组件地址，避免重复引入
+VC.cache = [];
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VC);
 
 
 /***/ }),
@@ -2565,328 +2485,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _my_node_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var _task_queue_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
-/* harmony import */ var _time_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(10);
-
-
-
-
-
-/**
- * 视图组件
- * @author wang.xin
- * @namespace
- * @property {object} config 配置项
- * @property {string} [config.basicPath=''] 基地址
- */
-const VC = {
-    config: {
-        basicPath: '',
-    },
-};
-
-/**
- * @description 引入组件
- * @param {object} option 配置项
- * @param {string} option.basicPath 基地址
- * @param {string} option.filePath 文件路径
- * @param {function} option.handle 引入后执行的方法
- * @param {string} option.alias 别名，当组件名称重复时，可使用别名
- * @returns {Promise}
- */
-VC.imports = function (option) {
-    let {
-        basicPath = VC.config.basicPath,
-        filePath,
-        handle = () => {},
-        alias,
-    } = option;
-
-    filePath = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(filePath);
-
-    // 当是HTTP请求时，不再增加基地址
-    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
-        basicPath = '';
-    }
-
-    let path = `${basicPath}${filePath}`,
-        realPath = path.split('?ver')[0],
-        componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
-
-    if (componentName && componentName[1]) {
-        componentName = componentName[1];
-    } else {
-        console.log(`组件${path}获取失败：文件后缀应该为".vc"！`);
-        return;
-    }
-
-    let globalName = alias || componentName; // 最终引入全局变量的名称
-    if (
-        filePath == undefined ||
-        eval(`typeof ${globalName} !== 'undefined'`) ||
-        VC.cache.includes(realPath)
-    ) {
-        return new Promise((resolve) => {
-            handle.call(VC, {
-                template: eval(`typeof ${globalName} != 'undefined'`)
-                    ? eval(globalName)._template
-                    : '',
-            });
-            resolve();
-        });
-    }
-
-    if (globalName == componentName) {
-        // 仅当没有别名的时候才进行缓存
-        VC.cache.push(realPath);
-    }
-
-    if (!filePath.includes('?ver')) {
-        path += `?ver=${Math.random()}`;
-    }
-
-    return fetch(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].formatPath(path))
-        .then((response) => response.text())
-        .then((res) => {
-            let myNode = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](`<div>${res}</div>`),
-                unique =
-                    new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') +
-                    Math.floor(Math.random() * 1000);
-
-            return new Promise((resolve) => {
-                let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
-
-                taskQueue.free = false;
-                try {
-                    // 定义引入的名称
-
-                    // 处理file
-                    VC.handleFileNode(taskQueue, myNode.children('file'));
-
-                    // 处理component
-                    VC.handleComponentNode(
-                        taskQueue,
-                        myNode.children('component')
-                    );
-
-                    // 处理script
-                    VC.handleScriptNode(
-                        taskQueue,
-                        myNode.children('script'),
-                        componentName,
-                        globalName
-                    );
-
-                    // 处理template
-                    VC.handleTemplateNode(
-                        taskQueue,
-                        myNode.children('template').html(),
-                        globalName,
-                        unique
-                    );
-
-                    // 处理style
-                    VC.handleStyleNode(
-                        taskQueue,
-                        myNode.children('style'),
-                        unique
-                    );
-
-                    taskQueue.add(() =>
-                        new Promise((resolve) => {
-                            resolve();
-                        }).then(() => {
-                            handle.call(VC, {
-                                template: eval(
-                                    `typeof ${globalName} != 'undefined'`
-                                )
-                                    ? eval(globalName)._template
-                                    : '',
-                            });
-                            resolve();
-                        })
-                    );
-
-                    taskQueue.free = true;
-                } catch (err) {
-                    console.log(err);
-                }
-            });
-        });
-};
-
-/**
- * 处理file
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} file file节点
- */
-VC.handleFileNode = function (taskQueue, file) {
-    file.forEach((item, index, list) => {
-        let elem = list.eq(index),
-            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src'));
-
-        taskQueue.add(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].importFile, [src]);
-    });
-};
-
-/**
- * 处理component
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} component component节点
- */
-VC.handleComponentNode = function (taskQueue, component) {
-    component.forEach((item, index, list) => {
-        let elem = list.eq(index),
-            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src')),
-            alias = elem.attr('data-alias');
-
-        // 是否添加随机数
-        if (elem.attr('random') != undefined) {
-            src += `?ver=${Math.random()}`;
-        }
-
-        taskQueue.add(VC.imports, [{ filePath: src, alias }]);
-    });
-};
-
-/**
- * 处理script
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} scriptNode script节点
- * @param {string} componentName 组件名称
- * @param {string} globalName 最终引入全局变量名称
- */
-VC.handleScriptNode = function (
-    taskQueue,
-    scriptNode,
-    componentName,
-    globalName
-) {
-    taskQueue.add(() => {
-        return new Promise((resolve) => {
-            scriptNode.forEach((elem) => {
-                let script = document.createElement('script');
-                script.innerHTML = `(function() {
-                        ${elem.innerHTML.trim()};
-                        if (typeof ${componentName} != 'undefined') {
-                            window['${globalName}'] = window['${globalName}'] || ${componentName};
-                        }
-                    }());`;
-                document.querySelector('body').appendChild(script);
-            });
-            resolve();
-        });
-    });
-};
-
-/**
- * 处理template
- * @param {TaskQueue} taskQueue 任务队列
- * @param {string} template 模板字符串
- * @param {string} globalName 组件名称
- */
-VC.handleTemplateNode = function (taskQueue, template, globalName, unique) {
-    taskQueue.add(() => {
-        return new Promise((resolve) => {
-            let node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](template);
-
-            if (eval(`typeof ${globalName} != 'undefined'`)) {
-                if (node.length == 0) {
-                    node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](eval(`${globalName}._template`));
-                }
-                if (node.length != 0) {
-                    node.attr(`vc-${unique}`, '');
-                    eval(globalName)._template = node[0].outerHTML;
-                }
-            }
-            resolve();
-        });
-    });
-};
-
-/**
- * 处理style
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} styleNode 样式字符串
- * @param {string} unique 唯一标识
- */
-VC.handleStyleNode = function (taskQueue, styleNode, unique) {
-    styleNode.forEach((item, index, list) => {
-        let elem = list.eq(index);
-
-        if (elem.attr('disabled') != null) return;
-        taskQueue.add(() => {
-            return new Promise((resolve) => {
-                document.querySelector('body').appendChild(item);
-                if (elem.attr('scoped') != null) {
-                    VC.handleCSSRules(item.sheet.cssRules, unique);
-                }
-                resolve();
-            });
-        });
-    });
-};
-
-/**
- * @description 处理CSSRules
- * @param {string} cssRules CSS规则
- * @param {string} unique 唯一标识
- */
-VC.handleCSSRules = function (cssRules, unique) {
-    for (let i = 0; i < cssRules.length; i++) {
-        switch (cssRules[i].__proto__) {
-            case CSSStyleRule.prototype: // 规则
-                cssRules[i].selectorText = this.handleCSSStyleRule(
-                    cssRules[i].selectorText,
-                    unique
-                );
-                break;
-
-            case CSSMediaRule.prototype: // 媒体查询
-                this.handleCSSRules(cssRules[i].cssRules, unique);
-                break;
-
-            default:
-                break;
-        }
-    }
-};
-
-/**
- * @description 处理CSSStyleRule
- * @param {string} selectorText 样式字符串
- * @param {string} unique 唯一标识
- */
-VC.handleCSSStyleRule = function (selectorText, unique) {
-    let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
-        selectorList = selectorText.split(',');
-
-    return selectorList
-        .map((selector) => {
-            return selector
-                .trim()
-                .replace(req, (item) => `${item}[vc-${unique}]`);
-        })
-        .join(',');
-};
-
-// 缓存已经引入的组件地址，避免重复引入
-VC.cache = [];
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VC);
-
-
-/***/ }),
-/* 9 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 
 
 /**
@@ -2945,7 +2543,7 @@ class TaskQueue {
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3118,6 +2716,424 @@ class Time {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Time);
+
+
+/***/ }),
+/* 10 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _observe_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _my_node_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony import */ var _event_bus_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2);
+/* harmony import */ var _vc_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
+/* harmony import */ var _task_queue_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8);
+
+
+
+
+
+
+
+/**
+ * 组件基类
+ * @author wang.xin
+ */
+class Component {
+    /**
+     * Creates an instance of Component.
+     * @param {string | DOM | MyNode} selector 选择器
+     */
+    constructor(selector) {
+        let self = this;
+
+        selector = selector || this.__proto__.constructor._template;
+
+        /**
+         * @member {MyNode} node 组件根节点
+         * @memberof Component
+         * @inner
+         */
+        this.node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+
+        if (this.__proto__.constructor._version != undefined) {
+            this.node.attr(`vc-${this.__proto__.constructor._version}`, '');
+        }
+
+        /**
+         * @member {EventBus} _bus 事件总线
+         * @memberof Component
+         * @inner
+         */
+        this._bus = new _event_bus_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+
+        /**
+         * @member {Component} _parent 指向父组件
+         * @memberof Component
+         * @inner
+         */
+        this._parent = null;
+
+        /**
+         * @member {Component} _root 指向根组件
+         * @memberof Component
+         * @inner
+         */
+        this._root = this;
+
+        /**
+         * @member {Proxy} _children 存放子组件的代理对象
+         * @memberof Component
+         * @inner
+         */
+        this._children = new Proxy(
+            {},
+            {
+                get: Reflect.get,
+                set(target, prop, value) {
+                    if (value instanceof Component) {
+                        value._parent = self;
+                        self._reset_root(value);
+                    }
+                    return Reflect.set(target, prop, value);
+                },
+            }
+        );
+
+        /**
+         * @member {function} _destroyed 销毁
+         * @memberof Component
+         * @inner
+         */
+        Object.defineProperty(this, '_destroyed', {
+            writable: false,
+            enumerable: false,
+            value: new Proxy(this._destroyed, {
+                apply(target, thisArg, params) {
+                    let res = Reflect.apply(...arguments);
+                    self._after_destroyed();
+                    return res;
+                },
+            }),
+        });
+
+        /**
+         * @member {function} _send_msg 发送消息
+         * @memberof Component
+         * @inner
+         */
+        Object.defineProperty(this, '_send_msg', {
+            writable: false,
+            enumerable: false,
+            value: new Proxy(this._send_msg, {
+                apply(target, thisArg, params) {
+                    let parent = self._parent;
+
+                    if (params[1] === true) {
+                        while (parent instanceof Component) {
+                            parent._listen_msg(self, ...params);
+                            parent = parent._parent;
+                        }
+                    } else {
+                        parent instanceof Component && parent._listen_msg(self, ...params);
+                    }
+
+                    return Reflect.apply(...arguments);
+                },
+            }),
+        });
+
+        /**
+         * @member {function} _o 监听器
+         * @memberof Component
+         * @inner
+         */
+        Object.defineProperty(this, '_o', {
+            value: new _observe_js__WEBPACK_IMPORTED_MODULE_0__["default"]({
+                target: this,
+                property: {},
+                callback: {},
+            }),
+        });
+
+        this._watch_data();
+        this._watch_props();
+        this._mount_component();
+    }
+
+    /**
+     * 子组件内加载完成后执行的函数
+     */
+    _mounted() {}
+
+    /**
+     * 注册事件
+     */
+    _event() {}
+
+    /**
+     * 设置属性
+     */
+    _data() {}
+
+    /**
+     * 设置监听
+     */
+    _watch() {}
+
+    /**
+     * 计算属性
+     */
+    _computed() {}
+
+    /**
+     * 设置传参
+     */
+    _props() {
+        return {};
+    }
+
+    /**
+     * 设置监听属性
+     */
+    _watch_data() {
+        let res = this._data(),
+            methods = this._watch();
+
+        if (res != null) {
+            for (let key in res) {
+                let callback = () => {};
+
+                if (methods && methods[key]) {
+                    callback = methods[key];
+                }
+                this._observe(key, res[key], callback);
+            }
+        }
+    }
+
+    /**
+     * 监听入参
+     */
+    _watch_props() {
+        let props = this._props();
+
+        if (props != null) {
+            for (let key in props) {
+                this._observe(key, props[key]);
+            }
+        }
+    }
+
+    /**
+     * 销毁组件
+     */
+    _destroyed() {}
+
+    /**
+     * 销毁后执行移除节点，并删除引用
+     */
+    _after_destroyed() {
+        this.node.remove();
+
+        // 有父节点
+        if (this._parent instanceof Component) {
+            for (let key in this._parent._children) {
+                this._parent._children[key] === this && delete this._parent._children[key];
+            }
+        }
+    }
+
+    /**
+     * 发送消息，仅限用于子组件给父组件传递消息
+     * @param {object} 消息
+     * @example
+     * this._send_msg({
+     *     action: '动作'
+     *     info: '消息'
+     * })
+     */
+    _send_msg(msg) {}
+
+    /**
+     * 监听消息，仅限用于父组件监听子组件，使用时重写该方法
+     * @param {Component} component 消息来源组件
+     * @param {object} msg 消息
+     */
+    _listen_msg(component, msg) {}
+
+    /**
+     * 监听属性
+     * @param {string} property 属性
+     * @param {*} value 值
+     * @param {*} callback 响应方法
+     * @param {boolean} [deep=true] 是否深度监听
+     */
+    _observe(property, value, callback = () => {}, deep = true) {
+        if (arguments.length == 1) {
+            this._observe(property, undefined, callback);
+        } else if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) === 'function') {
+            this._observe(property, undefined, value);
+        } else {
+            if (property in this) {
+                if (value != undefined) {
+                    this[property] = value;
+                }
+                this._o.addCallback(property, callback, this);
+            } else {
+                this._o.defineObject({
+                    target: this,
+                    property,
+                    value,
+                    callback: callback.bind(this),
+                    deep,
+                });
+            }
+        }
+    }
+
+    /**
+     * 挂载组件
+     */
+    _mount_component() {
+        let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
+
+        taskQueue.free = false;
+        this.node.find('slot').forEach((elem, index, list) => {
+            let slot = list.eq(index), // 插槽
+                componentName = slot.attr('data-component'), // 组件类名
+                name = slot.attr('data-name'), // 实例化名称
+                prop = slot.attr('data-prop'), // 关联属性
+                src = slot.attr('data-src'); // 组件地址
+
+            if (componentName == null || componentName == '') {
+                // 当没有定义 data-component 时，根据 data-src 解析地址
+                if (src == null || src == '') {
+                    return;
+                }
+                let path = _util_js__WEBPACK_IMPORTED_MODULE_3__["default"].eval(src);
+                componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
+                if (componentName && componentName[1]) {
+                    componentName = componentName[1];
+                } else {
+                    console.log('组件文件后缀应该为".vc"！');
+                    return;
+                }
+            }
+
+            // 定义实例化名称
+            name = name || componentName.replace(componentName[0], componentName[0].toLowerCase());
+
+            if (eval(`typeof ${componentName} == 'undefined'`) && src != null) {
+                taskQueue.add(_vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].imports, [
+                    {
+                        filePath: src,
+                        handle: () => {
+                            this._instantiate_component({
+                                name,
+                                componentName,
+                                slot,
+                                prop,
+                            });
+                        },
+                    },
+                ]);
+            } else {
+                // 已存在指定的组件变量
+                this._instantiate_component({
+                    name,
+                    componentName,
+                    slot,
+                    prop,
+                });
+            }
+        });
+        taskQueue.add(() => {
+            try {
+                this._mounted();
+            } catch (err) {
+                console.log(err);
+            }
+        });
+        taskQueue.add(() => this._event());
+        taskQueue.free = true;
+    }
+
+    /**
+     * 实例化子组件
+     * @param {object} params 入参
+     * @param {string} params.name 组件实例化变量名
+     * @param {string} params.componentName 组件类名
+     * @param {string} params.prop 关联属性
+     * @param {MyNode} params.slot 插槽
+     */
+    _instantiate_component(params) {
+        let { name, componentName, slot, prop } = params;
+
+        if (
+            eval(`typeof ${componentName} == 'undefined'`) ||
+            !eval(`${componentName}.prototype instanceof Component`)
+        ) {
+            console.log(`${componentName}未定义！`);
+            return;
+        }
+
+        this._children[name] = eval(`new ${componentName}()`);
+        this._children[name].node.addClass(slot.attr('class'));
+        slot.replaceWith(this._children[name].node);
+
+        // 处理关联参数
+        if (prop != undefined && prop != '') {
+            let self = this,
+                proxyProperty = '__' + prop;
+            Object.defineProperty(this, proxyProperty, {
+                value: new Proxy(
+                    {},
+                    {
+                        set(target, p, newValue, receiver) {
+                            let res = Reflect.set(...arguments);
+                            if (p in self._children[name]) {
+                                self._children[name][p] = newValue;
+                            }
+                            return res;
+                        },
+                    }
+                ),
+            });
+            this._observe(prop, (value) => {
+                if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) == 'object') {
+                    for (let key in value) {
+                        this[proxyProperty][key] = value[key];
+                    }
+                }
+            });
+            if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(this[prop]) == 'object') {
+                for (let key in this[prop]) {
+                    this[proxyProperty][key] = this[prop][key];
+                }
+            }
+        }
+    }
+
+    /**
+     * 重置根组件
+     */
+    _reset_root(component) {
+        component._root = this._root;
+        for (let key in component._children) {
+            if (component instanceof Component && component._children[key] instanceof Component) {
+                component._reset_root(component._children[key]);
+            }
+        }
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Component);
 
 
 /***/ }),
@@ -3397,7 +3413,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _form_icon_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(27);
 /* harmony import */ var _base_util_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2);
 /* harmony import */ var _base_my_node_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(10);
 
 
 
@@ -5376,6 +5392,36 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * type = 1, 代表选中的个数已经达到最大值
          */
         this.error = (type) => {};
+
+        /**
+         * @member {*} disabled 不可更改项
+         * @memberof Checkbox
+         * @inner
+         */
+        this._observe('disabled', (value) => {
+            let pos = this.findItem(value, this.standardList);
+
+            this.disabledPos = _base_util_js__WEBPACK_IMPORTED_MODULE_2__["default"].type(pos) === 'array' ? pos : [pos];
+        });
+
+        /**
+         * @member {number[]} disabledPos 不可更改项在列表中的位置
+         * @memberof Checkbox
+         * @inner
+         */
+        this._observe('disabledPos', (value) => {
+            this.node
+                .find('.ly-checkbox_item')
+                .removeClass('ly-checkbox_item-disabled');
+            value.forEach((elem) => {
+                let node = this.node.find('.ly-checkbox_item').eq(elem);
+
+                if (this.all !== false) {
+                    node = this.node.find('.ly-checkbox_item').eq(elem + 1);
+                }
+                node.addClass('ly-checkbox_item-disabled');
+            });
+        });
     }
 
     /**
@@ -5385,7 +5431,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         // 单个选项
         this.node.on(
             'click',
-            '.ly-checkbox_item[data-type="single"]',
+            '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)',
             (e, target) => {
                 if (
                     this.maxCount != -1 &&
@@ -5415,9 +5461,13 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         );
 
         // 全选按钮
-        this.node.on('click', '.ly-checkbox_item[data-type="all"]', () => {
-            this.allCheck = !this.allCheck;
-        });
+        this.node.on(
+            'click',
+            '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)',
+            () => {
+                this.allCheck = !this.allCheck;
+            }
+        );
     }
 
     /**
@@ -5427,6 +5477,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      * @param {array} option.list 数据列表
      * @param {string} [option.all] 全选项名称（当传参的时候，代表有全选）
      * @param {number | string | object | array} option.check 选中项
+     * @param {number | string | object | array} option.disabled 不可更改项
      * @param {boolean} [option.allCheck] 全选（true 代表选中）
      * @param {function} option.change 切换选中项后触发的事件
      * @param {number} option.maxCount 最多可选个数
@@ -5437,6 +5488,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this.list = option.list || [];
         this.all = option.all || false;
         this.check = option.check != undefined ? option.check : [];
+        this.disabled = option.disabled != undefined ? option.disabled : [];
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
@@ -5651,13 +5703,15 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-checkbox {
     box-sizing: content-box;
 }
 
-.ly-checkbox .ly-checkbox_list > .ly-checkbox_item:hover {
+.ly-checkbox
+    .ly-checkbox_list
+    > .ly-checkbox_item:not(.ly-checkbox_item-disabled):hover {
     color: var(--ly-checkbox_color_active);
 }
 
 .ly-checkbox
     .ly-checkbox_list
-    > .ly-checkbox_item:hover
+    > .ly-checkbox_item:not(.ly-checkbox_item-disabled):hover
     > .ly-checkbox_item-icon {
     border-color: var(--ly-checkbox_color_active);
 }
@@ -5669,6 +5723,22 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-checkbox {
 
 .ly-checkbox .ly-checkbox_item-active > .ly-checkbox_item-icon::after {
     transform: translate(-50%, -67.5%) rotate(45deg) scale(1);
+}
+
+.ly-checkbox .ly-checkbox_item-disabled {
+    color: #ddd;
+    cursor: not-allowed;
+}
+
+.ly-checkbox .ly-checkbox_item-disabled > .ly-checkbox_item-icon {
+    border-color: #ddd;
+}
+
+.ly-checkbox
+    .ly-checkbox_item-active.ly-checkbox_item-disabled
+    > .ly-checkbox_item-icon {
+    border-color: #ddd;
+    background-color: #ddd;
 }
 `, ""]);
 // Exports
@@ -6352,7 +6422,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _pagination_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(45);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 
 
 
@@ -6879,7 +6949,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _file_upload_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(48);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 /* harmony import */ var _file_node_file_node_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(50);
 /* harmony import */ var _file_preview_file_preview_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(53);
 
@@ -7295,7 +7365,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _file_node_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(51);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 
 
 
@@ -7678,7 +7748,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _file_preview_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(54);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 
 
 
@@ -8087,7 +8157,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _scroll_top_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(57);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 
 
 
@@ -8793,7 +8863,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(63);
-/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 
 
 
@@ -8966,6 +9036,673 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-popup {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
+/***/ }),
+/* 65 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(66);
+
+
+/**
+ * 扩展功能
+ * @exports Extend
+ */
+const Extend = {};
+
+/**
+ * 水印
+ * @see WaterMark
+ */
+Extend.WaterMark = _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_0__["default"];
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Extend);
+
+
+/***/ }),
+/* 66 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(10);
+
+
+/**
+ * 水印
+ * @author wang.xin63
+ * @extends Component
+ * @example
+ * const waterMark = new WaterMark();
+ * waterMark.load({
+ *     parent: dom, // 水印容器，即水印添加到哪个元素中，建议与iframe并列
+ *     show: true, // 是否显示水印
+ *     position: 'absolute', // 水印显示方式，['fixed', 'absolute']
+ *     getMarkInfo: () => {
+ *         return [];
+ *     }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
+ *     interval: 1000, // 刷新频率，单位ms
+ * });
+ */
+class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"] {
+    constructor() {
+        super(document.createElement('div'));
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+        this.init();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * 透明度
+         * @member {number} opacity
+         * @memberof WaterMark#
+         * @default 0.16
+         */
+        this.opacity = 0.16;
+
+        /**
+         * 水印实例化对象
+         * @member {CanvasMark} mask
+         * @memberof WaterMark#
+         */
+        this.mark = new CanvasMark();
+
+        /**
+         * 备份节点，当节点发生变化时，通过备份节点恢复
+         * @member {Node} copyNode
+         * @memberof WaterMark#
+         */
+        this.copyNode = null;
+
+        /**
+         * @member {number} interval 刷新频率
+         * @memberof WaterMark#
+         * @default 1000
+         */
+        this._observe('interval', 1000, (value) => {
+            setInterval(() => {
+                this.markInfo = this.options.getMarkInfo();
+            }, value);
+        });
+
+        /**
+         * 水印信息
+         * @member {string[]} markInfo
+         * @memberof WaterMark#
+         */
+        this._observe('markInfo', (value) => {
+            if (!Array.isArray(value) || value.length == 0) {
+                return;
+            }
+            this.mark.render(value);
+        });
+    }
+
+    /**
+     * 初始化
+     * @todo 添加水印节点
+     * @todo 渲染样式，不能通过外联样式，否则修改样式不会触发节点更新
+     */
+    init() {
+        this.node.append(this.mark.node).css({
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            'z-index': 999999,
+            'pointer-events': 'none',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+            opacity: this.opacity,
+        });
+    }
+
+    /**
+     * 加载
+     * @param {object} options 入参
+     * @param {boolean} options.show 是否显示
+     * @param {object} options.parent 父节点
+     * @param {string} options.position 显示范围
+     * @param {number} options.interval 刷新频率
+     * @param {function} options.getMarkInfo 获取水印信息，返回的是一个字符串数组
+     */
+    load(options) {
+        this.options = options; // 缓存入参
+
+        // 控制显示
+        if (options.show) {
+            new LY.MyNode(options.parent).prepend(this.node);
+            this.node.css('position', options.position);
+            this.copyNode = new LY.MyNode(this.node[0].cloneNode(true));
+            this.markInfo = options.getMarkInfo();
+
+            // 设置刷新频率
+            if (typeof options.interval === 'number') {
+                this.interval = options.interval;
+            }
+            this.listenNodeChange();
+        }
+    }
+
+    /**
+     * 监听节点变化
+     */
+    listenNodeChange() {
+        if (typeof MutationObserver == 'undefined') {
+            return;
+        }
+
+        this.mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((elem) => {
+                let targetNode = new LY.MyNode(elem.target);
+
+                // 当移除的是该实例节点
+                if (this.node[0] === elem.removedNodes[0]) {
+                    targetNode.prepend(this.node);
+                }
+
+                // 当移除的是水印节点
+                if (this.mark.node[0] === elem.removedNodes[0]) {
+                    this.node.append(this.mark.node);
+                }
+
+                // 节点发生变化
+                if (
+                    targetNode[0] === this.node[0] ||
+                    targetNode[0] === this.mark.node[0]
+                ) {
+                    // 修改属性值，但是改变前后值没有变化
+                    if (
+                        elem.addedNodes.length == 0 &&
+                        targetNode.attr(elem.attributeName) == elem.oldValue
+                    ) {
+                        return;
+                    }
+
+                    // 新增节点，但是新增的是节点本身，则不需要处理
+                    if (
+                        elem.addedNodes[0] === this.node[0] ||
+                        elem.addedNodes[0] === this.mark.node[0]
+                    ) {
+                        return;
+                    }
+
+                    // 先断开原先的关联，再重新建立链接
+                    this.mutationObserver.disconnect();
+                    this.updateMark();
+                    this.addLinkedNode();
+                }
+            });
+        });
+        this.addLinkedNode();
+    }
+
+    /**
+     * 添加关联节点
+     */
+    addLinkedNode() {
+        this.mutationObserver.observe(this.node.parent()[0], {
+            attributes: true,
+            attributeOldValue: true,
+            childList: true,
+            subtree: true,
+        });
+    }
+
+    /**
+     * 更新水印
+     */
+    updateMark() {
+        // 备份节点替换主节点，然后重新备份节点
+        this.node.replaceWith(this.copyNode);
+        this.node = this.copyNode;
+        this.copyNode = new LY.MyNode(this.node[0].cloneNode(true));
+        // 重新创建canvas，然后替换
+        this.mark = new CanvasMark();
+        this.node.find('canvas').replaceWith(this.mark.node);
+        // 刷新水印信息
+        this.markInfo = this.options.getMarkInfo();
+    }
+}
+
+/**
+ * 通过 canvas 绘制水印
+ * @extends Component
+ */
+class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"] {
+    constructor() {
+        super(document.createElement('canvas'));
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * 宽度
+         * @member {number} width
+         * @memberof CanvasMark#
+         */
+        this.width = 3840;
+
+        /**
+         * 高度
+         * @member {number} height
+         * @memberof CanvasMark#
+         */
+        this.height = 2560;
+
+        /**
+         * @member {Node} canvas 画布
+         * @memberof CanvasMark#
+         */
+        this.canvas = this.node[0];
+
+        /**
+         * 绘制上下文
+         * @member {CanvasRenderingContext2D} context
+         * @memberof CanvasMark#
+         */
+        this.context = this.canvas.getContext('2d');
+
+        /**
+         * @member {string} fontSize 字体大小
+         * @memberof CanvasMark#
+         */
+        this.fontSize = 12;
+
+        /**
+         * @member {string} fillStyle 字体样式
+         * @memberof CanvasMark#
+         */
+        this.fillStyle = '#333';
+    }
+
+    /**
+     * 渲染
+     * @param {object} infoList 信息列表
+     * @todo 1. 清除画布内容
+     * @todo 2. 设置基础样式
+     * @todo 3. 计算水印位置
+     * @todo 4. 循环绘制水印
+     */
+    render(infoList) {
+        let context = this.context,
+            base = {
+                x: 50,
+                y: 50,
+            },
+            padding = {
+                x: 240, // 行间距
+                y: 180, // 列间距
+            },
+            count = {
+                x: this.height / padding.x,
+                y: this.width / padding.y,
+            }; // 个数
+
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        context.font = `normal ${this.fontSize}px Regular`;
+        context.fillStyle = this.fillStyle;
+        infoList = this.calcPosition(infoList);
+
+        for (let row = 0; row < count.x; row++) {
+            for (let col = 0; col < count.y; col++) {
+                this.drawFont(
+                    infoList,
+                    base.x + row * padding.x,
+                    base.y + col * padding.y
+                );
+            }
+        }
+    }
+
+    /**
+     * 绘制文字
+     * @param {object[]} infoList 文字信息
+     * @param {number} left 左侧距离
+     * @param {number} top 顶部距离
+     * @param {number} rotate 旋转角度
+     */
+    drawFont(infoList, left = 0, top = 0, rotate = (-30 * Math.PI) / 360) {
+        let context = this.context;
+
+        context.setTransform();
+        context.translate(left, top);
+        context.rotate(rotate);
+        infoList.forEach((info) => {
+            context.fillText(info.text, info.x, info.y);
+        });
+    }
+
+    /**
+     * 计算字符串绘制起始坐标
+     * @param {string[]} infoList 信息列表
+     * @return {object[]}
+     * @return {string}
+     * @return {number}
+     * @return {number}
+     */
+    calcPosition(infoList) {
+        let context = this.context,
+            lineHeight = this.fontSize * 1.5,
+            baseLength = context.measureText(infoList[0]).width;
+
+        // 做居中对齐处理
+        return infoList.map((info, index) => {
+            return {
+                text: info,
+                x: (baseLength - context.measureText(info).width) / 2,
+                y: lineHeight * index,
+            };
+        });
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WaterMark);
+
+
+/***/ }),
+/* 67 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/**
+ * XML 节点
+ */
+class XMLNode {
+    static ROOT_NODE = 0;
+    static ELEMENT_NODE = 1;
+    static ATTRIBUTE_NODE = 2;
+    static TEXT_NODE = 3;
+    static CDATA_SECTION_NODE = 4;
+    static COMMENT_NODE = 8;
+
+    constructor(data, nodeName) {
+        if (typeof data === 'number') {
+            this.nodeType = data;
+            this.nodeName = nodeName;
+            this.childNodes = []; // 所有 Node
+        } else {
+            return parseXML(data);
+        }
+    }
+
+    /**
+     * 添加子节点
+     * @param {XMLNode} 节点
+     */
+    append(xmlNode) {
+        if (!xmlNode instanceof XMLNode) {
+            return;
+        }
+        this.childNodes.push(xmlNode);
+        xmlNode.parentNode = this;
+        if (
+            (this instanceof RootNode || this instanceof ElementNode) &&
+            xmlNode instanceof ElementNode
+        ) {
+            this.children.push(xmlNode);
+        }
+    }
+
+    /**
+     * 转为 JSON 格式
+     */
+    toJson(result = {}) {
+        if (this.children.length == 0) {
+            return this.text;
+        }
+        this.children.forEach((elementNode) => {
+            if (result[elementNode.nodeName] == null) {
+                let nodeList = this.children.filter(
+                    (item) => item.nodeName === elementNode.nodeName
+                );
+
+                result[elementNode.nodeName] = nodeList.length > 1 ? [] : {};
+            }
+            if (result[elementNode.nodeName] instanceof Array) {
+                result[elementNode.nodeName].push(elementNode.toJson());
+            } else {
+                result[elementNode.nodeName] = elementNode.toJson();
+            }
+        });
+        return result;
+    }
+}
+
+/**
+ * 根节点
+ */
+class RootNode extends XMLNode {
+    constructor() {
+        super(XMLNode.ROOT_NODE, '#root');
+        this.children = [];
+    }
+}
+
+/**
+ * 元素节点
+ */
+class ElementNode extends XMLNode {
+    constructor(nodeName, position) {
+        super(XMLNode.ELEMENT_NODE, nodeName);
+        this.position = position;
+        this.attribute = {};
+        this.children = [];
+    }
+}
+
+/**
+ * 注释节点
+ */
+class CommentNode extends XMLNode {
+    constructor(text) {
+        super(XMLNode.COMMENT_NODE, '#comment');
+        this.nodeValue = text;
+    }
+}
+
+/**
+ * 文本节点
+ */
+class TextNode extends XMLNode {
+    constructor(text) {
+        super(XMLNode.TEXT_NODE, '#text');
+        this.nodeValue = text;
+    }
+}
+
+/**
+ * CDATA节点
+ */
+class CdataSectionNode extends XMLNode {
+    constructor(text) {
+        super(XMLNode.CDATA_SECTION_NODE, '#cdata-section');
+        this.nodeValue = text;
+    }
+}
+
+/**
+ * xml解析为json
+ * @param {string} data XML文本
+ * @example parseXML(data)
+ */
+function parseXML(data) {
+    /**
+     * ElementNode: /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)/
+     * CommentNode: /(<!--([\s\S]*?)-->)/
+     * CdataSectionNode: /(<!\[CDATA\[([\s\S]*?)\]\]>)/
+     * 0 匹配到的字符串
+     * 1 ElementNode节点标志位，匹配失败为 undefined
+     * 2 标签或闭合标签
+     * 3 属性值
+     * 4 单标签节点标志位，匹配成功为 undefined
+     * 5 CommentNode节点标志位，匹配失败为 undefined
+     * 6 注释
+     * 7 CDATA节点标志位，匹配失败为 undefined
+     * 8 值
+     */
+    let xmlRegExp =
+        /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)|(<!--([\s\S]*?)-->)|(<!\[CDATA\[([\s\S]*?)\]\]>)/gi; // 匹配器
+    let root = new RootNode(), // 根节点
+        stack = [root]; // 栈，至少含有根节点一个元素
+
+    root.innerHTML = data;
+    xml2json();
+    parseInnerText();
+
+    return root;
+
+    /**
+     * 解析XML文本
+     */
+    function xml2json() {
+        let topNode = stack[stack.length - 1], // 栈顶节点
+            lastIndex = xmlRegExp.lastIndex,
+            result = xmlRegExp.exec(data);
+
+        if (result) {
+            let {
+                1: elementNodeSign,
+                2: elementLabel,
+                3: attribute,
+                4: singleLabelSign,
+                5: commentNodeSign,
+                6: comment,
+                7: cdataSectionNodeSign,
+                8: cdata,
+                index,
+            } = result;
+
+            if (lastIndex !== index) {
+                // TextNode
+                topNode.append(new TextNode(data.slice(lastIndex, index)));
+            }
+
+            if (commentNodeSign !== undefined) {
+                // CommentNode
+                topNode.append(new CommentNode(comment));
+            } else if (cdataSectionNodeSign !== undefined) {
+                // CdataSectionNode
+                topNode.append(new CdataSectionNode(cdata));
+            } else if (elementNodeSign !== undefined) {
+                // ElementNode
+                let elementNode = new ElementNode(elementLabel, {
+                    0: index,
+                    1: xmlRegExp.lastIndex,
+                });
+                parseAttribute(elementNode, attribute);
+                if (singleLabelSign !== undefined) {
+                    topNode.append(elementNode);
+                } else {
+                    parseDoubleLabel(elementNode, result);
+                }
+            }
+            xml2json();
+        } else {
+            if (lastIndex !== data.length) {
+                // TextNode
+                topNode.append(new TextNode(data.slice(lastIndex)));
+            }
+        }
+    }
+
+    /**
+     * 解析双标签节点
+     * @param {object} elem 节点
+     * @param {object} res 匹配结果
+     */
+    function parseDoubleLabel(elementNode, res) {
+        let topNode = stack[stack.length - 1]; // 栈顶节点
+
+        if (res[2] === `/${topNode.nodeName}`) {
+            // 闭合标签，先赋值，再出栈
+            topNode.position[2] = res.index;
+            topNode.position[3] = xmlRegExp.lastIndex;
+            topNode.innerHTML = data.slice(topNode.position[1], topNode.position[2]);
+            topNode.outerHTML = data.slice(topNode.position[0], topNode.position[3]);
+            stack.pop();
+        } else {
+            // 非闭合标签，继续进栈
+            topNode.append(elementNode);
+            stack.push(elementNode);
+        }
+    }
+
+    /**
+     * 解析属性
+     * @param {object} elem 节点
+     * @param {string} attribute 属性字符串
+     */
+    function parseAttribute(elem, attribute) {
+        let attributeReg = /([a-z\-:]+)(="([\s\S]*?)")?/gi;
+
+        if (attribute != undefined && attribute.trim() != '') {
+            attribute.replace(attributeReg, (item, key, value1, value2) => {
+                elem.attribute[key] = value1 !== undefined ? value2 : '';
+                return '';
+            });
+        }
+    }
+
+    /**
+     * 解析节点内的文本内容
+     */
+    function parseInnerText(node = root) {
+        if (!node instanceof RootNode && !node instanceof ElementNode) {
+            return;
+        }
+
+        let text = '';
+
+        if (node.childNodes.length == 0) {
+            return '';
+        }
+        node.childNodes.forEach((child) => {
+            if (child instanceof TextNode) {
+                text += child.nodeValue;
+            } else if (child instanceof ElementNode) {
+                text += parseInnerText(child);
+            }
+        });
+        node.text = text.trim();
+        node.innerText = text;
+        return node.innerText;
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (XMLNode);
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -9049,16 +9786,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _modules_base_ajax_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _modules_base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-/* harmony import */ var _modules_base_event_bus_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
-/* harmony import */ var _modules_base_my_node_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7);
-/* harmony import */ var _modules_base_observe_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
-/* harmony import */ var _modules_base_task_queue_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9);
-/* harmony import */ var _modules_base_time_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(10);
-/* harmony import */ var _modules_base_util_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(2);
-/* harmony import */ var _modules_base_vc_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(8);
+/* harmony import */ var _modules_base_util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _modules_base_vc_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
+/* harmony import */ var _modules_base_component_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(10);
+/* harmony import */ var _modules_base_event_bus_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(4);
+/* harmony import */ var _modules_base_my_node_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+/* harmony import */ var _modules_base_observe_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(3);
+/* harmony import */ var _modules_base_task_queue_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(8);
+/* harmony import */ var _modules_base_time_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(9);
 /* harmony import */ var _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(11);
 /* harmony import */ var _modules_form_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(12);
+/* harmony import */ var _modules_extend_index_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(65);
+/* harmony import */ var _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(67);
 
 
 
@@ -9071,19 +9810,93 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-    Ajax: _modules_base_ajax_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Util: _modules_base_util_js__WEBPACK_IMPORTED_MODULE_7__["default"],
-    VC: _modules_base_vc_js__WEBPACK_IMPORTED_MODULE_8__["default"],
-    Component: _modules_base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-    EventBus: _modules_base_event_bus_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-    MyNode: _modules_base_my_node_js__WEBPACK_IMPORTED_MODULE_3__["default"],
-    Observe: _modules_base_observe_js__WEBPACK_IMPORTED_MODULE_4__["default"],
-    TaskQueue: _modules_base_task_queue_js__WEBPACK_IMPORTED_MODULE_5__["default"],
-    Time: _modules_base_time_js__WEBPACK_IMPORTED_MODULE_6__["default"],
-    Watcher: _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_9__["default"],
-    Form: _modules_form_index_js__WEBPACK_IMPORTED_MODULE_10__["default"],
-});
+
+
+/**
+ * 对外暴露的全局变量
+ * @namespace
+ */
+const LY = {};
+
+/**
+ * 接口请求相关方法
+ * @see module:Ajax
+ */
+LY.Ajax = _modules_base_ajax_js__WEBPACK_IMPORTED_MODULE_0__["default"];
+
+/**
+ * 常用工具方法
+ * @see module:Util
+ */
+LY.Util = _modules_base_util_js__WEBPACK_IMPORTED_MODULE_1__["default"];
+
+/**
+ * 组件引入相关方法
+ * @see module:VC
+ */
+LY.VC = _modules_base_vc_js__WEBPACK_IMPORTED_MODULE_2__["default"];
+
+/**
+ * 扩展功能
+ * @see module:Extend
+ */
+LY.Extend = _modules_extend_index_js__WEBPACK_IMPORTED_MODULE_11__["default"];
+
+/**
+ * 组件基类
+ * @see Component
+ */
+LY.Component = _modules_base_component_js__WEBPACK_IMPORTED_MODULE_3__["default"];
+
+/**
+ * 事件总线
+ * @see EventBus
+ */
+LY.EventBus = _modules_base_event_bus_js__WEBPACK_IMPORTED_MODULE_4__["default"];
+
+/**
+ * 封装 DOM 操作
+ * @see MyNode
+ */
+LY.MyNode = _modules_base_my_node_js__WEBPACK_IMPORTED_MODULE_5__["default"];
+
+/**
+ * 监听器
+ * @see Observe
+ */
+LY.Observe = _modules_base_observe_js__WEBPACK_IMPORTED_MODULE_6__["default"];
+
+/**
+ * 任务队列
+ * @see TaskQueue
+ */
+LY.TaskQueue = _modules_base_task_queue_js__WEBPACK_IMPORTED_MODULE_7__["default"];
+
+/**
+ * 时间
+ * @see Time
+ */
+LY.Time = _modules_base_time_js__WEBPACK_IMPORTED_MODULE_8__["default"];
+
+/**
+ * 观察者
+ * @see Watcher
+ */
+LY.Watcher = _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_9__["default"];
+
+/**
+ * 表单
+ * @see Form
+ */
+LY.Form = _modules_form_index_js__WEBPACK_IMPORTED_MODULE_10__["default"];
+
+/**
+ * XML 节点
+ * @see XMLNode
+ */
+LY.XMLNode = _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_12__["default"];
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LY);
 
 })();
 
