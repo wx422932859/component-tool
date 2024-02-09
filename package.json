@@ -4,7 +4,7 @@
     "description": "基于原生js的组件开发工具",
     "main": "index.js",
     "scripts": {
-        "test": "webpack-dev-server --config webpack.config.dev.js",
+        "start": "webpack-dev-server --config webpack.config.dev.js",
         "build": "webpack --mode=none && npm run docs",
         "build:pro": "webpack --mode=production",
         "docs": "jsdoc -c ./jsdoc.conf.json"

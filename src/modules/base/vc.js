@@ -299,6 +299,9 @@ VC.handleComponentPackage = function (taskQueue, componentPackage) {
             globalName = elem.attr('data-alias') || componentName,
             unique = new Time().format('HHMMSS') + Math.floor(Math.random() * 1000);
 
+        // 处理file
+        VC.handleFileNode(taskQueue, elem.children('file'));
+
         // 处理component
         VC.handleComponentNode(taskQueue, elem.children('component'));
 
