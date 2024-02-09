@@ -110,19 +110,16 @@ VC.imports = function (option) {
                     // 处理style
                     VC.handleStyleNode(taskQueue, myNode.children('style'), unique);
 
-                    taskQueue.add(() =>
-                        new Promise((resolve) => {
-                            resolve();
-                        }).then(() => {
+                    taskQueue.add(() => {
+                        return new Promise((resolve) => {
                             handle.call(VC, {
                                 template: eval(`typeof ${globalName} != 'undefined'`)
                                     ? eval(globalName)._template
                                     : '',
                             });
                             resolve();
-                        })
-                    );
-
+                        });
+                    });
                     taskQueue.free = true;
                 } catch (err) {
                     console.log(err);
@@ -227,6 +224,7 @@ VC.handleStyleNode = function (taskQueue, styleNode, unique) {
             styleNode.forEach((item, index, list) => {
                 VC.handleStyleNodeItem(list.eq(index), unique);
             });
+            resolve();
         });
     });
 };
