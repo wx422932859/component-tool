@@ -15,9 +15,10 @@ class Component {
      * @param {string | DOM | MyNode} selector 选择器
      */
     constructor(selector) {
-        let self = this;
+        let self = this,
+            $constructor = this.__proto__.constructor;
 
-        selector = selector || this.__proto__.constructor._template;
+        selector = selector || $constructor._template;
 
         /**
          * @member {MyNode} node 组件根节点
@@ -26,8 +27,8 @@ class Component {
          */
         this.node = new MyNode(selector);
 
-        if (this.__proto__.constructor._version != undefined) {
-            this.node.attr(`vc-${this.__proto__.constructor._version}`, '');
+        if ($constructor._version != undefined) {
+            this.node.attr(`vc-${$constructor._version}`, '');
         }
 
         /**
