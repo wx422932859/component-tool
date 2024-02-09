@@ -1,4 +1,13 @@
 const path = require('path');
+const webpack = require('webpack');
+const packageInfo = require('./package.json');
+const moment = require('moment');
+const markInfo = [
+    `name: ${packageInfo.name}`,
+    `package: ${moment().format('YYYY-MM-DD HH:mm:SS')}`,
+    `version: ${packageInfo.version}`,
+    `exports: LY`,
+];
 
 module.exports = {
     entry: './src/index.js',
@@ -30,4 +39,5 @@ module.exports = {
             },
         ],
     },
+    plugins: [new webpack.BannerPlugin(markInfo.join('\n'))],
 };

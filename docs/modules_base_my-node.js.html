@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>modules/base/my-node.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="LY.html">LY</a></li></ul><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Ajax.html#.filterHTML">filterHTML</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatData">formatData</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatParam">formatParam</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.load">load</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.req">req</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.request">request</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.upload">upload</a></li></ul></li><li><a href="module-Extend.html">Extend</a></li><li><a href="module-Util.html">Util</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Util.html#.calStringLength">calStringLength</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.class2type">class2type</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.compare">compare</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.debounce">debounce</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.deepClone">deepClone</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.eval">eval</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.exitFullScreen">exitFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.formatPath">formatPath</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.importFile">importFile</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isArrayLike">isArrayLike</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isFunction">isFunction</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isWindow">isWindow</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.proxyToJSON">proxyToJSON</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.setTimeout">setTimeout</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.throttle">throttle</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toArray">toArray</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toFullScreen">toFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toLowerUpper">toLowerUpper</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.type">type</a></li></ul></li><li><a href="module-VC.html">VC</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSRules">handleCSSRules</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSStyleRule">handleCSSStyleRule</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleComponentNode">handleComponentNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleComponentPackage">handleComponentPackage</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleFileNode">handleFileNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleScriptNode">handleScriptNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleStyleNode">handleStyleNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleStyleNodeItem">handleStyleNodeItem</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleTemplateNode">handleTemplateNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.imports">imports</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="CanvasMark.html">CanvasMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CanvasMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#calcPosition">calcPosition</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#drawFont">drawFont</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#render">render</a></li></ul></li><li><a href="CdataSectionNode.html">CdataSectionNode</a></li><li><a href="Checkbox.html">Checkbox</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Checkbox.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setAllItem">setAllItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="CommentNode.html">CommentNode</a></li><li><a href="Component.html">Component</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Component.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Component.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Component.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Component.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Component.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Component.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Component.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Component.html#_watch_props">_watch_props</a></li></ul></li><li><a href="DropList.html">DropList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="DropList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="DropList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="DropList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="DropList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="DropList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="ElementNode.html">ElementNode</a></li><li><a href="EventBus.html">EventBus</a><ul class='methods'><li data-type='method' style='display: none;'><a href="EventBus.html#emit">emit</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#off">off</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#on">on</a></li></ul></li><li><a href="FileNode.html">FileNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileNode.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderAudio">renderAudio</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderImage">renderImage</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderVideo">renderVideo</a></li></ul></li><li><a href="FilePreview.html">FilePreview</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FilePreview.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#find">find</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#preview">preview</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#unload">unload</a></li></ul></li><li><a href="FileUpload.html">FileUpload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileUpload.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#addFileNode">addFileNode</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#allowFileTypeByName">allowFileTypeByName</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileCount">getFileCount</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileList">getFileList</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#unload">unload</a></li></ul></li><li><a href="Form.html">Form</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Form.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Form.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Form.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Form.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Form.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Form.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Form.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Form.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Form.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Form.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Form.html#setLabel">setLabel</a></li></ul></li><li><a href="MultipleList.html">MultipleList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MultipleList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="MyNode.html">MyNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MyNode.html#after">after</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#before">before</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#includes">includes</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#prepend">prepend</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#replaceWith">replaceWith</a></li></ul></li><li><a href="Observe.html">Observe</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Observe.html#addCallback">addCallback</a></li><li data-type='method' style='display: none;'><a href="Observe.html#create">create</a></li><li data-type='method' style='display: none;'><a href="Observe.html#defineObject">defineObject</a></li><li data-type='method' style='display: none;'><a href="Observe.html#monitorMethodsOfArray">monitorMethodsOfArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyArray">proxyArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyObject">proxyObject</a></li></ul></li><li><a href="Pagination.html">Pagination</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Pagination.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createOmit">createOmit</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createPageLabel">createPageLabel</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#render">render</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderGotoPage">renderGotoPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderNextPage">renderNextPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPage">renderPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPreviousPage">renderPreviousPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderTip">renderTip</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#valid">valid</a></li></ul></li><li><a href="Popup.html">Popup</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Popup.html#_mounted">_mounted</a></li></ul></li><li><a href="Radio.html">Radio</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Radio.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Radio.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Radio.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Radio.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Radio.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Radio.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="RootNode.html">RootNode</a></li><li><a href="Slider.html">Slider</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Slider.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Slider.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Slider.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Slider.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Slider.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Slider.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Slider.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Slider.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Slider.html#update">update</a></li></ul></li><li><a href="Switch.html">Switch</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Switch.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="Switch.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Switch.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Switch.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Switch.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Switch.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Switch.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Switch.html#setLabel">setLabel</a></li></ul></li><li><a href="TaskQueue.html">TaskQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TaskQueue.html#add">add</a></li><li data-type='method' style='display: none;'><a href="TaskQueue.html#execute">execute</a></li></ul></li><li><a href="TextNode.html">TextNode</a></li><li><a href="Time.html">Time</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Time.html#dateCount">dateCount</a></li><li data-type='method' style='display: none;'><a href="Time.html#firstDate">firstDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#format">format</a></li><li data-type='method' style='display: none;'><a href="Time.html#forward">forward</a></li><li data-type='method' style='display: none;'><a href="Time.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Time.html#lastDate">lastDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#transform">transform</a></li></ul></li><li><a href="Watcher.html">Watcher</a></li><li><a href="WaterMark.html">WaterMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="WaterMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_computed">_computed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_data">_data</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_event">_event</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_props">_props</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch">_watch</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch_data">_watch_data</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_watch_props">_watch_props</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#addLinkedNode">addLinkedNode</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#init">init</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#listenNodeChange">listenNodeChange</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#load">load</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#updateMark">updateMark</a></li></ul></li><li><a href="XMLNode.html">XMLNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="XMLNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="XMLNode.html#toJson">toJson</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/base/my-node.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Util from './util.js';
+
+/**
+ * 封装 DOM 对象
+ * @author wang.xin
+ */
+class MyNode {
+    /**
+     * Creates an instance of MyNode.
+     * @param { String | DOM | MyNode } selector 选择器
+     * @param { MyNode } prevObject 上一级对象
+     */
+    constructor(selector, prevObject) {
+        if (selector instanceof MyNode) {
+            return selector;
+        }
+
+        this.length = 0; // 元素个数
+        this.prevObject = prevObject || document; // 前任
+        this.init(selector);
+    }
+
+    /**
+     * @description 初始化
+     * @method
+     * @param { Node | String | Array } selector 节点 | 选择器 | 数组
+     */
+    init(selector) {
+        if (selector &amp;&amp; selector.nodeType) {
+            // 节点
+            this.push(selector);
+        } else if (
+            Util.type(selector) !== 'string' &amp;&amp;
+            Util.isArrayLike(selector) &amp;&amp;
+            Util.type(selector.forEach) === 'function'
+        ) {
+            // 可迭代对象
+            selector.forEach((element) => this.push(element));
+        } else if (Util.type(selector) === 'string' &amp;&amp; selector.trim() !== '') {
+            // 字符串
+            selector = selector.trim();
+            if (
+                selector[0] === '&lt;' &amp;&amp;
+                selector[selector.length - 1] === '>' &amp;&amp;
+                selector.length >= 3
+            ) {
+                let template = document.createElement('template');
+
+                template.innerHTML = selector;
+                this.concat(new MyNode(template.content).children());
+            } else {
+                document
+                    .querySelectorAll(selector)
+                    .forEach((element) => this.push(element));
+            }
+        }
+    }
+
+    /**
+     * 判断对象中是否含有指定元素
+     * @param { DOM } elem DOM 元素
+     * @return { Boolean }
+     */
+    includes(elem) {
+        let res = false;
+
+        this.forEach((item) => {
+            res = item === elem;
+            return !res;
+        });
+
+        return res;
+    }
+
+    // 模拟[].indexOf()
+    indexOf(elem) {
+        return Util.toArray(this).indexOf(elem);
+    }
+
+    // 模拟[].push()
+    push(elem) {
+        if (elem &amp;&amp; !this.includes(elem)) {
+            this[this.length++] = elem;
+        }
+
+        return this;
+    }
+
+    // 模拟[].pop()
+    pop() {
+        delete this[--this.length];
+        return this;
+    }
+
+    // 模拟[].splice()
+    splice() {
+        return new MyNode([].splice.apply(this, arguments), this);
+    }
+
+    // 模拟[].concat()
+    concat(...arr) {
+        arr.filter((item) => item instanceof MyNode).forEach((elem) => {
+            elem.forEach((i) => this.push(i));
+        });
+
+        return this;
+    }
+
+    // 模拟[].forEach()
+    forEach(callback) {
+        let value,
+            i = 0,
+            length = this.length;
+
+        for (; i &lt; length; i++) {
+            value = callback.call(this[i], this[i], i, this);
+            if (value === false) {
+                break;
+            }
+        }
+
+        return this;
+    }
+
+    // 模拟[].reduce()
+    reduce(callback, value) {
+        let res = value;
+
+        if (Util.isFunction(callback)) {
+            this.forEach((item) => (res = callback.call(this, res, item)));
+        }
+
+        return res;
+    }
+
+    // 模拟[].map()
+    map(callback) {
+        let res = [],
+            i = 0,
+            length = this.length;
+
+        for (; i &lt; length; i++) {
+            res.push(callback.call(this[i], this[i], i, this));
+        }
+
+        return res;
+    }
+
+    // 判断是否包含指定的class，多个class用空格隔开
+    hasClass(str = '') {
+        let res = false,
+            arr = str.split(' ');
+
+        this.forEach((item) => {
+            res =
+                item.nodeType === 1 &amp;&amp;
+                arr.every((element) => item.classList.contains(element));
+            return !res;
+        });
+
+        return res;
+    }
+
+    // 移除指定的class，多个class用空格隔开
+    removeClass(str = '') {
+        let arr = Util.type(str) === 'string' ? str.split(' ') : [];
+
+        this.forEach((item) => {
+            item.nodeType === 1 &amp;&amp;
+                arr.forEach((element) => item.classList.remove(element));
+        });
+
+        return this;
+    }
+
+    // 添加指定的class，多个class用空格隔开
+    addClass(str = '') {
+        let arr = Util.type(str) === 'string' ? str.split(' ') : [];
+
+        this.forEach((item) => {
+            item.nodeType === 1 &amp;&amp;
+                arr.forEach(
+                    (element) => element &amp;&amp; item.classList.add(element)
+                );
+        });
+
+        return this;
+    }
+
+    // 判断是否含有指定的class，有则移除，无则添加
+    toggleClass(str = '') {
+        let myNode = null;
+
+        this.forEach((item) => {
+            myNode = new MyNode(item);
+            myNode.hasClass(str)
+                ? myNode.removeClass(str)
+                : myNode.addClass(str);
+        });
+
+        return this;
+    }
+
+    // 封装第i个元素为MyNode类型
+    eq(i) {
+        let len = this.length,
+            index = +i + (i &lt; 0 ? len : 0);
+
+        return new MyNode(index >= 0 &amp;&amp; index &lt; len ? this[index] : '', this);
+    }
+
+    // 封装偶数位的元素集合为MyNode类型
+    even() {
+        let res = new MyNode(),
+            len = this.length,
+            i = 0;
+
+        for (; i &lt; len; i++) {
+            (i + 1) % 2 === 0 &amp;&amp; res.push(this[i]);
+        }
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 封装奇数位的元素集合为MyNode类型
+    odd() {
+        let res = new MyNode(),
+            len = this.length,
+            i = 0;
+
+        for (; i &lt; len; i++) {
+            i % 2 === 0 &amp;&amp; res.push(this[i]);
+        }
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 封装父节点
+    parent(selector) {
+        let res = new MyNode();
+
+        this.forEach((elem) => {
+            let parent = elem.parentNode;
+
+            if (parent &amp;&amp; parent.nodeType === 1) {
+                if (selector) {
+                    // 存在选择器
+                    if (Util.type(selector) === 'string') {
+                        parent.matches(selector) &amp;&amp; res.push(parent);
+                    } else if (selector.nodeType) {
+                        parent === selector &amp;&amp; res.push(parent);
+                    }
+                } else {
+                    res.push(parent);
+                }
+            }
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 封装祖先节点
+    parents(selector, until) {
+        let res = new MyNode();
+
+        this.forEach((elem) => {
+            let parent = elem.parentNode;
+
+            while (parent &amp;&amp; parent.nodeType === 1) {
+                if (selector) {
+                    // 存在选择器
+                    if (Util.type(selector) === 'string') {
+                        parent.matches(selector) &amp;&amp; res.push(parent);
+                    } else if (selector.nodeType) {
+                        parent === selector &amp;&amp; res.push(parent);
+                    }
+                } else {
+                    res.push(parent);
+                }
+
+                if (parent === until || parent.matches(until)) break;
+                parent = parent.parentNode;
+            }
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 兄弟节点
+    siblings(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            new MyNode(item)
+                .parent()
+                .children(selector)
+                .forEach((elem) => {
+                    elem !== item &amp;&amp; res.push(elem);
+                });
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 判断当前节点是父元素第几个元素
+    posOfSiblings() {
+        let node = new MyNode(this[0]);
+
+        return node.parent().children().indexOf(node[0]);
+    }
+
+    // 前一个兄弟节点
+    prevSiblings(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            if (item.previousElementSibling &amp;&amp; selector) {
+                item.previousElementSibling.matches(selector) &amp;&amp;
+                    res.push(item.previousElementSibling);
+            } else {
+                res.push(item.previousElementSibling);
+            }
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 后一个兄弟节点
+    nextSiblings(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            if (item.nextElementSibling &amp;&amp; selector) {
+                item.nextElementSibling.matches(selector) &amp;&amp;
+                    res.push(item.nextElementSibling);
+            } else {
+                res.push(item.nextElementSibling);
+            }
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 子节点
+    children(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            Util.toArray(item.children).forEach((elem) => {
+                if (selector) {
+                    elem.matches(selector) &amp;&amp; res.push(elem);
+                } else {
+                    res.push(elem);
+                }
+            });
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 子节点
+    childNodes(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            Util.toArray(item.childNodes).forEach((elem) => {
+                if (selector) {
+                    elem.matches(selector) &amp;&amp; res.push(elem);
+                } else {
+                    res.push(elem);
+                }
+            });
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // 子孙节点
+    find(selector) {
+        let res = new MyNode();
+
+        this.forEach((item) => {
+            item.querySelectorAll(selector).forEach((elem) => {
+                res.push(elem);
+            });
+        });
+        res.prevObject = this;
+
+        return res;
+    }
+
+    // CSS
+    css(key, value) {
+        if (value != null || Util.type(key) === 'object') {
+            // 设置样式
+            switch (Util.type(key)) {
+                case 'string':
+                    this.forEach((item) => item.style.setProperty(key, value));
+                    break;
+
+                case 'object':
+                    for (let k in key) {
+                        this.css(k, key[k]);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            // 获取样式
+            return this[0]
+                ? this[0].style.getPropertyValue(key) ||
+                      window.getComputedStyle(this[0])[key]
+                : '';
+        }
+
+        return this;
+    }
+
+    // Attribute
+    attr(key, value) {
+        if (value != null || Util.type(key) === 'object') {
+            // 设置属性
+            switch (Util.type(key)) {
+                case 'string':
+                    this.forEach((item) => item.setAttribute(key, value));
+                    break;
+
+                case 'object':
+                    for (let k in key) {
+                        this.attr(k, key[k]);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            // 获取属性
+            return this[0] ? this[0].getAttribute(key) : 'null';
+        }
+
+        return this;
+    }
+
+    // removeAttribute
+    removeAttr(str) {
+        if (str != null) {
+            this.forEach((item) => item.removeAttribute(str));
+        }
+        return this;
+    }
+
+    // Text
+    text(str) {
+        if (str != null) {
+            this.forEach((item) => (item.innerText = str));
+            return this;
+        }
+
+        return this[0] ? this[0].innerText.trim() : '';
+    }
+
+    // Value
+    val(value) {
+        if (value != null) {
+            this.forEach((item) => (item.value = value));
+            return this;
+        }
+
+        return this[0] ? this[0].value : '';
+    }
+
+    // HTML
+    html(str) {
+        if (str != null) {
+            if (Util.type(str) === 'string') {
+                // 字符串
+                if (str.includes('&lt;script>')) {
+                    this.forEach((item) => {
+                        item.innerHTML = ''; // 清除内容
+                        let myNode = new MyNode(document.createElement('div'));
+
+                        myNode[0].innerHTML = str;
+                        myNode
+                            .children()
+                            .forEach((elem) => item.appendChild(elem));
+                    });
+                } else {
+                    this.forEach((item) => (item.innerHTML = str));
+                }
+            } else if (str instanceof MyNode || str.nodeType === 1) {
+                // MyNode | Node
+                this.html('');
+                this.append(str);
+            } else {
+                this.forEach((item) => (item.innerHTML = str));
+            }
+            return this;
+        }
+
+        return this[0] ? this[0].innerHTML.trim() : '';
+    }
+
+    // Text And Title
+    textAndTitle(str) {
+        if (str != null) {
+            this.forEach((item) =>
+                new MyNode(item).text(str).attr('title', str)
+            );
+        }
+        return this;
+    }
+
+    // Event
+    on(type, selector, callback) {
+        // 两个参数时，第二个参数作为回调函数
+        // 三个参数时，第二个参数作为选择器，第三个参数作为回调函数
+        switch (arguments.length) {
+            case 2:
+                callback = selector;
+                selector = '';
+                break;
+
+            case 3:
+                break;
+
+            default:
+                return;
+        }
+
+        this.forEach((item) => {
+            item.addEventListener(type, function (e) {
+                let _item = new MyNode(item);
+
+                if (selector) {
+                    if (_item.find(selector).includes(e.srcElement)) {
+                        // 点击的节点匹配
+                        callback.call(
+                            e.srcElement,
+                            e,
+                            new MyNode(e.srcElement),
+                            _item,
+                            new MyNode(e.srcElement)
+                        );
+                    } else {
+                        new MyNode(e.srcElement)
+                            .parents(selector)
+                            .forEach((elem) => {
+                                if (new MyNode(elem).parents(item).length > 0) {
+                                    callback.call(
+                                        elem,
+                                        e,
+                                        new MyNode(elem),
+                                        _item,
+                                        new MyNode(e.srcElement)
+                                    );
+                                    return false;
+                                }
+                            });
+                    }
+                } else {
+                    callback.call(
+                        this,
+                        e,
+                        new MyNode(this),
+                        _item,
+                        new MyNode(e.srcElement)
+                    );
+                }
+            });
+        });
+    }
+
+    // 点击事件
+    click() {
+        this.forEach((item) => item.click());
+    }
+
+    // 偏移量
+    offset() {
+        let docElem,
+            elem = this[0],
+            res = {
+                top: 0,
+                left: 0,
+            },
+            doc = elem &amp;&amp; elem.ownerDocument;
+
+        if (!doc) {
+            return;
+        }
+
+        docElem = doc.documentElement;
+        res = elem.getBoundingClientRect();
+
+        return {
+            top: res.top + window.pageYOffset - docElem.clientTop,
+            left: res.left + window.pageXOffset - docElem.clientLeft,
+        };
+    }
+
+    // 隐藏
+    hide() {
+        let node = null,
+            obj = {};
+
+        this.forEach((item) => {
+            node = new MyNode(item);
+            obj = MyNode._cache.get(item) || {};
+
+            if (node.css('display') !== 'none') {
+                Object.assign(obj, {
+                    display: node.css('display'),
+                });
+                node.css('display', 'none');
+            }
+            MyNode._cache.set(item, obj);
+        });
+
+        return this;
+    }
+
+    // 显示
+    show() {
+        let cache = null,
+            display = 'block';
+
+        this.forEach((item) => {
+            cache = MyNode._cache.get(item);
+            display = cache ? cache.display || 'block' : 'block';
+            new MyNode(item).css('display', display);
+        });
+
+        return this;
+    }
+
+    // 宽
+    width() {
+        if (this.length > 0) {
+            return this[0].offsetWidth;
+        }
+
+        return 0;
+    }
+
+    // 高
+    height() {
+        if (this.length > 0) {
+            return this[0].offsetHeight;
+        }
+
+        return 0;
+    }
+
+    /**
+     * @description 添加node为最后一个子节点，当集合有多个元素的时候，只在pos处添加指定节点，其余皆为深拷贝的节点
+     * @param { Node } node 要插入的节点
+     * @param { Number } pos 位置
+     */
+    append(node, pos = 0) {
+        if (node &amp;&amp; node.nodeType === 1) {
+            // Node
+            this.forEach((item, index) =>
+                item.appendChild(index == pos ? node : node.cloneNode(true))
+            );
+        } else if (node instanceof MyNode) {
+            // MyNode
+            node.forEach((item) => this.append(item, pos));
+        } else if (Util.type(node) === 'string') {
+            // String
+            if (
+                node[0] === '&lt;' &amp;&amp;
+                node[node.length - 1] === '>' &amp;&amp;
+                node.length >= 3
+            ) {
+                this.append(new MyNode(node), pos);
+            } else {
+                this.forEach((item) =>
+                    item.appendChild(document.createTextNode(node))
+                );
+            }
+        } else {
+            this.append(new MyNode(node), pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * @description 添加node为第一个子节点，当集合有多个元素的时候，只在pos处添加指定节点，其余皆为深拷贝的节点
+     * @param { Node } node 要插入的节点
+     * @param { Number } pos 位置
+     */
+    prepend(node, pos = 0) {
+        let children = this.children();
+
+        if (children.length > 0) {
+            children.eq(0).before(node, pos);
+        } else {
+            this.append(node, pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * @description 在节点前插入node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
+     * @param { Node } node 要插入的节点
+     * @param { Number } pos 位置
+     */
+    before(node, pos = 0) {
+        if (node &amp;&amp; node.nodeType === 1) {
+            // Node
+            this.forEach((item, index) =>
+                item.parentNode.insertBefore(
+                    index == pos ? node : node.cloneNode(true),
+                    item
+                )
+            );
+        } else if (node instanceof MyNode) {
+            // MyNode
+            node.forEach((item) => this.before(item, pos));
+        } else if (Util.type(node) === 'string') {
+            // String
+            if (
+                node[0] === '&lt;' &amp;&amp;
+                node[node.length - 1] === '>' &amp;&amp;
+                node.length >= 3
+            ) {
+                this.before(new MyNode(node), pos);
+            } else {
+                this.forEach((item) =>
+                    item.parentNode.insertBefore(
+                        document.createTextNode(node),
+                        item
+                    )
+                );
+            }
+        } else {
+            this.before(new MyNode(node), pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * @description 在节点后插入node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
+     * @param { Node } node 要插入的节点
+     * @param { Number } pos 位置
+     */
+    after(node, pos = 0) {
+        if (node &amp;&amp; node.nodeType === 1) {
+            // Node
+            this.forEach((item, index) =>
+                item.parentNode.insertBefore(
+                    index == pos ? node : node.cloneNode(true),
+                    item.nextElementSibling
+                )
+            );
+        } else if (node instanceof MyNode) {
+            // MyNode
+            node.forEach((item) => this.after(item, pos));
+        } else if (Util.type(node) === 'string') {
+            // String
+            if (
+                node[0] === '&lt;' &amp;&amp;
+                node[node.length - 1] === '>' &amp;&amp;
+                node.length >= 3
+            ) {
+                this.after(new MyNode(node), pos);
+            } else {
+                this.forEach((item) =>
+                    item.parentNode.insertBefore(
+                        document.createTextNode(node),
+                        item.nextElementSibling
+                    )
+                );
+            }
+        } else {
+            this.after(new MyNode(node), pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * @description 替换为node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
+     * @param { Node } node 要替换的节点
+     * @param { Number } pos 位置
+     */
+    replaceWith(node, pos = 0) {
+        let res = new MyNode(node);
+
+        res.length > 0 ? this.before(node, pos).remove() : '';
+
+        return res;
+    }
+
+    // 移除
+    remove() {
+        this.forEach((item) => item.remove());
+    }
+
+    // 节点内z-index最大值
+    maxZIndex() {
+        return this.find('*').reduce((res, elem) => {
+            return Math.max(res, +window.getComputedStyle(elem).zIndex || 0);
+        }, 0);
+    }
+}
+MyNode._cache = new Map();
+
+export default MyNode;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sun Jan 14 2024 15:45:03 GMT+0800 (GMT+08:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

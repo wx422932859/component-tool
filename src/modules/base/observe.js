@@ -28,7 +28,7 @@ class Observe {
         this.immediate = params.immediate == true;
         this.delay = params.delay || -1;
         this.isModifiable = params.isModifiable != false;
-        this.deep = params.deep != false;
+        this.deep = params.deep == true;
         this.create(params);
     }
 
@@ -59,11 +59,11 @@ class Observe {
      * @param {object | function} params.target 监听对象
      * @param {function} params.callback 回调函数
      * @param {*} params.value 初始值
-     * @param {boolean} [params.deep=true] 是否深度监听
+     * @param {boolean} [params.deep=false] 是否深度监听
      */
     defineObject(params) {
         let self = this,
-            { target, property, callback = {}, value, deep = true } = params;
+            { target, property, callback = {}, value, deep = false } = params;
 
         if (property == undefined) {
             // 针对 target 进行监听，此时 callback 是个 map
