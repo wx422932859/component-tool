@@ -127,8 +127,6 @@ class Component {
             }),
         });
 
-        this._watch_data();
-        this._watch_props();
         this._mount_component();
     }
 
@@ -136,60 +134,6 @@ class Component {
      * 子组件内加载完成后执行的函数
      */
     _mounted() {}
-
-    /**
-     * 设置属性
-     */
-    _data() {}
-
-    /**
-     * 设置监听
-     */
-    _watch() {}
-
-    /**
-     * 计算属性
-     */
-    _computed() {}
-
-    /**
-     * 设置传参
-     */
-    _props() {
-        return {};
-    }
-
-    /**
-     * 设置监听属性
-     */
-    _watch_data() {
-        let res = this._data(),
-            methods = this._watch();
-
-        if (res != null) {
-            for (let key in res) {
-                let callback = () => {};
-
-                if (methods && methods[key]) {
-                    callback = methods[key];
-                }
-                this._observe(key, res[key], callback);
-            }
-        }
-    }
-
-    /**
-     * 监听入参
-     */
-    _watch_props() {
-        let props = this._props();
-
-        if (props != null) {
-            for (let key in props) {
-                this._observe(key, props[key]);
-            }
-        }
-    }
 
     /**
      * 销毁组件
@@ -267,51 +211,26 @@ class Component {
         taskQueue.free = false;
         this.node.find('slot').forEach((elem, index, list) => {
             let slot = list.eq(index), // 插槽
-                componentName = slot.attr('data-component'), // 组件类名
-                name = slot.attr('data-name'), // 实例化名称
-                prop = slot.attr('data-prop'), // 关联属性
-                src = slot.attr('data-src'); // 组件地址
+                src = slot.attr('data-src'), // 组件地址
+                componentName = slot.attr('data-component') || VC.parseComponentName(src); // 组件类名
 
-            if (componentName == null || componentName == '') {
-                // 当没有定义 data-component 时，根据 data-src 解析地址
-                if (src == null || src == '') {
-                    return;
-                }
-                let path = Util.eval(src);
-                componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
-                if (componentName && componentName[1]) {
-                    componentName = componentName[1];
-                } else {
-                    console.log('组件文件后缀应该为".vc"！');
-                    return;
-                }
+            if (componentName === '') {
+                console.log(`组件${src}获取失败！`);
+                return;
             }
-
-            // 定义实例化名称
-            name = name || componentName.replace(componentName[0], componentName[0].toLowerCase());
 
             if (eval(`typeof ${componentName} == 'undefined'`) && src != null) {
                 taskQueue.add(VC.imports, [
                     {
                         filePath: src,
                         handle: () => {
-                            this._instantiate_component({
-                                name,
-                                componentName,
-                                slot,
-                                prop,
-                            });
+                            this._instantiate_component(slot, componentName);
                         },
                     },
                 ]);
             } else {
                 // 已存在指定的组件变量
-                this._instantiate_component({
-                    name,
-                    componentName,
-                    slot,
-                    prop,
-                });
+                this._instantiate_component(slot, componentName);
             }
         });
         taskQueue.add(() => {
@@ -326,14 +245,17 @@ class Component {
 
     /**
      * 实例化子组件
-     * @param {object} params 入参
-     * @param {string} params.name 组件实例化变量名
-     * @param {string} params.componentName 组件类名
-     * @param {string} params.prop 关联属性
-     * @param {MyNode} params.slot 插槽
+     * @param {MyNode} slot 插槽
+     * @param {string} componentName 组件类名
      */
-    _instantiate_component(params) {
-        let { name, componentName, slot, prop } = params;
+    _instantiate_component(slot, componentName) {
+        let instantiateName = slot.attr('data-name'), // 实例化名称
+            className = slot.attr('class'); // 插槽绑定的类
+
+        // 定义实例化名称
+        instantiateName =
+            instantiateName ||
+            componentName.replace(componentName[0], componentName[0].toLowerCase());
 
         if (
             eval(`typeof ${componentName} == 'undefined'`) ||
@@ -343,41 +265,9 @@ class Component {
             return;
         }
 
-        this._children[name] = eval(`new ${componentName}()`);
-        this._children[name].node.addClass(slot.attr('class'));
-        slot.replaceWith(this._children[name].node);
-
-        // 处理关联参数
-        if (prop != undefined && prop != '') {
-            let self = this,
-                proxyProperty = '__' + prop;
-            Object.defineProperty(this, proxyProperty, {
-                value: new Proxy(
-                    {},
-                    {
-                        set(target, p, newValue, receiver) {
-                            let res = Reflect.set(...arguments);
-                            if (p in self._children[name]) {
-                                self._children[name][p] = newValue;
-                            }
-                            return res;
-                        },
-                    }
-                ),
-            });
-            this._observe(prop, (value) => {
-                if (Util.type(value) == 'object') {
-                    for (let key in value) {
-                        this[proxyProperty][key] = value[key];
-                    }
-                }
-            });
-            if (Util.type(this[prop]) == 'object') {
-                for (let key in this[prop]) {
-                    this[proxyProperty][key] = this[prop][key];
-                }
-            }
-        }
+        this._children[instantiateName] = eval(`new ${componentName}()`);
+        this._children[instantiateName].node.addClass(className);
+        slot.replaceWith(this._children[instantiateName].node);
     }
 
     /**
