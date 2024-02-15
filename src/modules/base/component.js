@@ -138,11 +138,6 @@ class Component {
     _mounted() {}
 
     /**
-     * 注册事件
-     */
-    _event() {}
-
-    /**
      * 设置属性
      */
     _data() {}
@@ -326,7 +321,6 @@ class Component {
                 console.log(err);
             }
         });
-        taskQueue.add(() => this._event());
         taskQueue.free = true;
     }
 

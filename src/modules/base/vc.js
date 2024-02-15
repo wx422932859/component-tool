@@ -4,7 +4,7 @@ import TaskQueue from './task-queue.js';
 import Time from './time.js';
 
 /**
- * 视图组件
+ * View Component
  * @author wang.xin
  * @exports VC
  */
