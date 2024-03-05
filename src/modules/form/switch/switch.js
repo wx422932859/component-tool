@@ -68,6 +68,13 @@ class Switch extends Form {
             this.node.find('.ly-switch_btn').attr('data-status', value ? 1 : 0);
             this.change(value, prev, this);
         });
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Switch
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -87,9 +94,11 @@ class Switch extends Form {
      * @param {function} option.change 切换选中项后触发的事件
      */
     load(option = {}) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.value = option.value;
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
     }
 }
 
