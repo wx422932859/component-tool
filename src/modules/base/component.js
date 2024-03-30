@@ -16,9 +16,9 @@ class Component {
      */
     constructor(selector) {
         let self = this,
-            $constructor = this.__proto__.constructor;
+            _constructor = this.__proto__.constructor;
 
-        selector = selector || $constructor._template;
+        selector = selector || _constructor._template;
 
         /**
          * @member {MyNode} node 组件根节点
@@ -27,8 +27,8 @@ class Component {
          */
         this.node = new MyNode(selector);
 
-        if ($constructor._version != undefined) {
-            this.node.attr(`vc-${$constructor._version}`, '');
+        if (_constructor._version != undefined) {
+            this.node.attr(`vc-${_constructor._version}`, '');
         }
 
         /**
@@ -127,11 +127,18 @@ class Component {
             }),
         });
 
+        /**
+         * 增加默认全局事件监听
+         */
+        this._bus.on(this.__proto__.constructor.name, (msg) => {
+            const { component, action, data } = msg;
+            this._listen_bus(component, action, data);
+        });
         this._mount_component();
     }
 
     /**
-     * 子组件内加载完成后执行的函数
+     * 子组件实例化完成后执行的函数
      */
     _mounted() {}
 
@@ -166,11 +173,19 @@ class Component {
     _send_msg(msg) {}
 
     /**
-     * 监听消息，仅限用于父组件监听子组件，使用时重写该方法
+     * 监听子组件消息，使用时重写该方法
      * @param {Component} component 消息来源组件
      * @param {object} msg 消息
      */
     _listen_msg(component, msg) {}
+
+    /**
+     * 监听事件总线，使用时重写该方法
+     * @param {Component} component 消息来源组件
+     * @param {string} action 动作
+     * @param {object} data 数据
+     */
+    _listen_bus(component, action, data) {}
 
     /**
      * 监听属性
@@ -253,9 +268,7 @@ class Component {
             className = slot.attr('class'); // 插槽绑定的类
 
         // 定义实例化名称
-        instantiateName =
-            instantiateName ||
-            componentName.replace(componentName[0], componentName[0].toLowerCase());
+        instantiateName = instantiateName || componentName.replace(componentName[0], componentName[0].toLowerCase());
 
         if (
             eval(`typeof ${componentName} == 'undefined'`) ||
@@ -272,6 +285,7 @@ class Component {
 
     /**
      * 重置根组件
+     * @param {Component} component 组件
      */
     _reset_root(component) {
         component._root = this._root;
@@ -280,6 +294,37 @@ class Component {
                 component._reset_root(component._children[key]);
             }
         }
+    }
+
+    /**
+     * 判断组件的父组件中是否含有指定组件
+     * @param {Component} component 组件
+     */
+    _has_parent(component) {
+        if (this._parent === component) {
+            return true;
+        }
+
+        while (this._parent instanceof Component) {
+            return this._parent._is_parent(component);
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断组件的子组件中是否包含指定组件
+     * @param {Component} component 组件
+     */
+    _has_child(component) {
+        for (let child in this._children) {
+            if (this._children[child] === component) {
+                return true;
+            }
+            this._children[child].$child(component);
+        }
+
+        return false;
     }
 }
 
