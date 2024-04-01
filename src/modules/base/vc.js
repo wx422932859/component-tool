@@ -29,9 +29,7 @@ const VC = {
      * @return {string}
      */
     formatPath(filePath) {
-        let arr = filePath
-                .split('/')
-                .filter((item, index) => item !== '.' && (index === 0 || item !== '')),
+        let arr = filePath.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
             pos = arr.indexOf('..');
 
         while (pos > 0) {
@@ -100,11 +98,7 @@ const VC = {
             } else {
                 document.body.appendChild(target);
                 target.onload = target.onreadystatechange = function () {
-                    if (
-                        !this.readyState ||
-                        this.readyState === 'loaded' ||
-                        this.readyState === 'complete'
-                    ) {
+                    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
                         callback();
                         resolve();
                     } else {
@@ -138,11 +132,7 @@ const VC = {
             } else {
                 document.head.appendChild(target);
                 target.onload = target.onreadystatechange = function () {
-                    if (
-                        !this.readyState ||
-                        this.readyState === 'loaded' ||
-                        this.readyState === 'complete'
-                    ) {
+                    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
                         callback();
                         resolve();
                     } else {
@@ -173,16 +163,10 @@ const VC = {
         globalName = alias || componentName;
 
         // 组件已引入的情况
-        if (
-            realPath == undefined ||
-            eval(`typeof ${globalName} !== 'undefined'`) ||
-            VC.cache.includes(realPath)
-        ) {
+        if (realPath == undefined || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
             return new Promise((resolve) => {
                 callback.call(VC, {
-                    template: eval(`typeof ${globalName} !== 'undefined'`)
-                        ? eval(globalName)._template
-                        : '',
+                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : '',
                 });
                 resolve();
             });
@@ -240,9 +224,7 @@ const VC = {
                 taskQueue.add(() => {
                     return new Promise((resolve2) => {
                         callback.call(VC, {
-                            template: eval(`typeof ${globalName} != 'undefined'`)
-                                ? eval(globalName)._template
-                                : '',
+                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : '',
                         });
                         resolve2();
                         resolve();
@@ -422,10 +404,7 @@ const VC = {
         for (let i = 0; i < cssRules.length; i++) {
             switch (cssRules[i].__proto__) {
                 case CSSStyleRule.prototype: // 规则
-                    cssRules[i].selectorText = this.handleCSSStyleRule(
-                        cssRules[i].selectorText,
-                        unique
-                    );
+                    cssRules[i].selectorText = this.handleCSSStyleRule(cssRules[i].selectorText, unique);
                     break;
 
                 case CSSMediaRule.prototype: // 媒体查询

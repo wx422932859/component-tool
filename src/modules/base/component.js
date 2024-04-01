@@ -249,11 +249,7 @@ class Component {
             }
         });
         taskQueue.add(() => {
-            try {
-                this._mounted();
-            } catch (err) {
-                console.log(err);
-            }
+            this._mounted();
         });
         taskQueue.free = true;
     }
