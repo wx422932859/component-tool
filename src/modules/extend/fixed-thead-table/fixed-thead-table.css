@@ -1,0 +1,60 @@
+.fixed-thead-table {
+    position: relative;
+    max-height: 100%;
+}
+
+.fixed-thead-table > .ftt_thead-container {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+}
+
+.fixed-thead-table > .ftt_tbody-container {
+    position: absolute;
+    top: 0;
+    overflow: auto;
+}
+
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar,
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar-track {
+    width: 8px;
+    background-color: #eee;
+}
+
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar-thumb {
+    background-color: #777;
+    border-radius: 0;
+}
+
+.fixed-thead-table .ftt_table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #333;
+    table-layout: fixed;
+}
+
+.fixed-thead-table .ftt_table > thead {
+    font-size: 14px;
+    background-color: #f5f4f9;
+}
+
+.fixed-thead-table .ftt_table th {
+    font-family: 'Medium';
+    font-weight: bold;
+}
+
+.fixed-thead-table .ftt_table th,
+.fixed-thead-table .ftt_table td {
+    height: 36px;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    border: 1px solid #ddd;
+}
