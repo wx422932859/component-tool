@@ -114,6 +114,13 @@ class Radio extends Form {
          * @inner
          */
         this._observe('required', false);
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Radio
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -121,10 +128,7 @@ class Radio extends Form {
      */
     on() {
         this.node.on('click', '.ly-radio_item', (e, target) => {
-            if (
-                this.required == false &&
-                target.hasClass('ly-radio_item-active')
-            ) {
+            if (this.required == false && target.hasClass('ly-radio_item-active')) {
                 this.check = null;
             } else {
                 this.check = target.posOfSiblings();
@@ -141,7 +145,6 @@ class Radio extends Form {
      * @param {function} option.change 切换选中项后触发的事件
      */
     load(option = {}) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.list = option.list || [];
         this.check = option.check;
@@ -150,6 +153,9 @@ class Radio extends Form {
             if (this.value == null && this.list.length != 0) {
                 this.check = 0;
             }
+        }
+        if (typeof option.change == 'function') {
+            this.change = option.change;
         }
     }
 
@@ -173,15 +179,10 @@ class Radio extends Form {
      * @description 更新选中样式
      */
     updateCheckItem() {
-        this.node
-            .find('.ly-radio_item-active')
-            .removeClass('ly-radio_item-active');
+        this.node.find('.ly-radio_item-active').removeClass('ly-radio_item-active');
 
         if (this.pos !== -1) {
-            this.node
-                .find('.ly-radio_item')
-                .eq(this.pos)
-                .addClass('ly-radio_item-active');
+            this.node.find('.ly-radio_item').eq(this.pos).addClass('ly-radio_item-active');
         }
     }
 }

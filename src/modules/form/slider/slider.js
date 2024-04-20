@@ -124,8 +124,7 @@ class Slider extends Form {
          * @inner
          */
         this._observe('pageX', 0, (value) => {
-            this.dragWidth =
-                value - this.node.find('.ly-slider_content').offset().left;
+            this.dragWidth = value - this.node.find('.ly-slider_content').offset().left;
         });
 
         /**
@@ -145,10 +144,15 @@ class Slider extends Form {
                 rate = (this.max - this.min) / width,
                 result = this.min + value * rate;
 
-            this.valid =
-                parseInt(result * Math.pow(10, this.decimal)) /
-                Math.pow(10, this.decimal);
+            this.valid = parseInt(result * Math.pow(10, this.decimal)) / Math.pow(10, this.decimal);
         });
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Slider
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -202,12 +206,14 @@ class Slider extends Form {
      * @param {function} option.change 数值发生改变后触发的事件
      */
     load(option) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.min = option.min || 0;
         this.max = option.max || 100;
         this.step = option.step || 1;
         this.valid = option.value || 0;
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
     }
 
     /**

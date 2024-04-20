@@ -39,19 +39,13 @@ class MyNode {
         } else if (Util.type(selector) === 'string' && selector.trim() !== '') {
             // 字符串
             selector = selector.trim();
-            if (
-                selector[0] === '<' &&
-                selector[selector.length - 1] === '>' &&
-                selector.length >= 3
-            ) {
+            if (selector[0] === '<' && selector[selector.length - 1] === '>' && selector.length >= 3) {
                 let template = document.createElement('template');
 
                 template.innerHTML = selector;
                 this.concat(new MyNode(template.content).children());
             } else {
-                document
-                    .querySelectorAll(selector)
-                    .forEach((element) => this.push(element));
+                document.querySelectorAll(selector).forEach((element) => this.push(element));
             }
         }
     }
@@ -152,9 +146,7 @@ class MyNode {
             arr = str.split(' ');
 
         this.forEach((item) => {
-            res =
-                item.nodeType === 1 &&
-                arr.every((element) => item.classList.contains(element));
+            res = item.nodeType === 1 && arr.every((element) => item.classList.contains(element));
             return !res;
         });
 
@@ -166,8 +158,7 @@ class MyNode {
         let arr = Util.type(str) === 'string' ? str.split(' ') : [];
 
         this.forEach((item) => {
-            item.nodeType === 1 &&
-                arr.forEach((element) => item.classList.remove(element));
+            item.nodeType === 1 && arr.forEach((element) => item.classList.remove(element));
         });
 
         return this;
@@ -178,10 +169,7 @@ class MyNode {
         let arr = Util.type(str) === 'string' ? str.split(' ') : [];
 
         this.forEach((item) => {
-            item.nodeType === 1 &&
-                arr.forEach(
-                    (element) => element && item.classList.add(element)
-                );
+            item.nodeType === 1 && arr.forEach((element) => element && item.classList.add(element));
         });
 
         return this;
@@ -193,9 +181,7 @@ class MyNode {
 
         this.forEach((item) => {
             myNode = new MyNode(item);
-            myNode.hasClass(str)
-                ? myNode.removeClass(str)
-                : myNode.addClass(str);
+            myNode.hasClass(str) ? myNode.removeClass(str) : myNode.addClass(str);
         });
 
         return this;
@@ -320,8 +306,7 @@ class MyNode {
 
         this.forEach((item) => {
             if (item.previousElementSibling && selector) {
-                item.previousElementSibling.matches(selector) &&
-                    res.push(item.previousElementSibling);
+                item.previousElementSibling.matches(selector) && res.push(item.previousElementSibling);
             } else {
                 res.push(item.previousElementSibling);
             }
@@ -337,8 +322,7 @@ class MyNode {
 
         this.forEach((item) => {
             if (item.nextElementSibling && selector) {
-                item.nextElementSibling.matches(selector) &&
-                    res.push(item.nextElementSibling);
+                item.nextElementSibling.matches(selector) && res.push(item.nextElementSibling);
             } else {
                 res.push(item.nextElementSibling);
             }
@@ -418,10 +402,7 @@ class MyNode {
             }
         } else {
             // 获取样式
-            return this[0]
-                ? this[0].style.getPropertyValue(key) ||
-                      window.getComputedStyle(this[0])[key]
-                : '';
+            return this[0] ? this[0].style.getPropertyValue(key) || window.getComputedStyle(this[0])[key] : '';
         }
 
         return this;
@@ -492,9 +473,7 @@ class MyNode {
                         let myNode = new MyNode(document.createElement('div'));
 
                         myNode[0].innerHTML = str;
-                        myNode
-                            .children()
-                            .forEach((elem) => item.appendChild(elem));
+                        myNode.children().forEach((elem) => item.appendChild(elem));
                     });
                 } else {
                     this.forEach((item) => (item.innerHTML = str));
@@ -515,9 +494,7 @@ class MyNode {
     // Text And Title
     textAndTitle(str) {
         if (str != null) {
-            this.forEach((item) =>
-                new MyNode(item).text(str).attr('title', str)
-            );
+            this.forEach((item) => new MyNode(item).text(str).attr('title', str));
         }
         return this;
     }
@@ -546,37 +523,17 @@ class MyNode {
                 if (selector) {
                     if (_item.find(selector).includes(e.srcElement)) {
                         // 点击的节点匹配
-                        callback.call(
-                            e.srcElement,
-                            e,
-                            new MyNode(e.srcElement),
-                            _item,
-                            new MyNode(e.srcElement)
-                        );
+                        callback.call(e.srcElement, e, new MyNode(e.srcElement), _item, new MyNode(e.srcElement));
                     } else {
-                        new MyNode(e.srcElement)
-                            .parents(selector)
-                            .forEach((elem) => {
-                                if (new MyNode(elem).parents(item).length > 0) {
-                                    callback.call(
-                                        elem,
-                                        e,
-                                        new MyNode(elem),
-                                        _item,
-                                        new MyNode(e.srcElement)
-                                    );
-                                    return false;
-                                }
-                            });
+                        new MyNode(e.srcElement).parents(selector).forEach((elem) => {
+                            if (new MyNode(elem).parents(item).length > 0) {
+                                callback.call(elem, e, new MyNode(elem), _item, new MyNode(e.srcElement));
+                                return false;
+                            }
+                        });
                     }
                 } else {
-                    callback.call(
-                        this,
-                        e,
-                        new MyNode(this),
-                        _item,
-                        new MyNode(e.srcElement)
-                    );
+                    callback.call(this, e, new MyNode(this), _item, new MyNode(e.srcElement));
                 }
             });
         });
@@ -671,24 +628,16 @@ class MyNode {
     append(node, pos = 0) {
         if (node && node.nodeType === 1) {
             // Node
-            this.forEach((item, index) =>
-                item.appendChild(index == pos ? node : node.cloneNode(true))
-            );
+            this.forEach((item, index) => item.appendChild(index == pos ? node : node.cloneNode(true)));
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.append(item, pos));
         } else if (Util.type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.append(new MyNode(node), pos);
             } else {
-                this.forEach((item) =>
-                    item.appendChild(document.createTextNode(node))
-                );
+                this.forEach((item) => item.appendChild(document.createTextNode(node)));
             }
         } else {
             this.append(new MyNode(node), pos);
@@ -723,29 +672,17 @@ class MyNode {
         if (node && node.nodeType === 1) {
             // Node
             this.forEach((item, index) =>
-                item.parentNode.insertBefore(
-                    index == pos ? node : node.cloneNode(true),
-                    item
-                )
+                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item)
             );
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.before(item, pos));
         } else if (Util.type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.before(new MyNode(node), pos);
             } else {
-                this.forEach((item) =>
-                    item.parentNode.insertBefore(
-                        document.createTextNode(node),
-                        item
-                    )
-                );
+                this.forEach((item) => item.parentNode.insertBefore(document.createTextNode(node), item));
             }
         } else {
             this.before(new MyNode(node), pos);
@@ -763,28 +700,18 @@ class MyNode {
         if (node && node.nodeType === 1) {
             // Node
             this.forEach((item, index) =>
-                item.parentNode.insertBefore(
-                    index == pos ? node : node.cloneNode(true),
-                    item.nextElementSibling
-                )
+                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item.nextElementSibling)
             );
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.after(item, pos));
         } else if (Util.type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.after(new MyNode(node), pos);
             } else {
                 this.forEach((item) =>
-                    item.parentNode.insertBefore(
-                        document.createTextNode(node),
-                        item.nextElementSibling
-                    )
+                    item.parentNode.insertBefore(document.createTextNode(node), item.nextElementSibling)
                 );
             }
         } else {
