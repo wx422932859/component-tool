@@ -147,11 +147,11 @@ class DropList extends Form {
         this.label = option.label;
         this.list = option.list || [];
         this.hover = option.hover || false;
-        if (typeof option.change == 'function') {
-            this.change = option.change;
-        }
         if (option.check != null) {
             this.check = option.check;
+        }
+        if (typeof option.change == 'function') {
+            this.change = option.change;
         }
     }
 
@@ -213,17 +213,12 @@ class DropList extends Form {
      */
     updateCheckItem() {
         // 取消选中项
-        this.node
-            .find('.ly-drop-list_item-active')
-            .removeClass('ly-drop-list_item-active');
+        this.node.find('.ly-drop-list_item-active').removeClass('ly-drop-list_item-active');
 
         // 选中当前项
         let text = '';
         if (this.pos > -1) {
-            this.node
-                .find('.ly-drop-list_item')
-                .eq(this.pos)
-                .addClass('ly-drop-list_item-active');
+            this.node.find('.ly-drop-list_item').eq(this.pos).addClass('ly-drop-list_item-active');
             text = this.standardList[this.pos].value;
         }
         this.node.find('.ly-form_input').val(text).attr('title', text);

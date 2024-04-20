@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-01-14 15:44:33
+ * package: 2024-04-20 09:24:83
  * version: 1.0.0
  * exports: LY
  */
@@ -85,8 +85,7 @@ Ajax.req = function (opts) {
         let xhr = new XMLHttpRequest(),
             type = opts.type || 'post', // 请求方式
             url = opts.url || '', // 请求地址
-            contentType =
-                opts.contentType || 'application/x-www-form-urlencoded', // 请求参数的数据格式
+            contentType = opts.contentType || 'application/x-www-form-urlencoded', // 请求参数的数据格式
             defer = opts.defer === undefined ? true : opts.defer, // 是否异步请求
             data = opts.data || {}, // 请求数据
             beforeSend = opts.beforeSend || (() => {}), // 请求之前的操作
@@ -102,11 +101,7 @@ Ajax.req = function (opts) {
 
         // 启动请求
         if (type.toUpperCase() === 'GET' && JSON.stringify(data) != '{}') {
-            xhr.open(
-                type,
-                `${url}?${new URLSearchParams(data).toString()}`,
-                defer
-            );
+            xhr.open(type, `${url}?${new URLSearchParams(data).toString()}`, defer);
         } else {
             xhr.open(type, url, defer);
         }
@@ -126,10 +121,7 @@ Ajax.req = function (opts) {
             if (xhr.readyState === 4) {
                 let responseData = null;
 
-                if (
-                    (xhr.status >= 200 && xhr.status < 300) ||
-                    xhr.status === 304
-                ) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
                     try {
                         responseData = JSON.parse(xhr.responseText);
                     } catch (err) {
@@ -180,20 +172,12 @@ Ajax.formatData = function (data, contentType) {
                     switch (Object.prototype.toString.call(data[key])) {
                         case '[object Array]':
                             data[key].forEach((item) => {
-                                requestData.push(
-                                    encodeURIComponent(key) +
-                                        '=' +
-                                        encodeURIComponent(item)
-                                );
+                                requestData.push(encodeURIComponent(key) + '=' + encodeURIComponent(item));
                             });
                             break;
 
                         default:
-                            requestData.push(
-                                encodeURIComponent(key) +
-                                    '=' +
-                                    encodeURIComponent(data[key])
-                            );
+                            requestData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
                             break;
                     }
                 }
@@ -293,10 +277,19 @@ Ajax.request = function () {
         success = opts.success || (() => {}),
         error = opts.error || (() => {});
 
-    if (Ajax.intercept != null && opts.url in Ajax.intercept) {
-        return new Promise((resolve, reject) => {
-            resolve(Ajax.intercept[opts.url](opts));
-        });
+    if (Ajax.intercept != null) {
+        if (typeof Ajax.intercept == 'function') {
+            let response = Ajax.intercept(opts);
+            if (response != null) {
+                return new Promise((resolve) => {
+                    resolve(response);
+                });
+            }
+        } else if (opts.url in Ajax.intercept) {
+            return new Promise((resolve) => {
+                resolve(Ajax.intercept[opts.url](opts));
+            });
+        }
     }
 
     if (Object.prototype.toString.call(opts) === '[object Object]') {
@@ -503,85 +496,6 @@ Util.compare = function (obj1, obj2) {
     }
 
     return res;
-};
-
-/**
- * @description 引入文件
- * @param {String} filePath 文件路径
- * @param {Boolean} sign 是否为绝对路径（true 绝对路径， false 相对路径)
- */
-Util.importFile = function (filePath, sign = true) {
-    let prePath = '', // 路径前缀
-        node = null, // 父节点
-        target = null, // 标签
-        splitPath = ''; // 不包含随机数的地址
-
-    filePath = Util.formatPath(sign ? filePath : prePath + filePath);
-    splitPath = filePath.split('?')[0];
-    if (/\.js$/.test(splitPath)) {
-        // 导入JS文件
-        node = document.body;
-        target = document.createElement('script');
-        target.src = filePath;
-    } else if (/\.css$/.test(splitPath)) {
-        // 导入CSS文件
-        node = document.head;
-        target = document.createElement('link');
-        target.href = filePath;
-        target.rel = 'stylesheet';
-    }
-
-    return new Promise((resolve, reject) => {
-        if (target) {
-            let scriptList = [...document.scripts],
-                styleList = [...document.styleSheets],
-                filePathList = [];
-
-            scriptList = scriptList
-                .filter((item) => typeof item.src == 'string')
-                .map((item) => item.src.split('?')[0]);
-            styleList = styleList
-                .filter((item) => typeof item.href == 'string')
-                .map((item) => item.href.split('?')[0]);
-            filePathList = scriptList.concat(styleList);
-
-            if (filePathList.includes(splitPath)) {
-                resolve();
-            } else {
-                node.appendChild(target);
-                target.onload = target.onreadystatechange = function () {
-                    if (
-                        !this.readyState ||
-                        this.readyState === 'loaded' ||
-                        this.readyState === 'complete'
-                    ) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                };
-            }
-        } else {
-            resolve();
-        }
-    });
-};
-
-/**
- * @description 格式化路径
- * @param {String} path 路径
- * @returns {String}
- */
-Util.formatPath = function (path) {
-    let arr = path.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
-        pos = arr.indexOf('..');
-
-    while (pos > 0) {
-        arr = arr.slice(0, pos - 1).concat(arr.slice(pos + 1));
-        pos = arr.indexOf('..');
-    }
-
-    return arr.join('/').replace(':/', '://');
 };
 
 /**
@@ -894,6 +808,36 @@ Util.calStringLength = function (str) {
 
     return length;
 };
+
+/**
+ * 图片转base64
+ * @param {File | string} file 文件
+ */
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        if (typeof file == 'string') {
+            // 字符串
+            const image = new Image();
+            image.onload = function () {
+                reader.onloadend = function () {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(image);
+            };
+            image.src = file; // 替换为图片的URL或者base64字符串
+        } else {
+            reader.onloadend = function () {
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        }
+    });
+}
+Util.convertImageToBase64 = convertImageToBase64;
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Util);
 
@@ -1324,317 +1268,435 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * 视图组件
+ * View Component
  * @author wang.xin
  * @exports VC
- * @property {object} config 配置项
- * @property {string} [config.basicPath=''] 基地址
  */
 const VC = {
+    /**
+     * @property {object} config 配置项
+     * @property {string} [config.basicPath=''] 基地址
+     */
     config: {
         basicPath: '',
     },
-};
 
-/**
- * @description 引入组件
- * @param {object} option 配置项
- * @param {string} option.basicPath 基地址
- * @param {string} option.filePath 文件路径
- * @param {function} option.handle 引入后执行的方法
- * @param {string} option.alias 别名，当组件名称重复时，可使用别名
- * @returns {Promise}
- */
-VC.imports = function (option) {
-    let { basicPath = VC.config.basicPath, filePath, handle = () => {}, alias } = option;
+    /**
+     * 缓存已经引入的组件地址，避免重复引入
+     * @property {string[]} cache 地址缓存
+     */
+    cache: [],
 
-    filePath = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(filePath);
+    /**
+     * 格式化文件地址
+     * @param {string} filePath
+     * @return {string}
+     */
+    formatPath(filePath) {
+        let arr = filePath.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
+            pos = arr.indexOf('..');
 
-    // 当是HTTP请求时，不再增加基地址
-    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
-        basicPath = '';
-    }
-
-    let path = `${basicPath}${filePath}`,
-        realPath = path.split('?ver')[0],
-        componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
-
-    if (componentName && componentName[1]) {
-        componentName = componentName[1];
-    } else {
-        console.log(`组件${path}获取失败：文件后缀应该为".vc"！`);
-        return;
-    }
-
-    let globalName = alias || componentName; // 最终引入全局变量的名称
-    if (
-        filePath == undefined ||
-        eval(`typeof ${globalName} !== 'undefined'`) ||
-        VC.cache.includes(realPath)
-    ) {
-        return new Promise((resolve) => {
-            handle.call(VC, {
-                template: eval(`typeof ${globalName} != 'undefined'`)
-                    ? eval(globalName)._template
-                    : '',
-            });
-            resolve();
-        });
-    }
-
-    if (globalName == componentName) {
-        // 仅当没有别名的时候才进行缓存
-        VC.cache.push(realPath);
-    }
-
-    if (!filePath.includes('?ver')) {
-        path += `?ver=${Math.random()}`;
-    }
-
-    return fetch(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].formatPath(path))
-        .then((response) => response.text())
-        .then((res) => {
-            let myNode = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](`<div>${res}</div>`),
-                unique = new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') + Math.floor(Math.random() * 1000);
-
-            return new Promise((resolve) => {
-                let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
-
-                taskQueue.free = false;
-                try {
-                    // 处理component-package
-                    VC.handleComponentPackage(taskQueue, myNode.children('component-package'));
-
-                    // 处理file
-                    VC.handleFileNode(taskQueue, myNode.children('file'));
-
-                    // 处理component
-                    VC.handleComponentNode(taskQueue, myNode.children('component'));
-
-                    // 处理script
-                    VC.handleScriptNode(
-                        taskQueue,
-                        myNode.children('script'),
-                        componentName,
-                        globalName
-                    );
-
-                    // 处理template
-                    VC.handleTemplateNode(
-                        taskQueue,
-                        myNode.children('template').html(),
-                        globalName,
-                        unique
-                    );
-
-                    // 处理style
-                    VC.handleStyleNode(taskQueue, myNode.children('style'), unique);
-
-                    taskQueue.add(() =>
-                        new Promise((resolve) => {
-                            resolve();
-                        }).then(() => {
-                            handle.call(VC, {
-                                template: eval(`typeof ${globalName} != 'undefined'`)
-                                    ? eval(globalName)._template
-                                    : '',
-                            });
-                            resolve();
-                        })
-                    );
-
-                    taskQueue.free = true;
-                } catch (err) {
-                    console.log(err);
-                }
-            });
-        });
-};
-
-/**
- * 处理file
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} file file节点
- */
-VC.handleFileNode = function (taskQueue, file) {
-    file.forEach((item, index, list) => {
-        let elem = list.eq(index),
-            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src'));
-
-        taskQueue.add(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].importFile, [src]);
-    });
-};
-
-/**
- * 处理component
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} component component节点
- */
-VC.handleComponentNode = function (taskQueue, component) {
-    component.forEach((item, index, list) => {
-        let elem = list.eq(index),
-            src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src')),
-            alias = elem.attr('data-alias');
-
-        // 是否添加随机数
-        if (elem.attr('random') != undefined) {
-            src += `?ver=${Math.random()}`;
+        while (pos > 0) {
+            arr = arr.slice(0, pos - 1).concat(arr.slice(pos + 1));
+            pos = arr.indexOf('..');
         }
 
-        taskQueue.add(VC.imports, [{ filePath: src, alias }]);
-    });
-};
+        return arr.join('/').replace(':/', '://');
+    },
 
-/**
- * 处理script
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} scriptNode script节点
- * @param {string} componentName 组件名称
- * @param {string} globalName 最终引入全局变量名称
- */
-VC.handleScriptNode = function (taskQueue, scriptNode, componentName, globalName) {
-    taskQueue.add(() => {
+    /**
+     * 引入文件
+     * @param {object} option 配置项
+     * @param {string} option.basicPath 基地址
+     * @param {string} option.filePath 文件路径
+     * @param {function} option.handle 引入后执行的方法
+     * @param {string} option.alias 别名，当组件名称重复时，可使用别名
+     * @returns {Promise}
+     */
+    imports(option) {
+        let { basicPath = VC.config.basicPath, filePath = '', handle = () => {}, alias } = option,
+            fullPath = '', // 完整路径
+            realPath = ''; // 不携带版本号的路径
+
+        // 判断文件地址是否需要增加基地址
+        fullPath = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(filePath);
+        if (!fullPath.startsWith('http://') && !fullPath.startsWith('https://')) {
+            fullPath = `${basicPath}${fullPath}`;
+        }
+        fullPath = VC.formatPath(fullPath);
+        realPath = fullPath.split('?ver')[0];
+
+        if (/\.js$/.test(realPath)) {
+            // 处理 script
+            return VC.importScript(fullPath, realPath, handle);
+        } else if (/\.css$/.test(realPath)) {
+            // 处理 style
+            return VC.importStyle(fullPath, realPath, handle);
+        } else if (/\.vc$/.test(realPath)) {
+            // 处理 ViewComponent
+            return VC.importViewComponent(fullPath, realPath, handle, alias);
+        }
+
+        return fetch(fullPath).then((response) => response.text());
+    },
+
+    /**
+     * 引入 js 文件
+     * @param {string} fullPath 完整路径
+     * @param {string} realPath 不携带版本号的路径
+     * @param {function} callback 引入文件后执行的回调函数
+     * @return {Promise}
+     */
+    importScript(fullPath, realPath, callback) {
+        let target = document.createElement('script');
+
+        target.src = fullPath;
+        return new Promise((resolve, reject) => {
+            let scriptList = [...document.scripts]
+                .filter((item) => typeof item.src == 'string')
+                .map((item) => item.src.split('?')[0]);
+
+            if (scriptList.includes(realPath)) {
+                callback();
+                resolve();
+            } else {
+                document.body.appendChild(target);
+                target.onload = target.onreadystatechange = function () {
+                    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+                        callback();
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                };
+            }
+        });
+    },
+
+    /**
+     * 引入 css 文件
+     * @param {string} fullPath 完整路径
+     * @param {string} realPath 不携带版本号的路径
+     * @param {function} callback 引入文件后执行的回调函数
+     * @return {Promise}
+     */
+    importStyle(fullPath, realPath, callback) {
+        let target = document.createElement('link');
+
+        target.href = fullPath;
+        target.rel = 'stylesheet';
+        return new Promise((resolve, reject) => {
+            let styleList = [...document.styleSheets]
+                .filter((item) => typeof item.href == 'string')
+                .map((item) => item.href.split('?')[0]);
+
+            if (styleList.includes(realPath)) {
+                callback();
+                resolve();
+            } else {
+                document.head.appendChild(target);
+                target.onload = target.onreadystatechange = function () {
+                    if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+                        callback();
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                };
+            }
+        });
+    },
+
+    /**
+     * 引入 vc 文件
+     * @param {string} fullPath 完整路径
+     * @param {string} realPath 不携带版本号的路径
+     * @param {function} callback 引入文件后执行的回调函数
+     * @param {string} alias 组件别名
+     * @return {Promise}
+     */
+    importViewComponent(fullPath, realPath, callback, alias) {
+        let componentName = VC.parseComponentName(realPath),
+            globalName = '';
+
+        // 确定组件名称
+        if (componentName === '') {
+            console.log(`组件${fullPath}获取失败！`);
+            return;
+        }
+        globalName = alias || componentName;
+
+        // 组件已引入的情况
+        if (realPath == undefined || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
+            return new Promise((resolve) => {
+                callback.call(VC, {
+                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : '',
+                });
+                resolve();
+            });
+        }
+
+        // 仅当没有别名的时候，缓存组件地址，避免重复引入
+        if (globalName === componentName) {
+            VC.cache.push(realPath);
+        }
+
+        // 增加版本号
+        if (!fullPath.includes('?ver')) {
+            fullPath += `?ver=${Math.random()}`;
+        }
+
+        return fetch(fullPath)
+            .then((response) => response.text())
+            .then((res) => VC.parseViewComponent(res, componentName, globalName, callback));
+    },
+
+    /**
+     * 根据文件路径解析组件名称
+     * @param {string} src 文件路径
+     */
+    parseComponentName(src) {
+        let path = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(src);
+
+        if (path != null) {
+            let componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
+            if (componentName != null && componentName[1] != null) {
+                return componentName[1];
+            }
+        }
+
+        return '';
+    },
+
+    /**
+     * 解析组件文件
+     * @param {string} text 文本内容
+     * @param {string} componentName 组件名称
+     * @param {string} globalName 组件对外暴露名称
+     * @param {function} callback 解析完组件执行的回调函数
+     */
+    parseViewComponent(text, componentName, globalName, callback = () => {}) {
+        let myNode = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](`<div>${text}</div>`);
+
         return new Promise((resolve) => {
-            scriptNode.forEach((elem) => {
-                let script = document.createElement('script');
-                script.innerHTML = `(function() {
+            let taskQueue = new _task_queue_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+
+            taskQueue.free = false;
+            try {
+                VC.parseComponentPackageNode(taskQueue, myNode.children('component-package'));
+                VC.parseComponentNormalNode(taskQueue, myNode, componentName, globalName);
+                taskQueue.add(() => {
+                    return new Promise((resolve2) => {
+                        callback.call(VC, {
+                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : '',
+                        });
+                        resolve2();
+                        resolve();
+                    });
+                });
+                taskQueue.free = true;
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    },
+
+    /**
+     * 解析 component-package 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode[]} componentPackage 组件包
+     */
+    parseComponentPackageNode(taskQueue, componentPackage) {
+        componentPackage.forEach((item, index, list) => {
+            let elem = list.eq(index),
+                componentName = elem.attr('name'),
+                globalName = elem.attr('alias') || componentName;
+
+            VC.parseComponentNormalNode(taskQueue, elem, componentName, globalName);
+        });
+    },
+
+    /**
+     * 解析常规组件节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode} myNode 节点
+     * @param {string} componentName 组件名称
+     * @param {string} globalName 组件对外暴露名称
+     */
+    parseComponentNormalNode(taskQueue, myNode, componentName, globalName) {
+        let unique = new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') + Math.floor(Math.random() * 1000);
+
+        // 解析 file 节点
+        VC.parseFileNode(taskQueue, myNode.children('file'));
+
+        // 解析 component 节点
+        VC.parseComponentNode(taskQueue, myNode.children('component'));
+
+        // 解析 script 节点
+        VC.parseScriptNode(taskQueue, myNode.children('script'), componentName, globalName);
+
+        // 解析 template 节点
+        VC.parseTemplateNode(taskQueue, myNode.children('template').html(), globalName, unique);
+
+        //解析 style 节点
+        VC.parseStyleNode(taskQueue, myNode.children('style'), unique);
+    },
+
+    /**
+     * 解析 file 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode} file file节点
+     */
+    parseFileNode(taskQueue, file) {
+        file.forEach((item, index, list) => {
+            let src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(list.eq(index).attr('src'));
+
+            taskQueue.add(VC.imports, [{ filePath: src }]);
+        });
+    },
+
+    /**
+     * 解析 component 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode} component component节点
+     */
+    parseComponentNode(taskQueue, component) {
+        component.forEach((item, index, list) => {
+            let elem = list.eq(index),
+                src = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(elem.attr('src')),
+                alias = elem.attr('alias');
+
+            // 是否添加随机数
+            if (elem.attr('random') != undefined) {
+                src += `?ver=${Math.random()}`;
+            }
+
+            taskQueue.add(VC.imports, [{ filePath: src, alias }]);
+        });
+    },
+
+    /**
+     * 解析 script 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode} scriptNode script节点
+     * @param {string} componentName 组件名称
+     * @param {string} globalName 最终引入全局变量名称
+     */
+    parseScriptNode(taskQueue, scriptNode, componentName, globalName) {
+        taskQueue.add(() => {
+            return new Promise((resolve) => {
+                scriptNode.forEach((elem) => {
+                    let script = document.createElement('script');
+                    script.innerHTML = `(function() {
                         ${elem.innerHTML.trim()};
                         if (typeof ${componentName} != 'undefined') {
                             window['${globalName}'] = window['${globalName}'] || ${componentName};
                         }
                     }());`;
-                document.querySelector('body').appendChild(script);
-            });
-            resolve();
-        });
-    });
-};
-
-/**
- * 处理template
- * @param {TaskQueue} taskQueue 任务队列
- * @param {string} template 模板字符串
- * @param {string} globalName 组件名称
- */
-VC.handleTemplateNode = function (taskQueue, template, globalName, unique) {
-    taskQueue.add(() => {
-        return new Promise((resolve) => {
-            let node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](template);
-
-            if (eval(`typeof ${globalName} != 'undefined'`)) {
-                if (node.length == 0) {
-                    node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](eval(`${globalName}._template`));
-                }
-                if (node.length != 0) {
-                    node.attr(`vc-${unique}`, '');
-                    eval(globalName)._template = node[0].outerHTML;
-                }
-            }
-            resolve();
-        });
-    });
-};
-
-/**
- * 处理style
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode} styleNode 样式字符串
- * @param {string} unique 唯一标识
- */
-VC.handleStyleNode = function (taskQueue, styleNode, unique) {
-    taskQueue.add(() => {
-        return new Promise((resolve) => {
-            styleNode.forEach((item, index, list) => {
-                VC.handleStyleNodeItem(list.eq(index), unique);
+                    document.querySelector('body').appendChild(script);
+                });
+                resolve();
             });
         });
-    });
-};
+    },
 
-/**
- * 处理style
- * @param {MyNode} elem 元素
- * @param {string} unique 唯一标识
- */
-VC.handleStyleNodeItem = function (elem, unique) {
-    let node = elem[0];
+    /**
+     * 解析 template 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {string} template 模板字符串
+     * @param {string} globalName 组件名称
+     */
+    parseTemplateNode(taskQueue, template, globalName, unique) {
+        taskQueue.add(() => {
+            return new Promise((resolve) => {
+                let node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](template);
 
-    if (elem.attr('disabled') != null) return;
-    document.querySelector('body').appendChild(node);
-    if (elem.attr('scoped') != null) {
-        VC.handleCSSRules(node.sheet.cssRules, unique);
-    }
-};
+                if (eval(`typeof ${globalName} != 'undefined'`)) {
+                    if (node.length == 0) {
+                        node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](eval(`${globalName}._template`));
+                    }
+                    if (node.length != 0) {
+                        node.attr(`vc-${unique}`, '');
+                        eval(globalName)._template = node[0].outerHTML;
+                    }
+                }
+                resolve();
+            });
+        });
+    },
 
-/**
- * @description 处理CSSRules
- * @param {string} cssRules CSS规则
- * @param {string} unique 唯一标识
- */
-VC.handleCSSRules = function (cssRules, unique) {
-    for (let i = 0; i < cssRules.length; i++) {
-        switch (cssRules[i].__proto__) {
-            case CSSStyleRule.prototype: // 规则
-                cssRules[i].selectorText = this.handleCSSStyleRule(
-                    cssRules[i].selectorText,
-                    unique
-                );
-                break;
+    /**
+     * 解析 style 节点
+     * @param {TaskQueue} taskQueue 任务队列
+     * @param {MyNode} styleNode 样式字符串
+     * @param {string} unique 唯一标识
+     */
+    parseStyleNode(taskQueue, styleNode, unique) {
+        taskQueue.add(() => {
+            return new Promise((resolve) => {
+                styleNode.forEach((item, index, list) => {
+                    VC.handleStyleNodeItem(list.eq(index), unique);
+                });
+                resolve();
+            });
+        });
+    },
 
-            case CSSMediaRule.prototype: // 媒体查询
-                this.handleCSSRules(cssRules[i].cssRules, unique);
-                break;
+    /**
+     * 处理style
+     * @param {MyNode} elem 元素
+     * @param {string} unique 唯一标识
+     */
+    handleStyleNodeItem(elem, unique) {
+        let node = elem[0];
 
-            default:
-                break;
+        if (elem.attr('disabled') != null) {
+            return;
         }
-    }
+        document.querySelector('body').appendChild(node);
+        if (elem.attr('scoped') != null) {
+            VC.handleCSSRules(node.sheet.cssRules, unique);
+        }
+    },
+
+    /**
+     * @description 处理CSSRules
+     * @param {string} cssRules CSS规则
+     * @param {string} unique 唯一标识
+     */
+    handleCSSRules(cssRules, unique) {
+        for (let i = 0; i < cssRules.length; i++) {
+            switch (cssRules[i].__proto__) {
+                case CSSStyleRule.prototype: // 规则
+                    cssRules[i].selectorText = this.handleCSSStyleRule(cssRules[i].selectorText, unique);
+                    break;
+
+                case CSSMediaRule.prototype: // 媒体查询
+                    this.handleCSSRules(cssRules[i].cssRules, unique);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    },
+
+    /**
+     * @description 处理CSSStyleRule
+     * @param {string} selectorText 样式字符串
+     * @param {string} unique 唯一标识
+     */
+    handleCSSStyleRule(selectorText, unique) {
+        let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
+            selectorList = selectorText.split(',');
+
+        return selectorList
+            .map((selector) => {
+                return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
+            })
+            .join(',');
+    },
 };
-
-/**
- * @description 处理CSSStyleRule
- * @param {string} selectorText 样式字符串
- * @param {string} unique 唯一标识
- */
-VC.handleCSSStyleRule = function (selectorText, unique) {
-    let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
-        selectorList = selectorText.split(',');
-
-    return selectorList
-        .map((selector) => {
-            return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
-        })
-        .join(',');
-};
-
-/**
- * 处理组件包
- * @param {TaskQueue} taskQueue 任务队列
- * @param {MyNode[]} componentPackage 组件包
- */
-VC.handleComponentPackage = function (taskQueue, componentPackage) {
-    componentPackage.forEach((item, index, list) => {
-        let elem = list.eq(index),
-            componentName = elem.attr('data-name'),
-            globalName = elem.attr('data-alias') || componentName,
-            unique = new _time_js__WEBPACK_IMPORTED_MODULE_3__["default"]().format('HHMMSS') + Math.floor(Math.random() * 1000);
-
-        // 处理component
-        VC.handleComponentNode(taskQueue, elem.children('component'));
-
-        // 处理script
-        VC.handleScriptNode(taskQueue, elem.children('script'), componentName, globalName);
-
-        // 处理template
-        VC.handleTemplateNode(taskQueue, elem.children('template').html(), globalName, unique);
-
-        // 处理style
-        VC.handleStyleNode(taskQueue, elem.children('style'), unique);
-    });
-};
-
-// 缓存已经引入的组件地址，避免重复引入
-VC.cache = [];
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VC);
 
@@ -1690,19 +1752,13 @@ class MyNode {
         } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(selector) === 'string' && selector.trim() !== '') {
             // 字符串
             selector = selector.trim();
-            if (
-                selector[0] === '<' &&
-                selector[selector.length - 1] === '>' &&
-                selector.length >= 3
-            ) {
+            if (selector[0] === '<' && selector[selector.length - 1] === '>' && selector.length >= 3) {
                 let template = document.createElement('template');
 
                 template.innerHTML = selector;
                 this.concat(new MyNode(template.content).children());
             } else {
-                document
-                    .querySelectorAll(selector)
-                    .forEach((element) => this.push(element));
+                document.querySelectorAll(selector).forEach((element) => this.push(element));
             }
         }
     }
@@ -1803,9 +1859,7 @@ class MyNode {
             arr = str.split(' ');
 
         this.forEach((item) => {
-            res =
-                item.nodeType === 1 &&
-                arr.every((element) => item.classList.contains(element));
+            res = item.nodeType === 1 && arr.every((element) => item.classList.contains(element));
             return !res;
         });
 
@@ -1817,8 +1871,7 @@ class MyNode {
         let arr = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(str) === 'string' ? str.split(' ') : [];
 
         this.forEach((item) => {
-            item.nodeType === 1 &&
-                arr.forEach((element) => item.classList.remove(element));
+            item.nodeType === 1 && arr.forEach((element) => item.classList.remove(element));
         });
 
         return this;
@@ -1829,10 +1882,7 @@ class MyNode {
         let arr = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(str) === 'string' ? str.split(' ') : [];
 
         this.forEach((item) => {
-            item.nodeType === 1 &&
-                arr.forEach(
-                    (element) => element && item.classList.add(element)
-                );
+            item.nodeType === 1 && arr.forEach((element) => element && item.classList.add(element));
         });
 
         return this;
@@ -1844,9 +1894,7 @@ class MyNode {
 
         this.forEach((item) => {
             myNode = new MyNode(item);
-            myNode.hasClass(str)
-                ? myNode.removeClass(str)
-                : myNode.addClass(str);
+            myNode.hasClass(str) ? myNode.removeClass(str) : myNode.addClass(str);
         });
 
         return this;
@@ -1971,8 +2019,7 @@ class MyNode {
 
         this.forEach((item) => {
             if (item.previousElementSibling && selector) {
-                item.previousElementSibling.matches(selector) &&
-                    res.push(item.previousElementSibling);
+                item.previousElementSibling.matches(selector) && res.push(item.previousElementSibling);
             } else {
                 res.push(item.previousElementSibling);
             }
@@ -1988,8 +2035,7 @@ class MyNode {
 
         this.forEach((item) => {
             if (item.nextElementSibling && selector) {
-                item.nextElementSibling.matches(selector) &&
-                    res.push(item.nextElementSibling);
+                item.nextElementSibling.matches(selector) && res.push(item.nextElementSibling);
             } else {
                 res.push(item.nextElementSibling);
             }
@@ -2069,10 +2115,7 @@ class MyNode {
             }
         } else {
             // 获取样式
-            return this[0]
-                ? this[0].style.getPropertyValue(key) ||
-                      window.getComputedStyle(this[0])[key]
-                : '';
+            return this[0] ? this[0].style.getPropertyValue(key) || window.getComputedStyle(this[0])[key] : '';
         }
 
         return this;
@@ -2143,9 +2186,7 @@ class MyNode {
                         let myNode = new MyNode(document.createElement('div'));
 
                         myNode[0].innerHTML = str;
-                        myNode
-                            .children()
-                            .forEach((elem) => item.appendChild(elem));
+                        myNode.children().forEach((elem) => item.appendChild(elem));
                     });
                 } else {
                     this.forEach((item) => (item.innerHTML = str));
@@ -2166,9 +2207,7 @@ class MyNode {
     // Text And Title
     textAndTitle(str) {
         if (str != null) {
-            this.forEach((item) =>
-                new MyNode(item).text(str).attr('title', str)
-            );
+            this.forEach((item) => new MyNode(item).text(str).attr('title', str));
         }
         return this;
     }
@@ -2197,37 +2236,17 @@ class MyNode {
                 if (selector) {
                     if (_item.find(selector).includes(e.srcElement)) {
                         // 点击的节点匹配
-                        callback.call(
-                            e.srcElement,
-                            e,
-                            new MyNode(e.srcElement),
-                            _item,
-                            new MyNode(e.srcElement)
-                        );
+                        callback.call(e.srcElement, e, new MyNode(e.srcElement), _item, new MyNode(e.srcElement));
                     } else {
-                        new MyNode(e.srcElement)
-                            .parents(selector)
-                            .forEach((elem) => {
-                                if (new MyNode(elem).parents(item).length > 0) {
-                                    callback.call(
-                                        elem,
-                                        e,
-                                        new MyNode(elem),
-                                        _item,
-                                        new MyNode(e.srcElement)
-                                    );
-                                    return false;
-                                }
-                            });
+                        new MyNode(e.srcElement).parents(selector).forEach((elem) => {
+                            if (new MyNode(elem).parents(item).length > 0) {
+                                callback.call(elem, e, new MyNode(elem), _item, new MyNode(e.srcElement));
+                                return false;
+                            }
+                        });
                     }
                 } else {
-                    callback.call(
-                        this,
-                        e,
-                        new MyNode(this),
-                        _item,
-                        new MyNode(e.srcElement)
-                    );
+                    callback.call(this, e, new MyNode(this), _item, new MyNode(e.srcElement));
                 }
             });
         });
@@ -2322,24 +2341,16 @@ class MyNode {
     append(node, pos = 0) {
         if (node && node.nodeType === 1) {
             // Node
-            this.forEach((item, index) =>
-                item.appendChild(index == pos ? node : node.cloneNode(true))
-            );
+            this.forEach((item, index) => item.appendChild(index == pos ? node : node.cloneNode(true)));
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.append(item, pos));
         } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.append(new MyNode(node), pos);
             } else {
-                this.forEach((item) =>
-                    item.appendChild(document.createTextNode(node))
-                );
+                this.forEach((item) => item.appendChild(document.createTextNode(node)));
             }
         } else {
             this.append(new MyNode(node), pos);
@@ -2374,29 +2385,17 @@ class MyNode {
         if (node && node.nodeType === 1) {
             // Node
             this.forEach((item, index) =>
-                item.parentNode.insertBefore(
-                    index == pos ? node : node.cloneNode(true),
-                    item
-                )
+                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item)
             );
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.before(item, pos));
         } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.before(new MyNode(node), pos);
             } else {
-                this.forEach((item) =>
-                    item.parentNode.insertBefore(
-                        document.createTextNode(node),
-                        item
-                    )
-                );
+                this.forEach((item) => item.parentNode.insertBefore(document.createTextNode(node), item));
             }
         } else {
             this.before(new MyNode(node), pos);
@@ -2414,28 +2413,18 @@ class MyNode {
         if (node && node.nodeType === 1) {
             // Node
             this.forEach((item, index) =>
-                item.parentNode.insertBefore(
-                    index == pos ? node : node.cloneNode(true),
-                    item.nextElementSibling
-                )
+                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item.nextElementSibling)
             );
         } else if (node instanceof MyNode) {
             // MyNode
             node.forEach((item) => this.after(item, pos));
         } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(node) === 'string') {
             // String
-            if (
-                node[0] === '<' &&
-                node[node.length - 1] === '>' &&
-                node.length >= 3
-            ) {
+            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
                 this.after(new MyNode(node), pos);
             } else {
                 this.forEach((item) =>
-                    item.parentNode.insertBefore(
-                        document.createTextNode(node),
-                        item.nextElementSibling
-                    )
+                    item.parentNode.insertBefore(document.createTextNode(node), item.nextElementSibling)
                 );
             }
         } else {
@@ -2750,9 +2739,10 @@ class Component {
      * @param {string | DOM | MyNode} selector 选择器
      */
     constructor(selector) {
-        let self = this;
+        let self = this,
+            _constructor = this.__proto__.constructor;
 
-        selector = selector || this.__proto__.constructor._template;
+        selector = selector || _constructor._template;
 
         /**
          * @member {MyNode} node 组件根节点
@@ -2761,8 +2751,8 @@ class Component {
          */
         this.node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
-        if (this.__proto__.constructor._version != undefined) {
-            this.node.attr(`vc-${this.__proto__.constructor._version}`, '');
+        if (_constructor._version != undefined) {
+            this.node.attr(`vc-${_constructor._version}`, '');
         }
 
         /**
@@ -2861,74 +2851,20 @@ class Component {
             }),
         });
 
-        this._watch_data();
-        this._watch_props();
+        /**
+         * 增加默认全局事件监听
+         */
+        this._bus.on(this.__proto__.constructor.name, (msg) => {
+            const { component, action, data } = msg;
+            this._listen_bus(component, action, data);
+        });
         this._mount_component();
     }
 
     /**
-     * 子组件内加载完成后执行的函数
+     * 子组件实例化完成后执行的函数
      */
     _mounted() {}
-
-    /**
-     * 注册事件
-     */
-    _event() {}
-
-    /**
-     * 设置属性
-     */
-    _data() {}
-
-    /**
-     * 设置监听
-     */
-    _watch() {}
-
-    /**
-     * 计算属性
-     */
-    _computed() {}
-
-    /**
-     * 设置传参
-     */
-    _props() {
-        return {};
-    }
-
-    /**
-     * 设置监听属性
-     */
-    _watch_data() {
-        let res = this._data(),
-            methods = this._watch();
-
-        if (res != null) {
-            for (let key in res) {
-                let callback = () => {};
-
-                if (methods && methods[key]) {
-                    callback = methods[key];
-                }
-                this._observe(key, res[key], callback);
-            }
-        }
-    }
-
-    /**
-     * 监听入参
-     */
-    _watch_props() {
-        let props = this._props();
-
-        if (props != null) {
-            for (let key in props) {
-                this._observe(key, props[key]);
-            }
-        }
-    }
 
     /**
      * 销毁组件
@@ -2961,11 +2897,19 @@ class Component {
     _send_msg(msg) {}
 
     /**
-     * 监听消息，仅限用于父组件监听子组件，使用时重写该方法
+     * 监听子组件消息，使用时重写该方法
      * @param {Component} component 消息来源组件
      * @param {object} msg 消息
      */
     _listen_msg(component, msg) {}
+
+    /**
+     * 监听事件总线，使用时重写该方法
+     * @param {Component} component 消息来源组件
+     * @param {string} action 动作
+     * @param {object} data 数据
+     */
+    _listen_bus(component, action, data) {}
 
     /**
      * 监听属性
@@ -3006,74 +2950,45 @@ class Component {
         taskQueue.free = false;
         this.node.find('slot').forEach((elem, index, list) => {
             let slot = list.eq(index), // 插槽
-                componentName = slot.attr('data-component'), // 组件类名
-                name = slot.attr('data-name'), // 实例化名称
-                prop = slot.attr('data-prop'), // 关联属性
-                src = slot.attr('data-src'); // 组件地址
+                src = slot.attr('data-src'), // 组件地址
+                componentName = slot.attr('data-component') || _vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseComponentName(src); // 组件类名
 
-            if (componentName == null || componentName == '') {
-                // 当没有定义 data-component 时，根据 data-src 解析地址
-                if (src == null || src == '') {
-                    return;
-                }
-                let path = _util_js__WEBPACK_IMPORTED_MODULE_3__["default"].eval(src);
-                componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
-                if (componentName && componentName[1]) {
-                    componentName = componentName[1];
-                } else {
-                    console.log('组件文件后缀应该为".vc"！');
-                    return;
-                }
+            if (componentName === '') {
+                console.log(`组件${src}获取失败！`);
+                return;
             }
-
-            // 定义实例化名称
-            name = name || componentName.replace(componentName[0], componentName[0].toLowerCase());
 
             if (eval(`typeof ${componentName} == 'undefined'`) && src != null) {
                 taskQueue.add(_vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].imports, [
                     {
                         filePath: src,
                         handle: () => {
-                            this._instantiate_component({
-                                name,
-                                componentName,
-                                slot,
-                                prop,
-                            });
+                            this._instantiate_component(slot, componentName);
                         },
                     },
                 ]);
             } else {
                 // 已存在指定的组件变量
-                this._instantiate_component({
-                    name,
-                    componentName,
-                    slot,
-                    prop,
-                });
+                this._instantiate_component(slot, componentName);
             }
         });
         taskQueue.add(() => {
-            try {
-                this._mounted();
-            } catch (err) {
-                console.log(err);
-            }
+            this._mounted();
         });
-        taskQueue.add(() => this._event());
         taskQueue.free = true;
     }
 
     /**
      * 实例化子组件
-     * @param {object} params 入参
-     * @param {string} params.name 组件实例化变量名
-     * @param {string} params.componentName 组件类名
-     * @param {string} params.prop 关联属性
-     * @param {MyNode} params.slot 插槽
+     * @param {MyNode} slot 插槽
+     * @param {string} componentName 组件类名
      */
-    _instantiate_component(params) {
-        let { name, componentName, slot, prop } = params;
+    _instantiate_component(slot, componentName) {
+        let instantiateName = slot.attr('data-name'), // 实例化名称
+            className = slot.attr('class'); // 插槽绑定的类
+
+        // 定义实例化名称
+        instantiateName = instantiateName || componentName.replace(componentName[0], componentName[0].toLowerCase());
 
         if (
             eval(`typeof ${componentName} == 'undefined'`) ||
@@ -3083,45 +2998,14 @@ class Component {
             return;
         }
 
-        this._children[name] = eval(`new ${componentName}()`);
-        this._children[name].node.addClass(slot.attr('class'));
-        slot.replaceWith(this._children[name].node);
-
-        // 处理关联参数
-        if (prop != undefined && prop != '') {
-            let self = this,
-                proxyProperty = '__' + prop;
-            Object.defineProperty(this, proxyProperty, {
-                value: new Proxy(
-                    {},
-                    {
-                        set(target, p, newValue, receiver) {
-                            let res = Reflect.set(...arguments);
-                            if (p in self._children[name]) {
-                                self._children[name][p] = newValue;
-                            }
-                            return res;
-                        },
-                    }
-                ),
-            });
-            this._observe(prop, (value) => {
-                if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) == 'object') {
-                    for (let key in value) {
-                        this[proxyProperty][key] = value[key];
-                    }
-                }
-            });
-            if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(this[prop]) == 'object') {
-                for (let key in this[prop]) {
-                    this[proxyProperty][key] = this[prop][key];
-                }
-            }
-        }
+        this._children[instantiateName] = eval(`new ${componentName}()`);
+        this._children[instantiateName].node.addClass(className);
+        slot.replaceWith(this._children[instantiateName].node);
     }
 
     /**
      * 重置根组件
+     * @param {Component} component 组件
      */
     _reset_root(component) {
         component._root = this._root;
@@ -3130,6 +3014,37 @@ class Component {
                 component._reset_root(component._children[key]);
             }
         }
+    }
+
+    /**
+     * 判断组件的父组件中是否含有指定组件
+     * @param {Component} component 组件
+     */
+    _has_parent(component) {
+        if (this._parent === component) {
+            return true;
+        }
+
+        while (this._parent instanceof Component) {
+            return this._parent._is_parent(component);
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断组件的子组件中是否包含指定组件
+     * @param {Component} component 组件
+     */
+    _has_child(component) {
+        for (let child in this._children) {
+            if (this._children[child] === component) {
+                return true;
+            }
+            this._children[child].$child(component);
+        }
+
+        return false;
     }
 }
 
@@ -4473,11 +4388,11 @@ class DropList extends _form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         this.label = option.label;
         this.list = option.list || [];
         this.hover = option.hover || false;
-        if (typeof option.change == 'function') {
-            this.change = option.change;
-        }
         if (option.check != null) {
             this.check = option.check;
+        }
+        if (typeof option.change == 'function') {
+            this.change = option.change;
         }
     }
 
@@ -4539,17 +4454,12 @@ class DropList extends _form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
      */
     updateCheckItem() {
         // 取消选中项
-        this.node
-            .find('.ly-drop-list_item-active')
-            .removeClass('ly-drop-list_item-active');
+        this.node.find('.ly-drop-list_item-active').removeClass('ly-drop-list_item-active');
 
         // 选中当前项
         let text = '';
         if (this.pos > -1) {
-            this.node
-                .find('.ly-drop-list_item')
-                .eq(this.pos)
-                .addClass('ly-drop-list_item-active');
+            this.node.find('.ly-drop-list_item').eq(this.pos).addClass('ly-drop-list_item-active');
             text = this.standardList[this.pos].value;
         }
         this.node.find('.ly-form_input').val(text).attr('title', text);
@@ -4959,6 +4869,13 @@ class Radio extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * @inner
          */
         this._observe('required', false);
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Radio
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -4966,10 +4883,7 @@ class Radio extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      */
     on() {
         this.node.on('click', '.ly-radio_item', (e, target) => {
-            if (
-                this.required == false &&
-                target.hasClass('ly-radio_item-active')
-            ) {
+            if (this.required == false && target.hasClass('ly-radio_item-active')) {
                 this.check = null;
             } else {
                 this.check = target.posOfSiblings();
@@ -4986,7 +4900,6 @@ class Radio extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      * @param {function} option.change 切换选中项后触发的事件
      */
     load(option = {}) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.list = option.list || [];
         this.check = option.check;
@@ -4995,6 +4908,9 @@ class Radio extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
             if (this.value == null && this.list.length != 0) {
                 this.check = 0;
             }
+        }
+        if (typeof option.change == 'function') {
+            this.change = option.change;
         }
     }
 
@@ -5018,15 +4934,10 @@ class Radio extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      * @description 更新选中样式
      */
     updateCheckItem() {
-        this.node
-            .find('.ly-radio_item-active')
-            .removeClass('ly-radio_item-active');
+        this.node.find('.ly-radio_item-active').removeClass('ly-radio_item-active');
 
         if (this.pos !== -1) {
-            this.node
-                .find('.ly-radio_item')
-                .eq(this.pos)
-                .addClass('ly-radio_item-active');
+            this.node.find('.ly-radio_item').eq(this.pos).addClass('ly-radio_item-active');
         }
     }
 }
@@ -5305,15 +5216,9 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
                 return;
             }
 
-            if (
-                value.length === this.standardList.length &&
-                this.allCheck !== true
-            ) {
+            if (value.length === this.standardList.length && this.allCheck !== true) {
                 this.allCheck = true;
-            } else if (
-                value.length !== this.standardList.length &&
-                this.allCheck === true
-            ) {
+            } else if (value.length !== this.standardList.length && this.allCheck === true) {
                 this.allCheck = false;
             }
 
@@ -5357,15 +5262,9 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * @inner
          */
         this._observe('allCheck', false, (value) => {
-            if (
-                value === true &&
-                this.check.length !== this.standardList.length
-            ) {
+            if (value === true && this.check.length !== this.standardList.length) {
                 this.check = this.standardList.map((item, index) => index);
-            } else if (
-                value === false &&
-                this.check.length === this.standardList.length
-            ) {
+            } else if (value === false && this.check.length === this.standardList.length) {
                 this.check = [];
             }
         });
@@ -5410,9 +5309,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * @inner
          */
         this._observe('disabledPos', (value) => {
-            this.node
-                .find('.ly-checkbox_item')
-                .removeClass('ly-checkbox_item-disabled');
+            this.node.find('.ly-checkbox_item').removeClass('ly-checkbox_item-disabled');
             value.forEach((elem) => {
                 let node = this.node.find('.ly-checkbox_item').eq(elem);
 
@@ -5429,45 +5326,33 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      */
     on() {
         // 单个选项
-        this.node.on(
-            'click',
-            '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)',
-            (e, target) => {
-                if (
-                    this.maxCount != -1 &&
-                    this.check.length == this.maxCount &&
-                    !target.hasClass('ly-checkbox_item-active')
-                ) {
-                    this.error(0);
-                    return;
-                }
-
-                target.toggleClass('ly-checkbox_item-active');
-                if (this.all === false) {
-                    // 没有全选
-                    this.check = this.node
-                        .find('.ly-checkbox_item-active[data-type="single"]')
-                        .map((item, index, list) => {
-                            return list.eq(index).posOfSiblings();
-                        });
-                } else {
-                    this.check = this.node
-                        .find('.ly-checkbox_item-active[data-type="single"]')
-                        .map((item, index, list) => {
-                            return list.eq(index).posOfSiblings() - 1;
-                        });
-                }
+        this.node.on('click', '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)', (e, target) => {
+            if (
+                this.maxCount != -1 &&
+                this.check.length == this.maxCount &&
+                !target.hasClass('ly-checkbox_item-active')
+            ) {
+                this.error(0);
+                return;
             }
-        );
+
+            target.toggleClass('ly-checkbox_item-active');
+            if (this.all === false) {
+                // 没有全选
+                this.check = this.node.find('.ly-checkbox_item-active[data-type="single"]').map((item, index, list) => {
+                    return list.eq(index).posOfSiblings();
+                });
+            } else {
+                this.check = this.node.find('.ly-checkbox_item-active[data-type="single"]').map((item, index, list) => {
+                    return list.eq(index).posOfSiblings() - 1;
+                });
+            }
+        });
 
         // 全选按钮
-        this.node.on(
-            'click',
-            '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)',
-            () => {
-                this.allCheck = !this.allCheck;
-            }
-        );
+        this.node.on('click', '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)', () => {
+            this.allCheck = !this.allCheck;
+        });
     }
 
     /**
@@ -5489,13 +5374,13 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this.all = option.all || false;
         this.check = option.check != undefined ? option.check : [];
         this.disabled = option.disabled != undefined ? option.disabled : [];
+        this.maxCount = option.maxCount || this.maxCount;
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
         if (typeof option.change == 'function') {
             this.change = option.change;
         }
-        this.maxCount = option.maxCount || this.maxCount;
         if (typeof option.error == 'function') {
             this.error = option.error;
         }
@@ -5538,9 +5423,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      */
     updateCheckItem() {
         // 先重置为未选中再选中指定的节点
-        this.node
-            .find('.ly-checkbox_item')
-            .removeClass('ly-checkbox_item-active');
+        this.node.find('.ly-checkbox_item').removeClass('ly-checkbox_item-active');
 
         // 更新选中项
         let step = this.all ? 1 : 0;
@@ -5550,10 +5433,7 @@ class Checkbox extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
                 .eq(item + step)
                 .addClass('ly-checkbox_item-active')
         );
-        this.allCheck &&
-            this.node
-                .find('.ly-checkbox_item[data-type="all"]')
-                .addClass('ly-checkbox_item-active');
+        this.allCheck && this.node.find('.ly-checkbox_item[data-type="all"]').addClass('ly-checkbox_item-active');
     }
 }
 
@@ -5826,6 +5706,13 @@ class Switch extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
             this.node.find('.ly-switch_btn').attr('data-status', value ? 1 : 0);
             this.change(value, prev, this);
         });
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Switch
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -5845,9 +5732,11 @@ class Switch extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      * @param {function} option.change 切换选中项后触发的事件
      */
     load(option = {}) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.value = option.value;
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
     }
 }
 
@@ -6125,8 +6014,7 @@ class Slider extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * @inner
          */
         this._observe('pageX', 0, (value) => {
-            this.dragWidth =
-                value - this.node.find('.ly-slider_content').offset().left;
+            this.dragWidth = value - this.node.find('.ly-slider_content').offset().left;
         });
 
         /**
@@ -6146,10 +6034,15 @@ class Slider extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
                 rate = (this.max - this.min) / width,
                 result = this.min + value * rate;
 
-            this.valid =
-                parseInt(result * Math.pow(10, this.decimal)) /
-                Math.pow(10, this.decimal);
+            this.valid = parseInt(result * Math.pow(10, this.decimal)) / Math.pow(10, this.decimal);
         });
+
+        /**
+         * @member {function} change 值发生变化时的回调方法
+         * @memberof Slider
+         * @inner
+         */
+        this.change = () => {};
     }
 
     /**
@@ -6203,12 +6096,14 @@ class Slider extends _form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      * @param {function} option.change 数值发生改变后触发的事件
      */
     load(option) {
-        this.change = option.change || (() => {});
         this.label = option.label;
         this.min = option.min || 0;
         this.max = option.max || 100;
         this.step = option.step || 1;
         this.valid = option.value || 0;
+        if (typeof option.change == 'function') {
+            this.change = option.change;
+        }
     }
 
     /**
@@ -8502,31 +8397,24 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
      */
     on() {
         // 点击输入框
-        this.node.on(
-            'click',
-            '.ly-form_content',
-            (e, target, listener, source) => {
-                let show = this.show;
-                this.constructor._hideAll();
+        this.node.on('click', '.ly-form_content', (e, target, listener, source) => {
+            let show = this.show;
+            this.constructor._hideAll();
 
-                if (
-                    source.hasClass('ly-drop-list_item') ||
-                    source.parents('.ly-drop-list_item').length != 0
-                ) {
-                    // 当触发源是下拉列表项时，不改变显示状态
-                    this.show = show;
-                } else if (source.hasClass('ly-icon_remove')) {
-                    // 当触发源是删除按钮时，不改变现实状态，并删除
-                    this.show = show;
-                    let list = _base_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].proxyToJSON(this.check);
-                    list.shift();
-                    this.check = list;
-                } else if (this.hover != true) {
-                    // 当未做悬浮触发时，隐藏下拉列表
-                    this.show = !show;
-                }
+            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length != 0) {
+                // 当触发源是下拉列表项时，不改变显示状态
+                this.show = show;
+            } else if (source.hasClass('ly-icon_remove')) {
+                // 当触发源是删除按钮时，不改变现实状态，并删除
+                this.show = show;
+                let list = _base_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].proxyToJSON(this.check);
+                list.shift();
+                this.check = list;
+            } else if (this.hover != true) {
+                // 当未做悬浮触发时，隐藏下拉列表
+                this.show = !show;
             }
-        );
+        });
 
         // 切换列表项
         this.node.on('click', '.ly-drop-list_item', (e, target) => {
@@ -8577,14 +8465,14 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
         this.list = option.list || [];
         this.hover = option.hover || false;
         this.maxCount = option.maxCount || this.maxCount;
+        if (option.check != null) {
+            this.check = option.check;
+        }
         if (typeof option.error == 'function') {
             this.error = option.error;
         }
         if (typeof option.change == 'function') {
             this.change = option.change;
-        }
-        if (option.check != null) {
-            this.check = option.check;
         }
     }
 
@@ -8593,32 +8481,19 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
      */
     updateCheckItem() {
         // 先重置为未选中再选中指定的节点
-        this.node
-            .find('.ly-drop-list_item')
-            .removeClass('ly-drop-list_item-active');
+        this.node.find('.ly-drop-list_item').removeClass('ly-drop-list_item-active');
 
         // 选中当前项
         this.pos.forEach((element) => {
             // 更新列表中选中状态
-            this.node
-                .find('.ly-drop-list_item')
-                .eq(element)
-                .addClass('ly-drop-list_item-active');
+            this.node.find('.ly-drop-list_item').eq(element).addClass('ly-drop-list_item-active');
         });
-        this.node
-            .find('.ly-multiple-list_input-content')
-            .attr('data-count', this.pos.length);
+        this.node.find('.ly-multiple-list_input-content').attr('data-count', this.pos.length);
 
         if (this.pos.length > 0) {
             let text = this.standardList[this.pos[0]].value;
-            this.node
-                .find('.ly-multiple-list_checked-text>span')
-                .text(text)
-                .attr('title', text);
-            this.node
-                .find('.ly-multiple-list_checked-num>span')
-                .eq(1)
-                .text(this.pos.length);
+            this.node.find('.ly-multiple-list_checked-text>span').text(text).attr('title', text);
+            this.node.find('.ly-multiple-list_checked-num>span').eq(1).text(this.pos.length);
         }
     }
 }
@@ -9046,6 +8921,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(66);
+/* harmony import */ var _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(67);
+/* harmony import */ var _fixed_thead_table_fixed_thead_table__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+
+
 
 
 /**
@@ -9059,6 +8938,18 @@ const Extend = {};
  * @see WaterMark
  */
 Extend.WaterMark = _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_0__["default"];
+
+/**
+ * 滚动条
+ * @see ScrollBar
+ */
+Extend.ScrollBar = _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_1__["default"];
+
+/**
+ * 固定表头
+ * @see FixTheadTable
+ */
+Extend.FixTheadTable = _fixed_thead_table_fixed_thead_table__WEBPACK_IMPORTED_MODULE_2__["default"];
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Extend);
 
@@ -9089,6 +8980,7 @@ __webpack_require__.r(__webpack_exports__);
  *         return [];
  *     }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
  *     interval: 1000, // 刷新频率，单位ms
+ *     fillStyle: '#333' // 字体样式
  * });
  */
 class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"] {
@@ -9151,6 +9043,15 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"] 
                 return;
             }
             this.mark.render(value);
+        });
+
+        /**
+         * 字体样式
+         * @member {string} fillStyle
+         * @memberof WaterMark#
+         */
+        this._observe('fillStyle', (value) => {
+            this.mark.fillStyle = value;
         });
     }
 
@@ -9223,23 +9124,14 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"] 
                 }
 
                 // 节点发生变化
-                if (
-                    targetNode[0] === this.node[0] ||
-                    targetNode[0] === this.mark.node[0]
-                ) {
+                if (targetNode[0] === this.node[0] || targetNode[0] === this.mark.node[0]) {
                     // 修改属性值，但是改变前后值没有变化
-                    if (
-                        elem.addedNodes.length == 0 &&
-                        targetNode.attr(elem.attributeName) == elem.oldValue
-                    ) {
+                    if (elem.addedNodes.length == 0 && targetNode.attr(elem.attributeName) == elem.oldValue) {
                         return;
                     }
 
                     // 新增节点，但是新增的是节点本身，则不需要处理
-                    if (
-                        elem.addedNodes[0] === this.node[0] ||
-                        elem.addedNodes[0] === this.mark.node[0]
-                    ) {
+                    if (elem.addedNodes[0] === this.node[0] || elem.addedNodes[0] === this.mark.node[0]) {
                         return;
                     }
 
@@ -9372,11 +9264,7 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"]
 
         for (let row = 0; row < count.x; row++) {
             for (let col = 0; col < count.y; col++) {
-                this.drawFont(
-                    infoList,
-                    base.x + row * padding.x,
-                    base.y + col * padding.y
-                );
+                this.drawFont(infoList, base.x + row * padding.x, base.y + col * padding.y);
             }
         }
     }
@@ -9428,6 +9316,542 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_0__["default"]
 
 /***/ }),
 /* 67 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _scroll_bar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(68);
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+
+
+
+class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    constructor() {
+        super();
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * 容器
+         */
+        this.container = null;
+
+        /**
+         * 比例
+         */
+        this._observe('rate', 1, (value) => {
+            if (value < 1) {
+                this.showThumb();
+            } else {
+                this.node.find('.sb_thumb').css('height', '0px');
+                this.hideThumb();
+            }
+        });
+
+        /**
+         * @member {boolean} fixed 是否长显
+         */
+        this._observe('fixed', false, (value) => {
+            if (value) {
+                this.calcThumbRate();
+                this.node.attr('data-fixed', 1);
+            }
+        });
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        /**
+         * 滚轮
+         */
+        this.container.on('mousewheel', (event) => {
+            if (event.wheelDeltaY < 0) {
+                this.container[0].scrollTop += 40;
+            } else {
+                this.container[0].scrollTop -= 40;
+            }
+        });
+
+        /**
+         * 发生滚动
+         */
+        this.container.on('scroll', () => {
+            let scrollTop = this.container[0].scrollTop;
+
+            this.node.css('top', scrollTop + 'px');
+            this.node.find('.sb_thumb').css('top', scrollTop * this.rate + 'px');
+        });
+
+        /**
+         * 鼠标滑入
+         */
+        this.container.on('mouseenter', () => this.calcThumbRate());
+
+        /**
+         * 鼠标滑出
+         */
+        this.container.on('mouseleave', () => this.hideThumb());
+    }
+
+    /**
+     * 加载
+     * @param {object} options 入参
+     * @param {boolean} options.fixed 是否固定显示
+     */
+    load(options = {}) {
+        this.container = this.node.parent();
+        this.setStyle();
+        this.fixed = options.fixed || false;
+        this.on();
+    }
+
+    /**
+     * 设置样式
+     */
+    setStyle() {
+        if (!['relative', 'absolute', 'fixed'].includes(this.container.css('position'))) {
+            this.container.css('position', 'relative');
+        }
+        this.container.css('overflow', 'hidden');
+    }
+
+    /**
+     * 计算滑块占比
+     */
+    calcThumbRate() {
+        this.rate = this.container[0].clientHeight / this.container[0].scrollHeight;
+    }
+
+    /**
+     * 显示滚动条
+     */
+    showThumb() {
+        let { paddingTop, paddingBottom } = getComputedStyle(this.node[0]);
+
+        this.node
+            .find('.sb_thumb')
+            .css(
+                'height',
+                this.container[0].clientHeight * this.rate - (parseInt(paddingTop) + parseInt(paddingBottom)) + 'px'
+            );
+        this.node.addClass('scroll-bar-active');
+    }
+
+    /**
+     * 隐藏滚动条
+     */
+    hideThumb() {
+        this.node.removeClass('scroll-bar-active');
+    }
+}
+
+/**
+ * 模板
+ */
+ScrollBar._template = `<div class="scroll-bar">
+    <div class="sb_scroll">
+        <div class="sb_thumb"></div>
+    </div>
+</div>`;
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ScrollBar);
+
+
+/***/ }),
+/* 68 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(20);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(21);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(69);
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+/* 69 */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    opacity: 0;
+}
+
+.scroll-bar[data-fixed='1'] {
+    opacity: 0.5;
+}
+
+.scroll-bar-active {
+    opacity: 0.5;
+}
+
+.scroll-bar > .sb_scroll {
+    position: relative;
+    width: 4px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.scroll-bar > .sb_scroll > .sb_thumb {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background-color: #000;
+    border-radius: 2px;
+}
+`, ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+/* 70 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+
+
+
+class FixTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    constructor() {
+        super();
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {string} thead 表头
+         */
+        this._observe('thead', (value) => {
+            this.node.find('thead').html(value);
+            this.node.find('.ftt_thead-container tr:first-child>th').forEach((item, index, list) => {
+                this.thCount += parseInt(list.eq(index).attr('colspan')) || 1;
+            });
+        });
+
+        /**
+         * @member {number} thCount 列数
+         */
+        this._observe('thCount', 0, (value) => {});
+
+        /**
+         * @member {string} tbody 表格内容
+         */
+        this._observe('tbody', (value) => {
+            if (value != '') {
+                this.node.find('tbody').html(value);
+            } else {
+                this.reset();
+            }
+            this.resize();
+        });
+
+        /**
+         * @member {number} width 宽度
+         */
+        this._observe('width', (value, prev) => {
+            if (value != 0 && value != prev) {
+                this.node.find('.ftt_thead-container').css('width', `${value}px`);
+            }
+        });
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        // 窗口发生变化
+        window.addEventListener('resize', () => {
+            this.resize();
+        });
+    }
+
+    /**
+     * 重置
+     */
+    reset() {
+        this.node
+            .find('tbody')
+            .html(`<tr><td class="tc_empty" colspan="${this.thCount}">没有查询到符合条件的记录!</td></tr>`);
+    }
+
+    /**
+     * 滚动条置顶
+     */
+    scrollTop() {
+        this.node.find('.ftt_tbody-container')[0].scrollTop = 0;
+    }
+
+    /**
+     * 重置表格样式
+     */
+    resize(tableContainer = this.node) {
+        // 先设置高度，让滚动条自适应
+        let height = tableContainer.find('.ftt_tbody-container>.ftt_table').height();
+        if (height == 0) {
+            return;
+        }
+        tableContainer.css('height', `${height}px`);
+
+        // 不能使用 height: 100%，会造成页面无故出现滚动条
+        tableContainer.find('.ftt_tbody-container').css('height', tableContainer.height() + 'px');
+
+        // 根据表格实际宽度设置表头
+        this.width = tableContainer.find('.ftt_tbody-container>.ftt_table').width();
+        // 防止刷新延迟，50ms后重新计算
+        setTimeout(() => {
+            this.width = tableContainer.find('.ftt_tbody-container>.ftt_table').width();
+        }, 50);
+    }
+}
+
+/**
+ * @member {string} _template 模板
+ */
+FixTheadTable._template = `
+<div class="fixed-thead-table">
+    <div class="ftt_thead-container">
+        <table class="ftt_table">
+            <thead></thead>
+        </table>
+    </div>
+    <div class="ftt_tbody-container">
+        <table class="ftt_table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>`;
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FixTheadTable);
+
+
+/***/ }),
+/* 71 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(16);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(18);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(20);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(21);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(72);
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+/* 72 */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.fixed-thead-table {
+    position: relative;
+    max-height: 100%;
+}
+
+.fixed-thead-table > .ftt_thead-container {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+}
+
+.fixed-thead-table > .ftt_tbody-container {
+    position: absolute;
+    top: 0;
+    overflow: auto;
+}
+
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar,
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar-track {
+    width: 8px;
+    background-color: #eee;
+}
+
+.fixed-thead-table > .ftt_tbody-container::-webkit-scrollbar-thumb {
+    background-color: #777;
+    border-radius: 0;
+}
+
+.fixed-thead-table .ftt_table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #333;
+    table-layout: fixed;
+}
+
+.fixed-thead-table .ftt_table > thead {
+    font-size: 14px;
+    background-color: #f5f4f9;
+}
+
+.fixed-thead-table .ftt_table th {
+    font-family: 'Medium';
+    font-weight: bold;
+}
+
+.fixed-thead-table .ftt_table th,
+.fixed-thead-table .ftt_table td {
+    height: 36px;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    border: 1px solid #ddd;
+}
+`, ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+/* 73 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9797,7 +10221,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(11);
 /* harmony import */ var _modules_form_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(12);
 /* harmony import */ var _modules_extend_index_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(65);
-/* harmony import */ var _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(67);
+/* harmony import */ var _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(73);
 
 
 

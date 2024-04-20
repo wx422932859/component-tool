@@ -94,15 +94,9 @@ class Checkbox extends Form {
                 return;
             }
 
-            if (
-                value.length === this.standardList.length &&
-                this.allCheck !== true
-            ) {
+            if (value.length === this.standardList.length && this.allCheck !== true) {
                 this.allCheck = true;
-            } else if (
-                value.length !== this.standardList.length &&
-                this.allCheck === true
-            ) {
+            } else if (value.length !== this.standardList.length && this.allCheck === true) {
                 this.allCheck = false;
             }
 
@@ -146,15 +140,9 @@ class Checkbox extends Form {
          * @inner
          */
         this._observe('allCheck', false, (value) => {
-            if (
-                value === true &&
-                this.check.length !== this.standardList.length
-            ) {
+            if (value === true && this.check.length !== this.standardList.length) {
                 this.check = this.standardList.map((item, index) => index);
-            } else if (
-                value === false &&
-                this.check.length === this.standardList.length
-            ) {
+            } else if (value === false && this.check.length === this.standardList.length) {
                 this.check = [];
             }
         });
@@ -199,9 +187,7 @@ class Checkbox extends Form {
          * @inner
          */
         this._observe('disabledPos', (value) => {
-            this.node
-                .find('.ly-checkbox_item')
-                .removeClass('ly-checkbox_item-disabled');
+            this.node.find('.ly-checkbox_item').removeClass('ly-checkbox_item-disabled');
             value.forEach((elem) => {
                 let node = this.node.find('.ly-checkbox_item').eq(elem);
 
@@ -218,45 +204,33 @@ class Checkbox extends Form {
      */
     on() {
         // 单个选项
-        this.node.on(
-            'click',
-            '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)',
-            (e, target) => {
-                if (
-                    this.maxCount != -1 &&
-                    this.check.length == this.maxCount &&
-                    !target.hasClass('ly-checkbox_item-active')
-                ) {
-                    this.error(0);
-                    return;
-                }
-
-                target.toggleClass('ly-checkbox_item-active');
-                if (this.all === false) {
-                    // 没有全选
-                    this.check = this.node
-                        .find('.ly-checkbox_item-active[data-type="single"]')
-                        .map((item, index, list) => {
-                            return list.eq(index).posOfSiblings();
-                        });
-                } else {
-                    this.check = this.node
-                        .find('.ly-checkbox_item-active[data-type="single"]')
-                        .map((item, index, list) => {
-                            return list.eq(index).posOfSiblings() - 1;
-                        });
-                }
+        this.node.on('click', '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)', (e, target) => {
+            if (
+                this.maxCount != -1 &&
+                this.check.length == this.maxCount &&
+                !target.hasClass('ly-checkbox_item-active')
+            ) {
+                this.error(0);
+                return;
             }
-        );
+
+            target.toggleClass('ly-checkbox_item-active');
+            if (this.all === false) {
+                // 没有全选
+                this.check = this.node.find('.ly-checkbox_item-active[data-type="single"]').map((item, index, list) => {
+                    return list.eq(index).posOfSiblings();
+                });
+            } else {
+                this.check = this.node.find('.ly-checkbox_item-active[data-type="single"]').map((item, index, list) => {
+                    return list.eq(index).posOfSiblings() - 1;
+                });
+            }
+        });
 
         // 全选按钮
-        this.node.on(
-            'click',
-            '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)',
-            () => {
-                this.allCheck = !this.allCheck;
-            }
-        );
+        this.node.on('click', '.ly-checkbox_item[data-type="all"]:not(.ly-checkbox_item-disabled)', () => {
+            this.allCheck = !this.allCheck;
+        });
     }
 
     /**
@@ -278,13 +252,13 @@ class Checkbox extends Form {
         this.all = option.all || false;
         this.check = option.check != undefined ? option.check : [];
         this.disabled = option.disabled != undefined ? option.disabled : [];
+        this.maxCount = option.maxCount || this.maxCount;
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
         if (typeof option.change == 'function') {
             this.change = option.change;
         }
-        this.maxCount = option.maxCount || this.maxCount;
         if (typeof option.error == 'function') {
             this.error = option.error;
         }
@@ -327,9 +301,7 @@ class Checkbox extends Form {
      */
     updateCheckItem() {
         // 先重置为未选中再选中指定的节点
-        this.node
-            .find('.ly-checkbox_item')
-            .removeClass('ly-checkbox_item-active');
+        this.node.find('.ly-checkbox_item').removeClass('ly-checkbox_item-active');
 
         // 更新选中项
         let step = this.all ? 1 : 0;
@@ -339,10 +311,7 @@ class Checkbox extends Form {
                 .eq(item + step)
                 .addClass('ly-checkbox_item-active')
         );
-        this.allCheck &&
-            this.node
-                .find('.ly-checkbox_item[data-type="all"]')
-                .addClass('ly-checkbox_item-active');
+        this.allCheck && this.node.find('.ly-checkbox_item[data-type="all"]').addClass('ly-checkbox_item-active');
     }
 }
 

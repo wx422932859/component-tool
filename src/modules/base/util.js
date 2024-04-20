@@ -116,85 +116,6 @@ Util.compare = function (obj1, obj2) {
 };
 
 /**
- * @description 引入文件
- * @param {String} filePath 文件路径
- * @param {Boolean} sign 是否为绝对路径（true 绝对路径， false 相对路径)
- */
-Util.importFile = function (filePath, sign = true) {
-    let prePath = '', // 路径前缀
-        node = null, // 父节点
-        target = null, // 标签
-        splitPath = ''; // 不包含随机数的地址
-
-    filePath = Util.formatPath(sign ? filePath : prePath + filePath);
-    splitPath = filePath.split('?')[0];
-    if (/\.js$/.test(splitPath)) {
-        // 导入JS文件
-        node = document.body;
-        target = document.createElement('script');
-        target.src = filePath;
-    } else if (/\.css$/.test(splitPath)) {
-        // 导入CSS文件
-        node = document.head;
-        target = document.createElement('link');
-        target.href = filePath;
-        target.rel = 'stylesheet';
-    }
-
-    return new Promise((resolve, reject) => {
-        if (target) {
-            let scriptList = [...document.scripts],
-                styleList = [...document.styleSheets],
-                filePathList = [];
-
-            scriptList = scriptList
-                .filter((item) => typeof item.src == 'string')
-                .map((item) => item.src.split('?')[0]);
-            styleList = styleList
-                .filter((item) => typeof item.href == 'string')
-                .map((item) => item.href.split('?')[0]);
-            filePathList = scriptList.concat(styleList);
-
-            if (filePathList.includes(splitPath)) {
-                resolve();
-            } else {
-                node.appendChild(target);
-                target.onload = target.onreadystatechange = function () {
-                    if (
-                        !this.readyState ||
-                        this.readyState === 'loaded' ||
-                        this.readyState === 'complete'
-                    ) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                };
-            }
-        } else {
-            resolve();
-        }
-    });
-};
-
-/**
- * @description 格式化路径
- * @param {String} path 路径
- * @returns {String}
- */
-Util.formatPath = function (path) {
-    let arr = path.split('/').filter((item, index) => item !== '.' && (index === 0 || item !== '')),
-        pos = arr.indexOf('..');
-
-    while (pos > 0) {
-        arr = arr.slice(0, pos - 1).concat(arr.slice(pos + 1));
-        pos = arr.indexOf('..');
-    }
-
-    return arr.join('/').replace(':/', '://');
-};
-
-/**
  * @description 获取简易类型名称
  * @param {String} name 类名
  * @returns {String}
@@ -504,5 +425,35 @@ Util.calStringLength = function (str) {
 
     return length;
 };
+
+/**
+ * 图片转base64
+ * @param {File | string} file 文件
+ */
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        if (typeof file == 'string') {
+            // 字符串
+            const image = new Image();
+            image.onload = function () {
+                reader.onloadend = function () {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(image);
+            };
+            image.src = file; // 替换为图片的URL或者base64字符串
+        } else {
+            reader.onloadend = function () {
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        }
+    });
+}
+Util.convertImageToBase64 = convertImageToBase64;
 
 export default Util;

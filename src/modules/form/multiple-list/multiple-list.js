@@ -142,31 +142,24 @@ class MultipleList extends DropList {
      */
     on() {
         // 点击输入框
-        this.node.on(
-            'click',
-            '.ly-form_content',
-            (e, target, listener, source) => {
-                let show = this.show;
-                this.constructor._hideAll();
+        this.node.on('click', '.ly-form_content', (e, target, listener, source) => {
+            let show = this.show;
+            this.constructor._hideAll();
 
-                if (
-                    source.hasClass('ly-drop-list_item') ||
-                    source.parents('.ly-drop-list_item').length != 0
-                ) {
-                    // 当触发源是下拉列表项时，不改变显示状态
-                    this.show = show;
-                } else if (source.hasClass('ly-icon_remove')) {
-                    // 当触发源是删除按钮时，不改变现实状态，并删除
-                    this.show = show;
-                    let list = Util.proxyToJSON(this.check);
-                    list.shift();
-                    this.check = list;
-                } else if (this.hover != true) {
-                    // 当未做悬浮触发时，隐藏下拉列表
-                    this.show = !show;
-                }
+            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length != 0) {
+                // 当触发源是下拉列表项时，不改变显示状态
+                this.show = show;
+            } else if (source.hasClass('ly-icon_remove')) {
+                // 当触发源是删除按钮时，不改变现实状态，并删除
+                this.show = show;
+                let list = Util.proxyToJSON(this.check);
+                list.shift();
+                this.check = list;
+            } else if (this.hover != true) {
+                // 当未做悬浮触发时，隐藏下拉列表
+                this.show = !show;
             }
-        );
+        });
 
         // 切换列表项
         this.node.on('click', '.ly-drop-list_item', (e, target) => {
@@ -217,14 +210,14 @@ class MultipleList extends DropList {
         this.list = option.list || [];
         this.hover = option.hover || false;
         this.maxCount = option.maxCount || this.maxCount;
+        if (option.check != null) {
+            this.check = option.check;
+        }
         if (typeof option.error == 'function') {
             this.error = option.error;
         }
         if (typeof option.change == 'function') {
             this.change = option.change;
-        }
-        if (option.check != null) {
-            this.check = option.check;
         }
     }
 
@@ -233,32 +226,19 @@ class MultipleList extends DropList {
      */
     updateCheckItem() {
         // 先重置为未选中再选中指定的节点
-        this.node
-            .find('.ly-drop-list_item')
-            .removeClass('ly-drop-list_item-active');
+        this.node.find('.ly-drop-list_item').removeClass('ly-drop-list_item-active');
 
         // 选中当前项
         this.pos.forEach((element) => {
             // 更新列表中选中状态
-            this.node
-                .find('.ly-drop-list_item')
-                .eq(element)
-                .addClass('ly-drop-list_item-active');
+            this.node.find('.ly-drop-list_item').eq(element).addClass('ly-drop-list_item-active');
         });
-        this.node
-            .find('.ly-multiple-list_input-content')
-            .attr('data-count', this.pos.length);
+        this.node.find('.ly-multiple-list_input-content').attr('data-count', this.pos.length);
 
         if (this.pos.length > 0) {
             let text = this.standardList[this.pos[0]].value;
-            this.node
-                .find('.ly-multiple-list_checked-text>span')
-                .text(text)
-                .attr('title', text);
-            this.node
-                .find('.ly-multiple-list_checked-num>span')
-                .eq(1)
-                .text(this.pos.length);
+            this.node.find('.ly-multiple-list_checked-text>span').text(text).attr('title', text);
+            this.node.find('.ly-multiple-list_checked-num>span').eq(1).text(this.pos.length);
         }
     }
 }

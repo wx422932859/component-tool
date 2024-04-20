@@ -57,8 +57,7 @@ Ajax.req = function (opts) {
         let xhr = new XMLHttpRequest(),
             type = opts.type || 'post', // 请求方式
             url = opts.url || '', // 请求地址
-            contentType =
-                opts.contentType || 'application/x-www-form-urlencoded', // 请求参数的数据格式
+            contentType = opts.contentType || 'application/x-www-form-urlencoded', // 请求参数的数据格式
             defer = opts.defer === undefined ? true : opts.defer, // 是否异步请求
             data = opts.data || {}, // 请求数据
             beforeSend = opts.beforeSend || (() => {}), // 请求之前的操作
@@ -74,11 +73,7 @@ Ajax.req = function (opts) {
 
         // 启动请求
         if (type.toUpperCase() === 'GET' && JSON.stringify(data) != '{}') {
-            xhr.open(
-                type,
-                `${url}?${new URLSearchParams(data).toString()}`,
-                defer
-            );
+            xhr.open(type, `${url}?${new URLSearchParams(data).toString()}`, defer);
         } else {
             xhr.open(type, url, defer);
         }
@@ -98,10 +93,7 @@ Ajax.req = function (opts) {
             if (xhr.readyState === 4) {
                 let responseData = null;
 
-                if (
-                    (xhr.status >= 200 && xhr.status < 300) ||
-                    xhr.status === 304
-                ) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
                     try {
                         responseData = JSON.parse(xhr.responseText);
                     } catch (err) {
@@ -152,20 +144,12 @@ Ajax.formatData = function (data, contentType) {
                     switch (Object.prototype.toString.call(data[key])) {
                         case '[object Array]':
                             data[key].forEach((item) => {
-                                requestData.push(
-                                    encodeURIComponent(key) +
-                                        '=' +
-                                        encodeURIComponent(item)
-                                );
+                                requestData.push(encodeURIComponent(key) + '=' + encodeURIComponent(item));
                             });
                             break;
 
                         default:
-                            requestData.push(
-                                encodeURIComponent(key) +
-                                    '=' +
-                                    encodeURIComponent(data[key])
-                            );
+                            requestData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
                             break;
                     }
                 }
@@ -265,10 +249,19 @@ Ajax.request = function () {
         success = opts.success || (() => {}),
         error = opts.error || (() => {});
 
-    if (Ajax.intercept != null && opts.url in Ajax.intercept) {
-        return new Promise((resolve, reject) => {
-            resolve(Ajax.intercept[opts.url](opts));
-        });
+    if (Ajax.intercept != null) {
+        if (typeof Ajax.intercept == 'function') {
+            let response = Ajax.intercept(opts);
+            if (response != null) {
+                return new Promise((resolve) => {
+                    resolve(response);
+                });
+            }
+        } else if (opts.url in Ajax.intercept) {
+            return new Promise((resolve) => {
+                resolve(Ajax.intercept[opts.url](opts));
+            });
+        }
     }
 
     if (Object.prototype.toString.call(opts) === '[object Object]') {

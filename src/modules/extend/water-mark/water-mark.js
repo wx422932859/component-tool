@@ -14,6 +14,7 @@ import Component from '../../base/component';
  *         return [];
  *     }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
  *     interval: 1000, // 刷新频率，单位ms
+ *     fillStyle: '#333' // 字体样式
  * });
  */
 class WaterMark extends Component {
@@ -76,6 +77,15 @@ class WaterMark extends Component {
                 return;
             }
             this.mark.render(value);
+        });
+
+        /**
+         * 字体样式
+         * @member {string} fillStyle
+         * @memberof WaterMark#
+         */
+        this._observe('fillStyle', (value) => {
+            this.mark.fillStyle = value;
         });
     }
 
@@ -148,23 +158,14 @@ class WaterMark extends Component {
                 }
 
                 // 节点发生变化
-                if (
-                    targetNode[0] === this.node[0] ||
-                    targetNode[0] === this.mark.node[0]
-                ) {
+                if (targetNode[0] === this.node[0] || targetNode[0] === this.mark.node[0]) {
                     // 修改属性值，但是改变前后值没有变化
-                    if (
-                        elem.addedNodes.length == 0 &&
-                        targetNode.attr(elem.attributeName) == elem.oldValue
-                    ) {
+                    if (elem.addedNodes.length == 0 && targetNode.attr(elem.attributeName) == elem.oldValue) {
                         return;
                     }
 
                     // 新增节点，但是新增的是节点本身，则不需要处理
-                    if (
-                        elem.addedNodes[0] === this.node[0] ||
-                        elem.addedNodes[0] === this.mark.node[0]
-                    ) {
+                    if (elem.addedNodes[0] === this.node[0] || elem.addedNodes[0] === this.mark.node[0]) {
                         return;
                     }
 
@@ -297,11 +298,7 @@ class CanvasMark extends Component {
 
         for (let row = 0; row < count.x; row++) {
             for (let col = 0; col < count.y; col++) {
-                this.drawFont(
-                    infoList,
-                    base.x + row * padding.x,
-                    base.y + col * padding.y
-                );
+                this.drawFont(infoList, base.x + row * padding.x, base.y + col * padding.y);
             }
         }
     }
