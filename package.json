@@ -1,11 +1,11 @@
 {
     "name": "component-tool",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "基于原生js的组件开发工具",
     "main": "index.js",
     "scripts": {
         "start": "webpack-dev-server --config webpack.config.dev.js",
-        "build": "webpack --mode=none && npm run docs",
+        "build": "webpack --mode=none && npm run build:pro && npm run docs",
         "build:pro": "webpack --mode=production",
         "docs": "jsdoc -c ./jsdoc.conf.json"
     },
