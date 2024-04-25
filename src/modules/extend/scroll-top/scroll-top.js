@@ -4,19 +4,18 @@ import Component from '../../base/component.js';
 class ScrollTop extends Component {
     constructor(selector) {
         super(selector);
-        this.init();
     }
 
     /**
-     * 初始化
+     * 挂载
      */
-    init() {
+    _mounted() {
         this.monitor();
         this.on();
     }
 
     /**
-     * 设置监听属性
+     * 属性
      */
     monitor() {
         /**
@@ -51,14 +50,14 @@ class ScrollTop extends Component {
     /**
      * 更新按钮位置
      */
-    updatePosition(bottom = 60, right = 60) {
+    updatePosition() {
         let top = this.parentNode[0].scrollTop,
             left = this.parentNode[0].scrollLeft,
             width = this.parentNode.width(),
             height = this.parentNode.height();
 
-        this.node.css('top', top + height - bottom + 'px');
-        this.node.css('left', left + width - right + 'px');
+        this.node.css('top', top + height + 'px');
+        this.node.css('left', left + width + 'px');
     }
 
     /**

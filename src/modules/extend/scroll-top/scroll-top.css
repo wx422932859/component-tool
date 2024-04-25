@@ -1,0 +1,26 @@
+.ly-scroll-top {
+    display: none;
+    position: absolute;
+    transform: translate(-100%, -100%);
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.ly-scroll-top > .ly-icon_arrow-down {
+    width: 60%;
+    height: 60%;
+    transform: rotate(180deg);
+}
+
+.ly-scroll-top > .ly-icon_arrow-down {
+    border-top: 4px solid #fff;
+    border-left: 4px solid #fff;
+}
+
+.ly-scroll-top:hover {
+    opacity: 0.9;
+}
