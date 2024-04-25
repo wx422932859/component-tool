@@ -1,7 +1,7 @@
 /*!
  * name: component-tool
- * package: 2024-04-20 09:24:83
- * version: 1.0.0
+ * package: 2024-04-25 00:33:64
+ * version: 1.1.0
  * exports: LY
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1509,7 +1509,7 @@ const VC = {
     parseComponentPackageNode(taskQueue, componentPackage) {
         componentPackage.forEach((item, index, list) => {
             let elem = list.eq(index),
-                componentName = elem.attr('name'),
+                componentName = elem.attr('name') || elem.attr('data-name'),
                 globalName = elem.attr('alias') || componentName;
 
             VC.parseComponentNormalNode(taskQueue, elem, componentName, globalName);
@@ -9325,6 +9325,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _scroll_bar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(68);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+/* harmony import */ var _base_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
+
 
 
 
@@ -9370,6 +9372,16 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
                 this.node.attr('data-fixed', 1);
             }
         });
+
+        /**
+         * @member {function} delayCalcRate 延时计算比例
+         */
+        this.delayCalcRate = _base_util__WEBPACK_IMPORTED_MODULE_2__["default"].debounce(() => {
+            let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
+            if (rate != this.rate) {
+                this.rate = rate;
+            }
+        }, 200);
     }
 
     /**
@@ -9406,6 +9418,11 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          * 鼠标滑出
          */
         this.container.on('mouseleave', () => this.hideThumb());
+
+        /**
+         * 鼠标移动
+         */
+        this.container.on('mousemove', () => this.delayCalcRate());
     }
 
     /**

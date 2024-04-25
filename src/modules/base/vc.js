@@ -245,7 +245,7 @@ const VC = {
     parseComponentPackageNode(taskQueue, componentPackage) {
         componentPackage.forEach((item, index, list) => {
             let elem = list.eq(index),
-                componentName = elem.attr('name'),
+                componentName = elem.attr('name') || elem.attr('data-name'),
                 globalName = elem.attr('alias') || componentName;
 
             VC.parseComponentNormalNode(taskQueue, elem, componentName, globalName);

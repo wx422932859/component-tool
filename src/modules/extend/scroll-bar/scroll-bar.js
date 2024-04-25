@@ -1,5 +1,6 @@
 import './scroll-bar.css';
 import Component from '../../base/component';
+import Util from '../../base/util';
 
 class ScrollBar extends Component {
     constructor() {
@@ -43,6 +44,16 @@ class ScrollBar extends Component {
                 this.node.attr('data-fixed', 1);
             }
         });
+
+        /**
+         * @member {function} delayCalcRate 延时计算比例
+         */
+        this.delayCalcRate = Util.debounce(() => {
+            let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
+            if (rate != this.rate) {
+                this.rate = rate;
+            }
+        }, 200);
     }
 
     /**
@@ -79,6 +90,11 @@ class ScrollBar extends Component {
          * 鼠标滑出
          */
         this.container.on('mouseleave', () => this.hideThumb());
+
+        /**
+         * 鼠标移动
+         */
+        this.container.on('mousemove', () => this.delayCalcRate());
     }
 
     /**
