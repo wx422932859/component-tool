@@ -1,5 +1,5 @@
 import './radio.css';
-import Form from '../form.js';
+import Form from '../form/form.js';
 
 /**
  * @description 单选框

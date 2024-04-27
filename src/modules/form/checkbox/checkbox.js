@@ -1,5 +1,5 @@
 import './checkbox.css';
-import Form from '../form.js';
+import Form from '../form/form.js';
 import Util from '../../base/util.js';
 
 /**

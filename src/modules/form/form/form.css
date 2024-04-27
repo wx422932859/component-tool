@@ -1,4 +1,16 @@
 .ly-form {
+    --ly-form_color_gray1: #333;
+    --ly-form_color_gray2: #777;
+    --ly-form_color_gray3: #d7d7d7;
+    --ly-form_color_gray4: #e6e6e6;
+    --ly-form_color_blue: #28428c;
+    --ly-form_box-shadow-color: rgba(0, 0, 0, 0.12);
+    --ly-form_line-height: 32px;
+    --ly-form_font-size: 14px;
+
+    --ly-form_color_icon: var(--ly-form_color_gray2);
+    --ly-form_box-shadow: 0px 0px 8px var(--ly-form_box-shadow-color);
+
     display: inline-flex;
 }
 

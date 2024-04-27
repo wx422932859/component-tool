@@ -154,10 +154,7 @@ class FileNode extends Component {
                     `<div class="fn_file-content">${htmlStr}</div>
                     <i data-action="remove"></i>`
                 );
-                if (
-                    /video/.test(this.file.type) ||
-                    /audio/.test(this.file.type)
-                ) {
+                if (/video/.test(this.file.type) || /audio/.test(this.file.type)) {
                     let file = new Audio(reader.result);
                     file.addEventListener('loadedmetadata', () => {
                         this.file.duration = Math.floor(file.duration);
@@ -181,7 +178,7 @@ class FileNode extends Component {
      */
     renderVideo(src) {
         return `<video class="fn_file-item" src="${src}"></video>
-                <svg class="ly-svg-icon fn_video-icon" aria-hidden="true">
+                <svg class="ly-icon_svg fn_video-icon" aria-hidden="true">
                     <use xlink:href="#ly-play"></use>
                 </svg>`;
     }
@@ -191,7 +188,7 @@ class FileNode extends Component {
      */
     renderAudio(src) {
         return `<audio class="fn_file-item" src="${src}"></audio>
-                <svg class="ly-svg-icon fn_audio-icon" aria-hidden="true">
+                <svg class="ly-icon_svg fn_audio-icon" aria-hidden="true">
                     <use xlink:href="#ly-file-audio-o"></use>
                 </svg>`;
     }

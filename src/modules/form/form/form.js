@@ -1,9 +1,7 @@
-import './form-theme.css';
 import './form.css';
-import './form-icon.css';
-import Util from '../base/util.js';
-import MyNode from '../base/my-node.js';
-import Component from '../base/component.js';
+import Util from '../../base/util.js';
+import MyNode from '../../base/my-node.js';
+import Component from '../../base/component.js';
 
 /**
  * 表单组件基类
@@ -109,10 +107,7 @@ class Form extends Component {
                     break;
 
                 default: // 下标
-                    res =
-                        0 <= item.value && item.value < list.length
-                            ? parseInt(item.value)
-                            : res;
+                    res = 0 <= item.value && item.value < list.length ? parseInt(item.value) : res;
                     break;
             }
         } else if (Util.type(item) === 'number') {

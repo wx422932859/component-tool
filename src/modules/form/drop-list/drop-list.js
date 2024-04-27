@@ -1,6 +1,6 @@
 import './drop-list.css';
 import MyNode from '../../base/my-node.js';
-import Form from '../form.js';
+import Form from '../form/form.js';
 
 /**
  * 下拉列表
