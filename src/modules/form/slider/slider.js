@@ -1,5 +1,5 @@
 import './slider.css';
-import Form from '../form.js';
+import Form from '../form/form.js';
 
 /**
  * 滑块

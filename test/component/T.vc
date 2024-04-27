@@ -1,0 +1,47 @@
+<!-- T模块 -->
+<template>
+    <div class="t">
+        <span class="title"></span>
+        <ul class="content"></ul>
+    </div>
+</template>
+
+<script>
+    class T extends Component {
+        constructor() {
+            super();
+        }
+
+        // 初始化
+        _mounted() {
+            console.log('挂载T');
+            this.monitor();
+        }
+
+        // 监听属性
+        monitor() {
+            this._observe('title', (value) => {
+                this.node.find('.title').text(value);
+            });
+            this._observe('list', (value) => {
+                let htmlStr = '';
+                this.node.find('.content').html(value.join(','));
+            });
+        }
+
+        /**
+         * 事件总线
+         */
+        _listen_bus(component, action, data) {
+            console.log(component, action, data);
+        }
+
+        load() {}
+    }
+</script>
+
+<style scoped>
+    .t {
+        color: red;
+    }
+</style>

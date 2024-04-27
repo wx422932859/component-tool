@@ -1,4 +1,4 @@
-import Form from './form.js';
+import Form from './form/form.js';
 import DropList from './drop-list/drop-list.js';
 import Radio from './radio/radio.js';
 import Checkbox from './checkbox/checkbox.js';

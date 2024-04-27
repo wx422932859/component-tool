@@ -1,0 +1,68 @@
+.ly-form {
+    --ly-form_color_gray1: #333;
+    --ly-form_color_gray2: #777;
+    --ly-form_color_gray3: #d7d7d7;
+    --ly-form_color_gray4: #e6e6e6;
+    --ly-form_color_blue: #28428c;
+    --ly-form_box-shadow-color: rgba(0, 0, 0, 0.12);
+    --ly-form_line-height: 32px;
+    --ly-form_font-size: 14px;
+
+    --ly-form_color_icon: var(--ly-form_color_gray2);
+    --ly-form_box-shadow: 0px 0px 8px var(--ly-form_box-shadow-color);
+
+    display: inline-flex;
+}
+
+.ly-form,
+.ly-form * {
+    box-sizing: border-box;
+}
+
+.ly-form .ly-form_label {
+    position: relative;
+    display: inline-flex;
+    justify-content: flex-end;
+    width: 100px;
+    height: var(--ly-form_line-height);
+    line-height: var(--ly-form_line-height);
+    padding-right: 10px;
+    font-size: var(--ly-form_font-size);
+}
+
+.ly-form .ly-form_content {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    height: var(--ly-form_line-height);
+}
+
+.ly-form .ly-form_input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--ly-form_line-height);
+    padding: 0 10px;
+    border: 1px solid var(--ly-form_color_gray3);
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.ly-form .ly-form_input {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.ly-form .ly-form_input:focus {
+    outline: none;
+}
