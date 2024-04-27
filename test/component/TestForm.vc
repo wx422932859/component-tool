@@ -1,0 +1,229 @@
+<!-- TestForm模块 -->
+<template>
+    <div class="test-form">
+        <slot data-component="DropList"></slot>
+        <slot data-component="Radio"></slot>
+        <slot data-component="MultipleList"></slot>
+        <slot data-component="Checkbox"></slot>
+        <slot data-component="Switch"></slot>
+        <slot data-component="Slider"></slot>
+        <slot data-component="Pagination"></slot>
+        <slot data-component="ScrollTop"></slot>
+        <slot data-component="FileUpload"></slot>
+        <slot data-component="MyCheckbox"></slot>
+        <slot data-component="T" data-prop="msg"></slot>
+        <slot data-component="Popup"></slot>
+    </div>
+</template>
+
+<file src="../css/common.css"></file>
+<component src="CPM.T"></component>
+<component src="CPM.MyCheckbox"></component>
+<script>
+    class TestForm extends Component {
+        constructor() {
+            super();
+        }
+
+        /**
+         * 挂载成功
+         */
+        _mounted() {
+            console.log('挂载TestForm');
+            this.on();
+            this.initRadio();
+            this.initCheckBox();
+            this.initDropList();
+            this.initSwitch();
+            this.initSlider();
+            this.initFileUpload();
+            this._children.scrollTop.load();
+            this._children.pagination.pageCount = 20;
+        }
+
+        // 事件
+        on() {}
+
+        // 重置
+        reset() {}
+
+        // 加载
+        load() {}
+
+        // 卸载
+        unload() {
+            this.reset();
+        }
+
+        // 初始化Radio
+        initRadio() {
+            this._children.radio.load({
+                label: '单选框：',
+                list: [
+                    {
+                        key: 'BS01',
+                        value: '101',
+                    },
+                    {
+                        key: 'BS02',
+                        value: '102',
+                    },
+                    {
+                        key: 'BS03',
+                        value: '103',
+                    },
+                ],
+                check: -1,
+                change: (value, prev, target) => {},
+            });
+        }
+
+        // 初始化复选框
+        initCheckBox() {
+            this._children.checkbox.load({
+                label: '复选框：',
+                change: (value, prev, target) => {},
+                all: '全选',
+                list: [
+                    {
+                        key: 'BS01',
+                        value: '101',
+                    },
+                    {
+                        key: 'BS02',
+                        value: '102',
+                    },
+                    {
+                        key: 'BS03',
+                        value: '103',
+                    },
+                    {
+                        key: 'BS04',
+                        value: '104',
+                    },
+                    {
+                        key: 'BS05',
+                        value: '105',
+                    },
+                    {
+                        key: 'BS06',
+                        value: '106',
+                    },
+                ],
+                error: () => {},
+            });
+            this._children.myCheckbox.load({
+                label: false,
+                list: [
+                    {
+                        key: 'BS01',
+                        value: '101',
+                    },
+                    {
+                        key: 'BS02',
+                        value: '102',
+                    },
+                    {
+                        key: 'BS03',
+                        value: '103',
+                    },
+                ],
+                change: (value, prev, target) => {},
+            });
+        }
+
+        // 初始化下拉列表
+        initDropList() {
+            this._children.dropList.load({
+                label: '下拉列表：',
+                list: [
+                    {
+                        key: '',
+                        value: '请选择',
+                    },
+                    {
+                        key: 'BS01',
+                        value: '101',
+                    },
+                    {
+                        key: 'BS02',
+                        value: '102',
+                    },
+                    {
+                        key: 'BS03',
+                        value: '103',
+                    },
+                ],
+                change: (value, prev, target) => {},
+            });
+
+            this._children.multipleList.load({
+                label: '多选列表：',
+                list: [
+                    {
+                        key: 'BS01',
+                        value: '101',
+                    },
+                    {
+                        key: 'BS02',
+                        value: '102',
+                    },
+                    {
+                        key: 'BS03',
+                        value: '103',
+                    },
+                ],
+                change: (value, prev, target) => {
+                    console.log(value);
+                },
+            });
+        }
+
+        // 初始化开关按钮
+        initSwitch() {
+            this._children.switch.load({
+                label: '开关按钮：',
+                value: true,
+                change: (value, prev, target) => {},
+                relation: 'replaceWith',
+            });
+        }
+
+        // 滑块
+        initSlider() {
+            this._children.slider.load({
+                label: '滑块：',
+                change: (value, prev, target) => {},
+            });
+        }
+
+        // 文件上传
+        initFileUpload() {
+            this._children.fileUpload.load({
+                removeCallback: (fileNode) => {
+                    layui.use('layer', () => {
+                        var layer = layui.layer;
+
+                        layer.open({
+                            content: '确认删除？',
+                            yes: (index) => {
+                                // 执行删除操作
+                                fileNode.remove = true;
+                                layer.close(index);
+                            },
+                        });
+                    });
+                },
+            });
+        }
+    }
+</script>
+
+<style scoped>
+    .test-form {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+</style>
