@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Extend - Documentation</title>
+    <title>modules/extend/scroll-top/scroll-top.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,330 +37,103 @@
 
 <div id="main">
     
-    <h1 class="page-title">Extend</h1>
-    
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>扩展功能</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-            
-                <div class="description usertext">扩展功能</div>
-            
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".FixTheadTable"><span class="type-signature type-signature-static">(static) </span>FixTheadTable<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>固定表头</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="FixTheadTable.html">FixTheadTable</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    固定表头
-</div>
-
-
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ScrollBar"><span class="type-signature type-signature-static">(static) </span>ScrollBar<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>滚动条</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line20">line 20</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ScrollBar.html">ScrollBar</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    滚动条
-</div>
-
-
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".WaterMark"><span class="type-signature type-signature-static">(static) </span>WaterMark<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>水印</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line72">line 72</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="WaterMark.html">WaterMark</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    水印
-</div>
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">modules/extend/scroll-top/scroll-top.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './scroll-top.css';
+import Component from '../../base/component.js';
+
+class ScrollTop extends Component {
+    constructor(selector) {
+        super(selector);
+    }
+
+    /**
+     * 挂载
+     */
+    _mounted() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {boolean} show 是否显示
+         * @memberof ScrollTop
+         * @inner
+         */
+        this._observe('show', (value) => {
+            if (value) {
+                this.updatePosition();
+                this.node.css('display', 'flex');
+            } else {
+                this.node.css('display', 'none');
+            }
+        });
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        this.node.on('click', () => (this.parentNode[0].scrollTop = 0));
+    }
+
+    /**
+     * 根据父节点滚动条位置判断是否显示
+     */
+    hideOrShow() {
+        this.show = this.parentNode[0].scrollTop !== 0;
+    }
+
+    /**
+     * 更新按钮位置
+     */
+    updatePosition() {
+        let top = this.parentNode[0].scrollTop,
+            left = this.parentNode[0].scrollLeft,
+            width = this.parentNode.width(),
+            height = this.parentNode.height();
+
+        this.node.css('top', top + height + 'px');
+        this.node.css('left', left + width + 'px');
+    }
+
+    /**
+     * 加载，当节点被插入文档后执行该方法
+     */
+    load() {
+        this.parentNode = this.node.parent();
+        this.parentNode.on('scroll', () => this.hideOrShow());
+    }
+}
+
+/**
+ * 模板
+ * @member {string} _template
+ * @memberof ScrollTop
+ * @static
+ * @example
+ * &lt;div class="ly-form ly-scroll-top">
+ *     &lt;i class="ly-icon_arrow-down">&lt;/i>
+ * &lt;/div>
+ */
+ScrollTop._template = `&lt;div class="ly-form ly-scroll-top">&lt;i class="ly-icon_arrow-down">&lt;/i>&lt;/div>`;
+
+export default ScrollTop;
+</code></pre>
+        </article>
+    </section>
 
 
 

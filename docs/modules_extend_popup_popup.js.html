@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Extend - Documentation</title>
+    <title>modules/extend/popup/popup.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -37,330 +37,61 @@
 
 <div id="main">
     
-    <h1 class="page-title">Extend</h1>
-    
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>扩展功能</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-            
-                <div class="description usertext">扩展功能</div>
-            
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".FixTheadTable"><span class="type-signature type-signature-static">(static) </span>FixTheadTable<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>固定表头</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="FixTheadTable.html">FixTheadTable</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    固定表头
-</div>
-
-
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ScrollBar"><span class="type-signature type-signature-static">(static) </span>ScrollBar<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>滚动条</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line20">line 20</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ScrollBar.html">ScrollBar</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    滚动条
-</div>
-
-
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".WaterMark"><span class="type-signature type-signature-static">(static) </span>WaterMark<span class="type-signature"></span></h4>
-
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li>水印</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="modules_extend_index.js.html">modules/extend/index.js</a>, <a href="modules_extend_index.js.html#line72">line 72</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="WaterMark.html">WaterMark</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    水印
-</div>
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">modules/extend/popup/popup.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './popup.css';
+import Component from '../../base/component.js';
+
+class Popup extends Component {
+    /**
+     * Creates an instance of Popup.
+     * @param {*} selector
+     */
+    constructor(selector) {
+        super(selector);
+    }
+
+    /**
+     * 加载成功
+     */
+    _mounted() {
+        this.on();
+    }
+
+    on() {
+        this.node.on('click', '.ly-icon_close', () => {
+            this.node.hide();
+        });
+    }
+
+    load() {
+        this.node.css('display', 'flex');
+    }
+}
+
+Popup._template = `&lt;div class="ly-form ly-popup">
+    &lt;div class="ly-popup_container">
+        &lt;div class="ly-popup_header">
+            &lt;span class="ly-popup_title">&lt;/span>
+            &lt;i class="ly-icon_close">&lt;/i>
+        &lt;/div>
+        &lt;div class="ly-popup_center">&lt;/div>
+        &lt;div class="ly-popup_footer">&lt;/div>
+    &lt;/div>
+&lt;/div>`;
+
+export default Popup;
+</code></pre>
+        </article>
+    </section>
 
 
 
