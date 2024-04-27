@@ -1,3 +1,4 @@
+import './assets/css/icon.css';
 import './assets/iconfont/iconfont.js';
 import Ajax from './modules/base/ajax.js';
 import Util from './modules/base/util.js';
