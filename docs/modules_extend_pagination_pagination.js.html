@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>modules/extend/pagination/pagination.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="LY.html">LY</a></li></ul><h3>Modules</h3><ul><li><a href="module-Ajax.html">Ajax</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Ajax.html#.filterHTML">filterHTML</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatData">formatData</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.formatParam">formatParam</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.load">load</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.req">req</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.request">request</a></li><li data-type='method' style='display: none;'><a href="module-Ajax.html#.upload">upload</a></li></ul></li><li><a href="module-Extend.html">Extend</a></li><li><a href="module-Util.html">Util</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-Util.html#.calStringLength">calStringLength</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.class2type">class2type</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.compare">compare</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.debounce">debounce</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.deepClone">deepClone</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.eval">eval</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.exitFullScreen">exitFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isArrayLike">isArrayLike</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isFunction">isFunction</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.isWindow">isWindow</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.proxyToJSON">proxyToJSON</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.setTimeout">setTimeout</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.throttle">throttle</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toArray">toArray</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toFullScreen">toFullScreen</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.toLowerUpper">toLowerUpper</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#.type">type</a></li><li data-type='method' style='display: none;'><a href="module-Util.html#~convertImageToBase64">convertImageToBase64</a></li></ul></li><li><a href="module-VC.html">VC</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-VC.html#.formatPath">formatPath</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSRules">handleCSSRules</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleCSSStyleRule">handleCSSStyleRule</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.handleStyleNodeItem">handleStyleNodeItem</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.importScript">importScript</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.importStyle">importStyle</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.importViewComponent">importViewComponent</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.imports">imports</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseComponentName">parseComponentName</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseComponentNode">parseComponentNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseComponentNormalNode">parseComponentNormalNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseComponentPackageNode">parseComponentPackageNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseFileNode">parseFileNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseScriptNode">parseScriptNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseStyleNode">parseStyleNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseTemplateNode">parseTemplateNode</a></li><li data-type='method' style='display: none;'><a href="module-VC.html#.parseViewComponent">parseViewComponent</a></li></ul></li></ul><h3>Classes</h3><ul><li><a href="CanvasMark.html">CanvasMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CanvasMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#calcPosition">calcPosition</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#drawFont">drawFont</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="CanvasMark.html#render">render</a></li></ul></li><li><a href="CdataSectionNode.html">CdataSectionNode</a></li><li><a href="Checkbox.html">Checkbox</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Checkbox.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setAllItem">setAllItem</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Checkbox.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="CommentNode.html">CommentNode</a></li><li><a href="Component.html">Component</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Component.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Component.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Component.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Component.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Component.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Component.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Component.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Component.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Component.html#_send_msg">_send_msg</a></li></ul></li><li><a href="DropList.html">DropList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="DropList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="DropList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="DropList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="DropList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="DropList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="DropList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="DropList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="DropList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="DropList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="ElementNode.html">ElementNode</a></li><li><a href="EventBus.html">EventBus</a><ul class='methods'><li data-type='method' style='display: none;'><a href="EventBus.html#emit">emit</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#off">off</a></li><li data-type='method' style='display: none;'><a href="EventBus.html#on">on</a></li></ul></li><li><a href="FileNode.html">FileNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileNode.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderAudio">renderAudio</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderImage">renderImage</a></li><li data-type='method' style='display: none;'><a href="FileNode.html#renderVideo">renderVideo</a></li></ul></li><li><a href="FilePreview.html">FilePreview</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FilePreview.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#find">find</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#preview">preview</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FilePreview.html#unload">unload</a></li></ul></li><li><a href="FileUpload.html">FileUpload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="FileUpload.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#addFileNode">addFileNode</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#allowFileTypeByName">allowFileTypeByName</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileCount">getFileCount</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#getFileList">getFileList</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#init">init</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#load">load</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#on">on</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#reset">reset</a></li><li data-type='method' style='display: none;'><a href="FileUpload.html#unload">unload</a></li></ul></li><li><a href="Form.html">Form</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Form.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Form.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Form.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Form.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Form.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Form.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Form.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Form.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Form.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Form.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Form.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Form.html#setLabel">setLabel</a></li></ul></li><li><a href="MultipleList.html">MultipleList</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MultipleList.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#getCheckItem">getCheckItem</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#load">load</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#on">on</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="MultipleList.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="MyNode.html">MyNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="MyNode.html#after">after</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#before">before</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#includes">includes</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#init">init</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#prepend">prepend</a></li><li data-type='method' style='display: none;'><a href="MyNode.html#replaceWith">replaceWith</a></li></ul></li><li><a href="Observe.html">Observe</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Observe.html#addCallback">addCallback</a></li><li data-type='method' style='display: none;'><a href="Observe.html#create">create</a></li><li data-type='method' style='display: none;'><a href="Observe.html#defineObject">defineObject</a></li><li data-type='method' style='display: none;'><a href="Observe.html#monitorMethodsOfArray">monitorMethodsOfArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyArray">proxyArray</a></li><li data-type='method' style='display: none;'><a href="Observe.html#proxyObject">proxyObject</a></li></ul></li><li><a href="Pagination.html">Pagination</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Pagination.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createOmit">createOmit</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#createPageLabel">createPageLabel</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#render">render</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderGotoPage">renderGotoPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderNextPage">renderNextPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPage">renderPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderPreviousPage">renderPreviousPage</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#renderTip">renderTip</a></li><li data-type='method' style='display: none;'><a href="Pagination.html#valid">valid</a></li></ul></li><li><a href="Popup.html">Popup</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Popup.html#_mounted">_mounted</a></li></ul></li><li><a href="Radio.html">Radio</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Radio.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Radio.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Radio.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Radio.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Radio.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Radio.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Radio.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Radio.html#setList">setList</a></li><li data-type='method' style='display: none;'><a href="Radio.html#updateCheckItem">updateCheckItem</a></li></ul></li><li><a href="RootNode.html">RootNode</a></li><li><a href="Slider.html">Slider</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Slider.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Slider.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Slider.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Slider.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Slider.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Slider.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Slider.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Slider.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Slider.html#setLabel">setLabel</a></li><li data-type='method' style='display: none;'><a href="Slider.html#update">update</a></li></ul></li><li><a href="Switch.html">Switch</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Switch.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="Switch.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="Switch.html#findItem">findItem</a></li><li data-type='method' style='display: none;'><a href="Switch.html#formatList">formatList</a></li><li data-type='method' style='display: none;'><a href="Switch.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Switch.html#load">load</a></li><li data-type='method' style='display: none;'><a href="Switch.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="Switch.html#on">on</a></li><li data-type='method' style='display: none;'><a href="Switch.html#setLabel">setLabel</a></li></ul></li><li><a href="TaskQueue.html">TaskQueue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TaskQueue.html#add">add</a></li><li data-type='method' style='display: none;'><a href="TaskQueue.html#execute">execute</a></li></ul></li><li><a href="TextNode.html">TextNode</a></li><li><a href="Time.html">Time</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Time.html#dateCount">dateCount</a></li><li data-type='method' style='display: none;'><a href="Time.html#firstDate">firstDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#format">format</a></li><li data-type='method' style='display: none;'><a href="Time.html#forward">forward</a></li><li data-type='method' style='display: none;'><a href="Time.html#init">init</a></li><li data-type='method' style='display: none;'><a href="Time.html#lastDate">lastDate</a></li><li data-type='method' style='display: none;'><a href="Time.html#transform">transform</a></li></ul></li><li><a href="Watcher.html">Watcher</a></li><li><a href="WaterMark.html">WaterMark</a><ul class='methods'><li data-type='method' style='display: none;'><a href="WaterMark.html#_after_destroyed">_after_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_destroyed">_destroyed</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_has_child">_has_child</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_has_parent">_has_parent</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_instantiate_component">_instantiate_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_listen_bus">_listen_bus</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_listen_msg">_listen_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mount_component">_mount_component</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_mounted">_mounted</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_observe">_observe</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_reset_root">_reset_root</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#_send_msg">_send_msg</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#addLinkedNode">addLinkedNode</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#init">init</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#listenNodeChange">listenNodeChange</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#load">load</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#monitor">monitor</a></li><li data-type='method' style='display: none;'><a href="WaterMark.html#updateMark">updateMark</a></li></ul></li><li><a href="XMLNode.html">XMLNode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="XMLNode.html#append">append</a></li><li data-type='method' style='display: none;'><a href="XMLNode.html#toJson">toJson</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">modules/extend/pagination/pagination.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import './pagination.css';
+import Component from '../../base/component.js';
+
+/**
+ * @description 页码构造器
+ * @author wang.xin
+ * @extends {Component}
+ * @example
+ * new Pagination({
+ *     elem: '#pagination',
+ *     pageNo: 1,
+ *     pageCount: 10,
+ *     change: (value) => {},
+ * });
+ */
+class Pagination extends Component {
+    /**
+     * Creates an instance of Pagination.
+     * @param {object} [option={}] 配置参数
+     * @param {string | DOM} [option.elem] CSS 选择器 | DOM 节点
+     * @param {number} [option.pageNo=1] 当前页码
+     * @param {number} [option.pageSize=10] 单页记录条数
+     * @param {number} [option.pageCount=1] 页码数
+     * @param {number} [option.recordCount=0] 记录条数
+     * @param {number} [option.limitPage=6] 分段界限一
+     * @param {number} [option.limitNum=3] 分段界限二
+     * @param {boolean} [option.omitClickable=true] 省略号是否可点击
+     * @param {boolean} [option.tipShow=true] 是否显示提示信息
+     * @param {function} [option.change] 跳转页码时触发的事件
+     */
+    constructor(option = {}) {
+        super(option.elem || document.createElement('nav'));
+        this.node.addClass('ly-form ly-pagination');
+        this.init();
+        this.load(option);
+    }
+
+    /**
+     * 初始化
+     */
+    init() {
+        this.monitor();
+        this.on();
+        this.render();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {function} change 修改页码触发的回调函数
+         * @memberof Pagination
+         * @inner
+         */
+        this.change = () => {};
+
+        /**
+         * @member {string} pageNo 页码
+         * @memberof Pagination
+         * @default 1
+         * @inner
+         */
+        this._observe('pageNo', 1, (value) => {
+            this.render();
+            this.change(value, this.pageSize, this);
+        });
+
+        /**
+         * @member {string} pageSize 单页记录条数
+         * @memberof Pagination
+         * @default 10
+         * @inner
+         */
+        this._observe('pageSize', 10, () => this.render());
+
+        /**
+         * @member {string} pageCount 页码数
+         * @memberof Pagination
+         * @default 1
+         * @inner
+         */
+        this._observe('pageCount', 1, () => this.render());
+
+        /**
+         * @member {string} pageCount 记录条数
+         * @memberof Pagination
+         * @default 0
+         * @inner
+         */
+        this._observe('recordCount', 0, () => this.render());
+
+        /**
+         * @member {string} tipShow 页码信息是否提示
+         * @memberof Pagination
+         * @default true
+         * @inner
+         */
+        this._observe('tipShow', true, () => this.render());
+
+        /**
+         * @member {string} tipShow 省略号是否可以点击
+         * @memberof Pagination
+         * @default true
+         * @inner
+         */
+        this._observe('omitClickable', true, () => this.render());
+
+        /**
+         * @member {number} tipShow 界限一，当 pageCount &lt; limitPage 时，页码标签全显示，否则分段显示
+         * @memberof Pagination
+         * @default 6
+         * @inner
+         */
+        this._observe('limitPage', 6, () => this.render());
+
+        /**
+         * @member {number} tipShow 界限二，limitNum &lt; pageNo &lt; pageCount - limitNum
+         * @memberof Pagination
+         * @default 3
+         * @inner
+         */
+        this._observe('limitNum', 3, () => this.render());
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        // 页码
+        this.node.on(
+            'click',
+            '[data-action="page"]:not(.ly-pagination_current-page)',
+            (e, target) => {
+                this.pageNo = parseInt(target.text());
+            }
+        );
+
+        // 上一页
+        this.node.on(
+            'click',
+            '[data-action="previousPage"]:not(.ly-pagination_disabled-page)',
+            () => {
+                this.pageNo--;
+            }
+        );
+
+        // 下一页
+        this.node.on(
+            'click',
+            '[data-action="nextPage"]:not(.ly-pagination_disabled-page)',
+            () => {
+                this.pageNo++;
+            }
+        );
+
+        // 左侧省略号
+        this.node.on(
+            'click',
+            '[data-action="leftOmit"]:not(.ly-pagination_disabled-page)',
+            () => {
+                this.pageNo = Math.floor((1 + this.pageNo) / 2);
+            }
+        );
+
+        // 中间省略号
+        this.node.on(
+            'click',
+            '[data-action="centerOmit"]:not(.ly-pagination_disabled-page)',
+            () => {
+                this.pageNo = Math.floor((1 + this.pageCount) / 2);
+            }
+        );
+
+        // 右侧省略号
+        this.node.on(
+            'click',
+            '[data-action="rightOmit"]:not(.ly-pagination_disabled-page)',
+            () => {
+                this.pageNo = Math.floor((this.pageNo + this.pageCount) / 2);
+            }
+        );
+
+        // 跳转
+        this.node.on('click', '[data-action="gotoPage"]', () => {
+            this.valid() &amp;&amp; (this.pageNo = this.valid());
+        });
+
+        // 回车
+        this.node.on('keydown', '[data-value="page"]', (e) => {
+            if (e.key == 'Enter' || e.keyCode == 13) {
+                this.valid() &amp;&amp; (this.pageNo = this.valid());
+            }
+        });
+    }
+
+    /**
+     * 加载
+     * @param {object} [option={}] 配置参数
+     * @param {string | DOM} [option.elem] CSS 选择器 | DOM 节点
+     * @param {number} [option.pageNo=1] 当前页码
+     * @param {number} [option.pageSize=10] 单页记录条数
+     * @param {number} [option.pageCount=1] 页码数
+     * @param {number} [option.recordCount=0] 记录条数
+     * @param {number} [option.limitPage=6] 分段界限一
+     * @param {number} [option.limitNum=3] 分段界限二
+     * @param {boolean} [option.omitClickable=true] 省略号是否可点击
+     * @param {boolean} [option.tipShow=true] 是否显示提示信息
+     * @param {function} [option.change] 跳转页码时触发的事件
+     */
+    load(option = {}) {
+        for (let key in option) {
+            if (option[key] != undefined &amp;&amp; key != 'change') {
+                this[key] = option[key];
+            }
+        }
+        this.change = option.change || (() => {});
+    }
+
+    /**
+     * 渲染
+     */
+    render() {
+        this.node.html('&lt;ul class="ly-pagination_list">&lt;/ul>');
+        this.renderPreviousPage();
+        this.renderPage();
+        this.renderNextPage();
+        this.tipShow &amp;&amp; this.renderTip();
+        this.renderGotoPage();
+    }
+
+    /**
+     * 渲染上一页
+     */
+    renderPreviousPage() {
+        this.node.find('ul').append(
+            `&lt;li class="ly-pagination_item">
+                &lt;a class="ly-pagination_page ${
+                    this.pageNo == 1 ? 'ly-pagination_disabled-page' : ''
+                }"
+                    data-action="previousPage">« 上一页&lt;/a>
+            &lt;/li>`
+        );
+    }
+
+    /**
+     * 渲染页码
+     */
+    renderPage() {
+        let elem = this.node.find('ul');
+
+        if (this.pageCount &lt;= this.limitPage) {
+            // 当 pageCount &lt;= limitPage，直接显示页码
+            elem.append(this.createPageLabel(1, this.pageCount));
+        } else {
+            if (
+                this.pageNo &lt;= this.limitNum ||
+                this.pageCount - this.pageNo &lt; this.limitNum
+            ) {
+                // 当页码在前 limitNum 或后 limitNum 页时
+                elem.append(this.createPageLabel(1, this.limitNum))
+                    .append(this.createOmit('center'))
+                    .append(
+                        this.createPageLabel(
+                            this.pageCount - this.limitNum + 1,
+                            this.pageCount
+                        )
+                    );
+            } else {
+                // 当页码超过 limitPage 页，且当前页码不在前 limitNum 页或者后 limitNum 页时
+                elem.append(this.createPageLabel(1, 1))
+                    .append(this.createOmit('left'))
+                    .append(
+                        this.createPageLabel(this.pageNo - 1, this.pageNo + 1)
+                    )
+                    .append(this.createOmit('right'))
+                    .append(
+                        this.createPageLabel(this.pageCount, this.pageCount)
+                    );
+            }
+        }
+    }
+
+    /**
+     * 渲染下一页
+     */
+    renderNextPage() {
+        this.node.find('ul').append(
+            `&lt;li class="ly-pagination_item">
+                &lt;a class="ly-pagination_page ${
+                    this.pageNo == this.pageCount
+                        ? 'ly-pagination_disabled-page'
+                        : ''
+                }"
+                    data-action="nextPage">下一页 »&lt;/a>
+            &lt;/li>`
+        );
+    }
+
+    /**
+     * 渲染提示信息
+     */
+    renderTip() {
+        this.node.find('ul').append(
+            `&lt;li class="ly-pagination_item">
+                &lt;a class="ly-pagination_page ly-pagination_disabled-page">
+                    第 ${this.pageNo} / ${this.pageCount} 页 共 ${this.recordCount} 条
+                &lt;/a>
+            &lt;/li>`
+        );
+    }
+
+    /**
+     * 渲染页码跳转
+     */
+    renderGotoPage() {
+        this.node.find('ul').append(
+            `&lt;li class="ly-pagination_item">
+                &lt;input type="text" class="ly-pagination_page-input" data-value="page" value="${this.pageNo}" />
+            &lt;/li>
+            &lt;li class="ly-pagination_item">
+                &lt;a class="ly-pagination_page" data-action="gotoPage">跳转&lt;/a>
+            &lt;/li>`
+        );
+    }
+
+    /**
+     * 创建页码标签，并将页码标签添加到页码列表中
+     * @param {number} startPage 起始页码
+     * @param {number} endPage 结束页码
+     */
+    createPageLabel(startPage = 1, endPage = 1) {
+        let result = '';
+
+        // 创建页码标签
+        for (let i = startPage; i &lt;= endPage; i++) {
+            let tempClass = '';
+
+            tempClass += i == this.pageNo ? 'ly-pagination_current-page' : '';
+            tempClass += i == this.pageCount ? ' ly-pagination_last-page' : '';
+            result += `&lt;li class="ly-pagination_item">&lt;a class="ly-pagination_page ${tempClass}" data-action="page">${i}&lt;/a>&lt;/li>`;
+        }
+        return result;
+    }
+
+    /**
+     * 创建省略号
+     * @param { String } position 位置 { left | center | right }
+     */
+    createOmit(position) {
+        let classText = this.omitClickable ? '' : 'ly-pagination_disabled-page',
+            titleText = this.omitClickable ? '跳转中间页码' : ''; // 提示
+
+        return `&lt;li class="ly-pagination_item">&lt;span class="ly-pagination_page ${classText}" title="${titleText}" data-action="${position}Omit">...&lt;/span>&lt;/li>`;
+    }
+
+    /**
+     * 验证输入值是否有效
+     * @return {number} 有效则返回页码，否则返回0
+     */
+    valid() {
+        let inputNode = this.node.find('[data-value="page"]'),
+            page = parseInt(inputNode.val());
+
+        if (!isNaN(page) &amp;&amp; 0 &lt; page &amp;&amp; page &lt;= this.pageCount) {
+            inputNode.val(page).removeClass('ly-pagination_error-page');
+            return page;
+        }
+
+        inputNode.addClass('ly-pagination_error-page');
+        return 0;
+    }
+}
+
+export default Pagination;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sun Apr 28 2024 12:59:56 GMT+0800 (GMT+08:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
