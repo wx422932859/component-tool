@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-04-27 23:57:06
+ * package: 2024-04-28 12:59:64
  * version: 1.1.0
  * exports: LY
  */
@@ -9581,7 +9581,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-scroll-top {
     transform: rotate(180deg);
 }
 
-.ly-scroll-top > .ly-icon_arrow-down {
+.ly-scroll-top > .ly-icon_arrow-down::after {
     border-top: 4px solid #fff;
     border-left: 4px solid #fff;
 }
