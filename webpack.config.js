@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
     return {
         entry: './src/index.js',
         output: {
-            filename: argv.mode === 'production' ? 'LY.min.js' : 'LY.js',
+            filename: argv.mode === 'production' ? 'LY.js' : 'LY.dev.js',
             path: path.resolve(__dirname, 'dist/'),
             publicPath: 'dist/',
             libraryExport: 'default',
