@@ -467,17 +467,18 @@ class MyNode {
         if (str != null) {
             if (Util.type(str) === 'string') {
                 // 字符串
-                if (str.includes('<script>')) {
-                    this.forEach((item) => {
-                        item.innerHTML = ''; // 清除内容
-                        let myNode = new MyNode(document.createElement('div'));
-
-                        myNode[0].innerHTML = str;
-                        myNode.children().forEach((elem) => item.appendChild(elem));
-                    });
-                } else {
-                    this.forEach((item) => (item.innerHTML = str));
-                }
+                let template = document.createElement('template');
+                template.innerHTML = str;
+                template.content.querySelectorAll('script').forEach((elem) => {
+                    let scriptNode = document.createElement('script');
+                    scriptNode.innerHTML = elem.innerHTML;
+                    document.body.appendChild(scriptNode);
+                    elem.remove();
+                });
+                this.forEach((item) => {
+                    let fragment = template.content.cloneNode(true);
+                    item.appendChild(fragment);
+                });
             } else if (str instanceof MyNode || str.nodeType === 1) {
                 // MyNode | Node
                 this.html('');

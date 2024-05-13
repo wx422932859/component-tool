@@ -95,6 +95,22 @@ class ScrollBar extends Component {
          * 鼠标移动
          */
         this.container.on('mousemove', () => this.delayCalcRate());
+
+        this.node.on('mousedown', (e) => {
+            this.mousedown = true;
+            this.mouseY = e.pageY;
+        });
+
+        this.node.on('mousemove', (e) => {
+            if (this.mousedown == true && this.container[0]) {
+                this.container[0].scrollTop += (e.pageY - this.pageY) * this.rate;
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            this.mousedown = false;
+            this.mouseY = 0;
+        });
     }
 
     /**
