@@ -25,31 +25,34 @@ class App extends Component {
     }
 
     _mounted() {
-        // this._bus.emit('T', {
-        //     component: this,
-        //     action: 'update',
-        //     data: {
-        //         dd: '还可以',
-        //     },
-        // });
+        let template = `
+            文本节点1
+            <div class="container1" style="display: flex">
+                container1
+            </div>
+            <div class="container2">
+                container2
+            </div>
+            文末节点2
+        `;
+        this.node.html(template);
+        this.node.find('.container1').hide().show();
     }
 
-    load() {
-        this._children.scrollBar.load({ fixed: true });
-    }
+    load() {}
 }
 
 var app = new App('#app');
 app.load();
 console.log(app);
 
-const waterMark = new WaterMark();
-waterMark.load({
-    parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
-    show: true, // 是否显示水印
-    position: 'absolute', // 水印显示方式，['fixed', 'absolute']
-    getMarkInfo: () => {
-        return [new Time().format('yyyy-mm-dd HH:MM:SS')];
-    }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
-    interval: 1000, // 刷新频率，单位ms
-});
+// const waterMark = new WaterMark();
+// waterMark.load({
+//     parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
+//     show: true, // 是否显示水印
+//     position: 'absolute', // 水印显示方式，['fixed', 'absolute']
+//     getMarkInfo: () => {
+//         return [new Time().format('yyyy-mm-dd HH:MM:SS')];
+//     }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
+//     interval: 1000, // 刷新频率，单位ms
+// });

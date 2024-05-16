@@ -1,59 +1,316 @@
 import Util from './util.js';
 
 /**
- * 封装 DOM 对象
- * @author wang.xin
+ * 选择器
+ * @typedef {MyNode|Node|String} Selector
+ * @memberof MyNode
+ */
+
+/**
+ * 封装 Node 对象
  */
 class MyNode {
     /**
      * Creates an instance of MyNode.
-     * @param { String | DOM | MyNode } selector 选择器
-     * @param { MyNode } prevObject 上一级对象
+     * @param {MyNode.Selector|MyNode.Selector[]} selector 选择器
+     * @param {MyNode|Node} prevObject 上一级对象
+     * @author wang.xin
      */
     constructor(selector, prevObject) {
         if (selector instanceof MyNode) {
             return selector;
         }
+        /**
+         * @member {Number} length 元素个数
+         * @memberof MyNode#
+         * @default 0
+         */
+        this.length = 0;
 
-        this.length = 0; // 元素个数
-        this.prevObject = prevObject || document; // 前任
-        this.init(selector);
+        /**
+         * @member {MyNode|Node} prevObject 上一级对象
+         * @memberof MyNode#
+         * @default document
+         */
+        this.prevObject = prevObject || document;
+        this._init(selector);
     }
 
     /**
-     * @description 初始化
-     * @method
-     * @param { Node | String | Array } selector 节点 | 选择器 | 数组
+     * 初始化
+     * @param {MyNode.Selector|MyNode.Selector[]} selector 选择器
+     * @memberof MyNode
      */
-    init(selector) {
-        if (selector && selector.nodeType) {
-            // 节点
+    _init(selector) {
+        /**
+         * Node
+         */
+        if (selector instanceof Node) {
             this.push(selector);
-        } else if (
-            Util.type(selector) !== 'string' &&
-            Util.isArrayLike(selector) &&
-            Util.type(selector.forEach) === 'function'
-        ) {
-            // 可迭代对象
-            selector.forEach((element) => this.push(element));
-        } else if (Util.type(selector) === 'string' && selector.trim() !== '') {
-            // 字符串
-            selector = selector.trim();
-            if (selector[0] === '<' && selector[selector.length - 1] === '>' && selector.length >= 3) {
-                let template = document.createElement('template');
+        }
 
-                template.innerHTML = selector;
-                this.concat(new MyNode(template.content).children());
-            } else {
+        /**
+         * Array
+         */
+        if (typeof selector === 'object' && Util.isArrayLike(selector) && Util.type(selector.forEach) === 'function') {
+            selector.forEach((elem) => this.concat(new MyNode(elem)));
+        }
+
+        /**
+         * String
+         * 默认为选择器
+         * 其次作为模板进行录入
+         */
+        if (Util.type(selector) === 'string') {
+            try {
                 document.querySelectorAll(selector).forEach((element) => this.push(element));
+            } catch (err) {
+                this.concat(this._template2MyNode(selector));
             }
         }
     }
 
     /**
-     * 判断对象中是否含有指定元素
-     * @param { DOM } elem DOM 元素
-     * @return { Boolean }
+     * 模板字符串转MyNode
+     * @param {String} content 模板字符串
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    _template2MyNode(content) {
+        let template = document.createElement('template');
+        template.innerHTML = content;
+        return new MyNode(template.content.childNodes);
+    }
+
+    /**
+     * 添加 script 节点
+     * @param {Node|String} content 内容
+     * @memberof MyNode
+     */
+    appendScript(content) {
+        /**
+         * Node
+         */
+        if (content instanceof Node) {
+            if (content.nodeName.toLocaleLowerCase() === 'template') {
+                template.content.querySelectorAll('script').forEach((elem) => {
+                    this.appendAndRunScript(elem.innerHTML);
+                    elem.remove();
+                });
+            } else if (content.nodeName.toLocaleLowerCase() === 'script') {
+                this.appendAndRunScript(content.innerHTML);
+            }
+        }
+
+        /**
+         * String
+         */
+        if (Util.type(content) === 'string') {
+            this.appendAndRunScript(content);
+        }
+    }
+
+    /**
+     * 添加 script 节点，并执行其中代码
+     * @param {string} code 代码
+     * @memberof MyNode
+     */
+    appendAndRunScript(code) {
+        let scriptNode = document.createElement('script');
+        scriptNode.innerHTML = code;
+        document.body.appendChild(scriptNode);
+    }
+
+    /**
+     * 在被选元素前插入指定内容
+     * 当被选元素有多个，则只在 this[pos] 元素后插入指定内容，其余皆为深拷贝的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} content 内容
+     * @param {Number} [pos=0] 位置
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    before(content, pos = 0) {
+        /**
+         * Node
+         */
+        if (content instanceof Node) {
+            this.forEach((item, index) =>
+                item.parentNode.insertBefore(index == pos ? content : content.cloneNode(true), item)
+            );
+        }
+
+        /**
+         * Array
+         */
+        if (content instanceof MyNode) {
+            /**
+             * MyNode
+             */
+            content.forEach((item) => this.before(item, pos));
+        } else if (
+            typeof content === 'object' &&
+            Util.isArrayLike(content) &&
+            Util.type(content.forEach) === 'function'
+        ) {
+            content.forEach((elem) => this.before(new MyNode(elem), pos));
+        }
+
+        /**
+         * String
+         */
+        if (Util.type(content) === 'string') {
+            this.before(this._template2MyNode(content), pos);
+        }
+        return this;
+    }
+
+    /**
+     * 在被选元素后插入指定内容
+     * 当被选元素有多个，则只在 this[pos] 元素后插入指定内容，其余皆为深拷贝的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} content 内容
+     * @param {Number} [pos=0] 位置
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    after(content, pos = 0) {
+        /**
+         * Node
+         */
+        if (content instanceof Node) {
+            this.forEach((item, index) => {
+                item.parentNode.insertBefore(index == pos ? content : content.cloneNode(true), item.nextElementSibling);
+            });
+        }
+
+        /**
+         * Array
+         */
+        if (content instanceof MyNode) {
+            /**
+             * MyNode
+             */
+            content.forEach((item) => this.after(item, pos));
+        } else if (
+            typeof content === 'object' &&
+            Util.isArrayLike(content) &&
+            Util.type(content.forEach) === 'function'
+        ) {
+            content.forEach((elem) => this.after(new MyNode(elem), pos));
+        }
+
+        /**
+         * String
+         */
+        if (Util.type(content) === 'string') {
+            this.after(this._template2MyNode(content), pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * 在被选元素内部末尾位置插入指定内容<br/>
+     * 当被选元素有多个，则只在 this[pos] 元素后插入指定内容，其余皆为深拷贝的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} content 内容
+     * @param {Number} [pos=0] 位置
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    append(content, pos = 0) {
+        /**
+         * Node
+         */
+        if (content instanceof Node) {
+            this.appendScript(content);
+            this.forEach((item, index) => {
+                item.appendChild(index == pos ? content : content.cloneNode(true));
+            });
+        }
+
+        /**
+         * Array
+         */
+        if (content instanceof MyNode) {
+            /**
+             * MyNode
+             */
+            content.forEach((item) => this.append(item, pos));
+        } else if (
+            typeof content === 'object' &&
+            Util.isArrayLike(content) &&
+            Util.type(content.forEach) === 'function'
+        ) {
+            content.forEach((elem) => this.append(new MyNode(elem), pos));
+        }
+
+        /**
+         * String
+         */
+        if (Util.type(content) === 'string') {
+            this.append(this._template2MyNode(content), pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * 在被选元素内部起始位置插入指定内容<br/>
+     * 当被选元素有多个，则只在 this[pos] 元素后插入指定内容，其余皆为深拷贝的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} content 内容
+     * @param {Number} [pos=0] 位置
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    prepend(content, pos = 0) {
+        let children = this.children();
+
+        if (children.length > 0) {
+            children.eq(0).before(content, pos);
+        } else {
+            this.append(content, pos);
+        }
+
+        return this;
+    }
+
+    /**
+     * 替换被选元素的内容，或返回被选元素的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} [content] 内容
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    html(content) {
+        if (content == null) {
+            return this[0] ? this[0].innerHTML.trim() : '';
+        }
+
+        this.forEach((item) => (item.innerHTML = ''));
+        this.append(content);
+        return this;
+    }
+
+    /**
+     * 遍历<br/>
+     * 与 Array.forEach() 有区别，当回调函数返回 false 时，会跳出循环
+     * @param {Function} callback 回调函数
+     * @return {MyNode}
+     * @memberof MyNode
+     */
+    forEach(callback) {
+        for (let i = 0; i < this.length; i++) {
+            if (callback.call(this[i], this[i], i, this) === false) {
+                break;
+            }
+        }
+
+        return this;
+    }
+
+    /**
+     * 判断是否含有指定节点
+     * @param {Node} elem 节点
+     * @return {Boolean}
+     * @memberof MyNode
      */
     includes(elem) {
         let res = false;
@@ -66,12 +323,22 @@ class MyNode {
         return res;
     }
 
-    // 模拟[].indexOf()
+    /**
+     * 查找节点位置
+     * @param {Node} elem 节点
+     * @return {Number}
+     * @memberof MyNode
+     */
     indexOf(elem) {
         return Util.toArray(this).indexOf(elem);
     }
 
-    // 模拟[].push()
+    /**
+     * 模拟 Array.push()
+     * @param {Node} elem 节点
+     * @return {MyNode}
+     * @memberof MyNode
+     */
     push(elem) {
         if (elem && !this.includes(elem)) {
             this[this.length++] = elem;
@@ -80,18 +347,31 @@ class MyNode {
         return this;
     }
 
-    // 模拟[].pop()
+    /**
+     * 模拟 Array.pop()
+     * @return {MyNode}
+     * @memberof MyNode
+     */
     pop() {
         delete this[--this.length];
         return this;
     }
 
-    // 模拟[].splice()
+    /**
+     * 模拟 Array.splice()
+     * @return {MyNode}
+     * @memberof MyNode
+     */
     splice() {
         return new MyNode([].splice.apply(this, arguments), this);
     }
 
-    // 模拟[].concat()
+    /**
+     * 模拟 Array.concat()
+     * @param {MyNode[]} arr 节点数组
+     * @return {MyNode}
+     * @memberof MyNode
+     */
     concat(...arr) {
         arr.filter((item) => item instanceof MyNode).forEach((elem) => {
             elem.forEach((i) => this.push(i));
@@ -100,28 +380,20 @@ class MyNode {
         return this;
     }
 
-    // 模拟[].forEach()
-    forEach(callback) {
-        let value,
-            i = 0,
-            length = this.length;
-
-        for (; i < length; i++) {
-            value = callback.call(this[i], this[i], i, this);
-            if (value === false) {
-                break;
-            }
-        }
-
-        return this;
-    }
-
-    // 模拟[].reduce()
+    /**
+     * 模拟 Array.reduce()
+     * @param {Function} callback 回调函数
+     * @param {*} value 上一次的结果
+     * @return {*}
+     * @memberof MyNode
+     */
     reduce(callback, value) {
         let res = value;
 
         if (Util.isFunction(callback)) {
-            this.forEach((item) => (res = callback.call(this, res, item)));
+            this.forEach((item) => {
+                res = callback.call(this, res, item);
+            });
         }
 
         return res;
@@ -462,36 +734,6 @@ class MyNode {
         return this[0] ? this[0].value : '';
     }
 
-    // HTML
-    html(str) {
-        if (str != null) {
-            if (Util.type(str) === 'string') {
-                // 字符串
-                let template = document.createElement('template');
-                template.innerHTML = str;
-                template.content.querySelectorAll('script').forEach((elem) => {
-                    let scriptNode = document.createElement('script');
-                    scriptNode.innerHTML = elem.innerHTML;
-                    document.body.appendChild(scriptNode);
-                    elem.remove();
-                });
-                this.forEach((item) => {
-                    let fragment = template.content.cloneNode(true);
-                    item.appendChild(fragment);
-                });
-            } else if (str instanceof MyNode || str.nodeType === 1) {
-                // MyNode | Node
-                this.html('');
-                this.append(str);
-            } else {
-                this.forEach((item) => (item.innerHTML = str));
-            }
-            return this;
-        }
-
-        return this[0] ? this[0].innerHTML.trim() : '';
-    }
-
     // Text And Title
     textAndTitle(str) {
         if (str != null) {
@@ -589,21 +831,30 @@ class MyNode {
         return this;
     }
 
-    // 显示
+    /**
+     * 显示
+     * @return {MyNode}
+     * @memberof MyNode
+     */
     show() {
-        let cache = null,
-            display = 'block';
-
         this.forEach((item) => {
-            cache = MyNode._cache.get(item);
-            display = cache ? cache.display || 'block' : 'block';
+            let cache = MyNode._cache.get(item) || {};
+            if (cache.display == null) {
+                cache.display = window.getComputedStyle(elem).display;
+            }
+
+            let display = cache.display !== 'none' ? cache.display : 'block';
             new MyNode(item).css('display', display);
         });
 
         return this;
     }
 
-    // 宽
+    /**
+     * 获取 offsetWidth
+     * @return {Number}
+     * @memberof MyNode
+     */
     width() {
         if (this.length > 0) {
             return this[0].offsetWidth;
@@ -612,7 +863,11 @@ class MyNode {
         return 0;
     }
 
-    // 高
+    /**
+     * 获取 offsetHeight
+     * @return {Number}
+     * @memberof MyNode
+     */
     height() {
         if (this.length > 0) {
             return this[0].offsetHeight;
@@ -622,125 +877,33 @@ class MyNode {
     }
 
     /**
-     * @description 添加node为最后一个子节点，当集合有多个元素的时候，只在pos处添加指定节点，其余皆为深拷贝的节点
-     * @param { Node } node 要插入的节点
-     * @param { Number } pos 位置
+     * 将被选元素替换为指定内容<br/>
+     * 当被选元素有多个，则只将 this[pos] 元素替换为指定内容，其余皆为深拷贝的内容
+     * @param {MyNode.Selector|MyNode.Selector[]} content 内容
+     * @param {Number} [pos=0] 位置
+     * @return {MyNode}
+     * @memberof MyNode
      */
-    append(node, pos = 0) {
-        if (node && node.nodeType === 1) {
-            // Node
-            this.forEach((item, index) => item.appendChild(index == pos ? node : node.cloneNode(true)));
-        } else if (node instanceof MyNode) {
-            // MyNode
-            node.forEach((item) => this.append(item, pos));
-        } else if (Util.type(node) === 'string') {
-            // String
-            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
-                this.append(new MyNode(node), pos);
-            } else {
-                this.forEach((item) => item.appendChild(document.createTextNode(node)));
-            }
-        } else {
-            this.append(new MyNode(node), pos);
-        }
+    replaceWith(content, pos = 0) {
+        let res = new MyNode(content);
 
-        return this;
-    }
-
-    /**
-     * @description 添加node为第一个子节点，当集合有多个元素的时候，只在pos处添加指定节点，其余皆为深拷贝的节点
-     * @param { Node } node 要插入的节点
-     * @param { Number } pos 位置
-     */
-    prepend(node, pos = 0) {
-        let children = this.children();
-
-        if (children.length > 0) {
-            children.eq(0).before(node, pos);
-        } else {
-            this.append(node, pos);
-        }
-
-        return this;
-    }
-
-    /**
-     * @description 在节点前插入node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
-     * @param { Node } node 要插入的节点
-     * @param { Number } pos 位置
-     */
-    before(node, pos = 0) {
-        if (node && node.nodeType === 1) {
-            // Node
-            this.forEach((item, index) =>
-                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item)
-            );
-        } else if (node instanceof MyNode) {
-            // MyNode
-            node.forEach((item) => this.before(item, pos));
-        } else if (Util.type(node) === 'string') {
-            // String
-            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
-                this.before(new MyNode(node), pos);
-            } else {
-                this.forEach((item) => item.parentNode.insertBefore(document.createTextNode(node), item));
-            }
-        } else {
-            this.before(new MyNode(node), pos);
-        }
-
-        return this;
-    }
-
-    /**
-     * @description 在节点后插入node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
-     * @param { Node } node 要插入的节点
-     * @param { Number } pos 位置
-     */
-    after(node, pos = 0) {
-        if (node && node.nodeType === 1) {
-            // Node
-            this.forEach((item, index) =>
-                item.parentNode.insertBefore(index == pos ? node : node.cloneNode(true), item.nextElementSibling)
-            );
-        } else if (node instanceof MyNode) {
-            // MyNode
-            node.forEach((item) => this.after(item, pos));
-        } else if (Util.type(node) === 'string') {
-            // String
-            if (node[0] === '<' && node[node.length - 1] === '>' && node.length >= 3) {
-                this.after(new MyNode(node), pos);
-            } else {
-                this.forEach((item) =>
-                    item.parentNode.insertBefore(document.createTextNode(node), item.nextElementSibling)
-                );
-            }
-        } else {
-            this.after(new MyNode(node), pos);
-        }
-
-        return this;
-    }
-
-    /**
-     * @description 替换为node节点，当集合有多个元素的时候，只在pos处插入指定节点，其余皆为深拷贝的节点
-     * @param { Node } node 要替换的节点
-     * @param { Number } pos 位置
-     */
-    replaceWith(node, pos = 0) {
-        let res = new MyNode(node);
-
-        res.length > 0 ? this.before(node, pos).remove() : '';
-
+        this.before(res, pos).remove();
         return res;
     }
 
-    // 移除
+    /**
+     * 移除节点
+     * @memberof MyNode
+     */
     remove() {
         this.forEach((item) => item.remove());
     }
 
-    // 节点内z-index最大值
+    /**
+     * 节点内z-index最大值
+     * @returns {Number}
+     * @memberof MyNode
+     */
     maxZIndex() {
         return this.find('*').reduce((res, elem) => {
             return Math.max(res, +window.getComputedStyle(elem).zIndex || 0);
