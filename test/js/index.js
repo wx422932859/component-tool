@@ -33,6 +33,9 @@ class App extends Component {
             <div class="container2">
                 container2
             </div>
+            <div class="container2">
+                container2
+            </div>
             文末节点2
         `;
         this.node.html(template);
@@ -44,8 +47,6 @@ class App extends Component {
 
 var app = new App('#app');
 app.load();
-console.log(app);
-
 // const waterMark = new WaterMark();
 // waterMark.load({
 //     parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
