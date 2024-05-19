@@ -42,9 +42,7 @@ Util.animation = {
  * @returns {String}
  */
 Util.toLowerUpper = function (str) {
-    return str
-        .replace(/(^-)|(-$)/g, '')
-        .replace(/-([a-z0-9])/g, (item, elem) => elem.toUpperCase());
+    return str.replace(/(^-*)|(-*$)/g, '').replace(/-([a-z0-9])/g, (item, elem) => elem.toUpperCase());
 };
 
 /**
@@ -156,11 +154,7 @@ Util.type = function (obj) {
  * @returns {Boolean}
  */
 Util.isFunction = function (obj) {
-    return (
-        typeof obj === 'function' &&
-        typeof obj.nodeType !== 'number' &&
-        typeof obj.item !== 'function'
-    );
+    return typeof obj === 'function' && typeof obj.nodeType !== 'number' && typeof obj.item !== 'function';
 };
 
 /**
@@ -178,6 +172,10 @@ Util.isWindow = function (obj) {
  * @returns {Boolean}
  */
 Util.isArrayLike = function (obj) {
+    if (typeof obj !== 'object') {
+        return false;
+    }
+
     let length = !!obj && 'length' in obj && obj.length,
         type = Util.class2type(toString.call(obj));
 
@@ -185,11 +183,7 @@ Util.isArrayLike = function (obj) {
         return false;
     }
 
-    return (
-        type === 'array' ||
-        length === 0 ||
-        (typeof length === 'number' && length > 0 && length - 1 in obj)
-    );
+    return type === 'array' || length === 0 || (typeof length === 'number' && length > 0 && length - 1 in obj);
 };
 
 /**
