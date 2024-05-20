@@ -7,8 +7,9 @@
         <title>Welcome LY</title>
     </head>
     <body>
-        <div id="app"></div>
-        <div id="app2"></div>
+        <div id="app">
+            <slot data-component="FileUpload"></slot>
+        </div>
         <script defer src="./js/index.js"></script>
         <script defer src="./js/test/test-my-node.js"></script>
     </body>
