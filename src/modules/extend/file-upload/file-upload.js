@@ -17,16 +17,11 @@ const FileType = {
 /**
  * 文件上传
  * @author wang.xin
- * @extends {Component}
- * @example
- * new FileUpload({
- *
- *
- * })
+ * @extends Component
  */
 class FileUpload extends Component {
-    constructor(selector) {
-        super(selector);
+    constructor() {
+        super();
         this.init();
     }
 
@@ -42,20 +37,22 @@ class FileUpload extends Component {
      * 设置监听属性
      */
     monitor() {
+        /**
+         * @member {FilePreview} filePreview 文件预览器
+         * @memberof FileUpload#
+         */
         this._children.filePreview = new FilePreview();
         document.body.appendChild(this._children.filePreview.node[0]);
 
         /**
-         * @member {boolean} id 文件ID
-         * @memberof FileUpload
-         * @inner
+         * @member {Number} id 文件ID
+         * @memberof FileUpload#
          */
         this._observe('id', 1, () => {});
 
         /**
-         * @member {boolean} list 文件列表
-         * @memberof FileUpload
-         * @inner
+         * @member {object[]} list 文件列表
+         * @memberof FileUpload#
          */
         this._observe('list', [], () => {}, false);
 
@@ -91,9 +88,7 @@ class FileUpload extends Component {
         this._observe('type', [], (value) => {
             if (value.length === 1 && FileType[value[0]] != undefined) {
                 // 仅有一个文件类型的时候做限制
-                this.node
-                    .find('input[type="file"]')
-                    .attr('accept', FileType[value[0]]);
+                this.node.find('input[type="file"]').attr('accept', FileType[value[0]]);
             }
         });
 
@@ -130,11 +125,7 @@ class FileUpload extends Component {
                 this.error(0); // 文件个数超过限制
             }
 
-            for (
-                let i = 0;
-                i < fileList.length && this.getFileCount() < this.maxCount;
-                i++
-            ) {
+            for (let i = 0; i < fileList.length && this.getFileCount() < this.maxCount; i++) {
                 let file = fileList[i];
 
                 if (this.allowFileTypeByName(file.name)) {
@@ -153,10 +144,7 @@ class FileUpload extends Component {
 
         // 点击文件
         this.node.on('click', '.fn_file-content', (e, target) => {
-            this._children.filePreview.load(
-                target.find('.fn_file-item')[0],
-                this.node.find('.fn_file-item')
-            );
+            this._children.filePreview.load(target.find('.fn_file-item')[0], this.node.find('.fn_file-item'));
         });
     }
 
@@ -261,13 +249,9 @@ class FileUpload extends Component {
 
             result =
                 result ||
-                new RegExp(
-                    '\\.' +
-                        fileSuffix
-                            .reduce((res, elem) => `${res}|(${elem}$)`, '')
-                            .substr(1),
-                    'gi'
-                ).test(fileName);
+                new RegExp('\\.' + fileSuffix.reduce((res, elem) => `${res}|(${elem}$)`, '').substr(1), 'gi').test(
+                    fileName
+                );
         });
         return result;
     }

@@ -6,13 +6,12 @@ const {
     Switch,
     Slider,
     Checkbox,
-    Pagination,
-    FileUpload,
+
     FilePreview,
     MultipleList,
     Popup,
 } = Form;
-const { WaterMark, ScrollBar } = Extend;
+const { WaterMark, ScrollBar, FileUpload, Pagination } = Extend;
 const CPM = {
     TestForm: '../component/TestForm.vc',
     T: '../component/T.vc',
@@ -25,21 +24,9 @@ class App extends Component {
     }
 
     _mounted() {
-        let template = `
-            文本节点1
-            <div class="container1" style="display: flex">
-                container1
-            </div>
-            <div class="container2">
-                container2
-            </div>
-            <div class="container2">
-                container2
-            </div>
-            文末节点2
-        `;
-        this.node.html(template);
-        this.node.find('.container1').hide().show();
+        app._children.fileUpload.addFileNode(
+            'https://puui.qpic.cn/vpic_cover/a352039hrht/a352039hrht_1699515662_hz.jpg'
+        );
     }
 
     load() {}
