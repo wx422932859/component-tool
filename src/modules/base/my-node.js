@@ -658,8 +658,13 @@ class MyNode {
             return this[0] ? this[0].innerHTML.trim() : '';
         }
 
-        this.forEach((item) => (item.innerHTML = ''));
-        this.append(content);
+        if (Util.type(content) === 'string' && !/<script[\s\S]*?>[\s\S]*?<\/script>/gi.test(content)) {
+            this.forEach((item) => (item.innerHTML = content));
+        } else {
+            this.forEach((item) => (item.innerHTML = ''));
+            this.append(content);
+        }
+
         return this;
     }
 
