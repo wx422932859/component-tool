@@ -450,4 +450,87 @@ function convertImageToBase64(file) {
 }
 Util.convertImageToBase64 = convertImageToBase64;
 
+/**
+ * 加密
+ * @param {Object|String} code 明文
+ * @returns {String}
+ */
+Util.encode = function (code) {
+    try {
+        code = JSON.stringify(code);
+    } catch (err) {
+        console.log(err);
+    }
+
+    return btoa(encodeURIComponent(code));
+};
+
+/**
+ * 解密
+ * @param {String} code 密文
+ * @returns {String}
+ */
+Util.decode = function (code) {
+    let result = decodeURIComponent(atob(code));
+
+    try {
+        result = JSON.parse(result);
+    } catch (err) {
+        console.log(err);
+    }
+
+    return result;
+};
+
+/**
+ * 更新 URL 的查询参数
+ * @param {String} [key='params'] 键
+ * @param {Object|String} value 值
+ * @param {Function} [encode] 加密方式
+ * @returns {Object}
+ */
+Util.updateURLSearchParams = function (key = 'params', value, encode) {
+    if (arguments.length < 2 || typeof key !== 'string') {
+        console.warn('updateURLSearchParams 入参不符合规则！');
+        return;
+    }
+
+    let url = new URL(window.location);
+    if (typeof encode === 'function') {
+        value = encode(value);
+    } else {
+        try {
+            value = JSON.stringify(value);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    url.searchParams.set(key, value);
+    window.history.pushState({}, '', url);
+
+    return { key, value };
+};
+
+/**
+ * 获取 URL 的查询参数值
+ * @param {String} [key='params'] 键
+ * @param {Function} [decode] 解密方式
+ * @returns {object|String}
+ */
+Util.getURLSearchParams = function (key = 'params', decode) {
+    let value = new URL(window.location).searchParams.get(key);
+
+    if (typeof decode === 'function') {
+        return decode(value);
+    } else {
+        try {
+            value = JSON.parse(value);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    return value;
+};
+
 export default Util;

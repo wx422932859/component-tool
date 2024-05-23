@@ -1,3 +1,4 @@
+import MyNode from '../../base/my-node';
 import Component from '../../base/component';
 
 /**
@@ -122,9 +123,9 @@ class WaterMark extends Component {
 
         // 控制显示
         if (options.show) {
-            new LY.MyNode(options.parent).prepend(this.node);
+            options.parent && new MyNode(options.parent).prepend(this.node);
             this.node.css('position', options.position);
-            this.copyNode = new LY.MyNode(this.node[0].cloneNode(true));
+            this.copyNode = new MyNode(this.node[0].cloneNode(true));
             this.markInfo = options.getMarkInfo();
 
             // 设置刷新频率
@@ -145,7 +146,7 @@ class WaterMark extends Component {
 
         this.mutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((elem) => {
-                let targetNode = new LY.MyNode(elem.target);
+                let targetNode = new MyNode(elem.target);
 
                 // 当移除的是该实例节点
                 if (this.node[0] === elem.removedNodes[0]) {
@@ -198,7 +199,7 @@ class WaterMark extends Component {
         // 备份节点替换主节点，然后重新备份节点
         this.node.replaceWith(this.copyNode);
         this.node = this.copyNode;
-        this.copyNode = new LY.MyNode(this.node[0].cloneNode(true));
+        this.copyNode = new MyNode(this.node[0].cloneNode(true));
         // 重新创建canvas，然后替换
         this.mark = new CanvasMark();
         this.node.find('canvas').replaceWith(this.mark.node);
