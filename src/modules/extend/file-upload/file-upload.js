@@ -3,16 +3,7 @@ import Component from '../../base/component.js';
 import FileNode from '../file-node/file-node.js';
 import FilePreview from '../file-preview/file-preview.js';
 
-const FileType = {
-    audio: 'audio/*',
-    image: 'image/*',
-    video: 'video/*',
-    pdf: 'application/pdf',
-    zip: 'application/zip',
-    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-};
+const { FILE_TYPE } = FileNode;
 
 /**
  * 文件上传
@@ -22,19 +13,18 @@ const FileType = {
 class FileUpload extends Component {
     constructor() {
         super();
-        this.init();
     }
 
     /**
-     * 初始化
+     * 挂载
      */
-    init() {
+    _mounted() {
         this.monitor();
         this.on();
     }
 
     /**
-     * 设置监听属性
+     * 属性
      */
     monitor() {
         /**
@@ -45,64 +35,61 @@ class FileUpload extends Component {
         document.body.appendChild(this._children.filePreview.node[0]);
 
         /**
-         * @member {Number} id 文件ID
-         * @memberof FileUpload#
-         */
-        this._observe('id', 1, () => {});
-
-        /**
          * @member {object[]} list 文件列表
          * @memberof FileUpload#
          */
         this._observe('list', [], () => {}, false);
 
         /**
-         * @member {string[] | null} suffix 允许的文件后缀
-         * @memberof FileUpload
-         * @inner
-         */
-        this._observe('suffix', null, () => {});
-
-        /**
-         * @member {number} maxSize 上传文件大小限制，单位B
-         * @memberof FileUpload
-         * @inner
+         * @member {Number} maxSize 上传文件大小限制，单位 B
+         * @memberof FileUpload#
          * @default null
          */
         this._observe('maxSize', null, () => {});
 
         /**
-         * @member {number} maxCount 上传文件个数限制
-         * @memberof FileUpload
-         * @inner
+         * @member {Number} maxCount 上传文件个数限制
+         * @memberof FileUpload#
          * @default 10
          */
         this._observe('maxCount', 10, () => {});
 
         /**
-         * @member {string[]} type 可上传的文件类型
-         * @memberof FileUpload
-         * @inner
+         * @member {String[]} acceptType 允许上传的文件类型
+         * @memberof FileUpload#
          * @default []
+         * @todo
+         * 仅有一个文件类型的时候做限制
          */
-        this._observe('type', [], (value) => {
-            if (value.length === 1 && FileType[value[0]] != undefined) {
-                // 仅有一个文件类型的时候做限制
-                this.node.find('input[type="file"]').attr('accept', FileType[value[0]]);
+        this._observe('acceptType', [], (value) => {
+            if (value.length === 1 && FILE_TYPE[value[0]].type != undefined) {
+                this.node.find('input[type="file"]').attr('accept', FILE_TYPE[value[0]].type);
+            } else {
+                this.node.find('input[type="file"]').removeAttr('accept');
             }
         });
 
         /**
-         * @member {function} error 错误触发事件
-         * @memberof FileUpload
-         * @inner
+         * @member {Object} acceptExtension 允许上传的文件扩展名
+         * @memberof FileUpload#
+         * @example
+         * {
+         *     image: ['webp', 'jpg', 'jpeg', 'png', 'bmp', 'gif'],
+         *     video: ['mp4'],
+         *     audio: ['mp3', 'm4a', 'wav'],
+         * },
          */
-        this.error = () => {};
+        this._observe('acceptExtension', null, () => {});
 
         /**
-         * @member {function} removeCallback 删除文件触发事件
-         * @memberof FileUpload
-         * @inner
+         * @member {Function} errorCallback 发生错误回调函数
+         * @memberof FileUpload#
+         */
+        this.errorCallback = () => {};
+
+        /**
+         * @member {Function} removeCallback 删除文件回调函数
+         * @memberof FileUpload#
          */
         this.removeCallback = () => {};
     }
@@ -111,38 +98,33 @@ class FileUpload extends Component {
      * 事件
      */
     on() {
-        // 添加文件
+        /**
+         * @event 添加文件
+         */
         this.node.on('click', '.fu_add-file', () => {
             this.node.find('input[type="file"]').click();
         });
 
-        // 文件变化
+        /**
+         * @event 文件变化
+         */
         this.node.find('input[type="file"]').on('change', (e, target) => {
             let fileList = target[0].files;
 
-            // 判断文件个数
             if (this.getFileCount() + fileList.length > this.maxCount) {
-                this.error(0); // 文件个数超过限制
+                this.errorCallback(0);
             }
 
             for (let i = 0; i < fileList.length && this.getFileCount() < this.maxCount; i++) {
-                let file = fileList[i];
-
-                if (this.allowFileTypeByName(file.name)) {
-                    if (this.maxSize != null && file.size > this.maxSize) {
-                        this.error(1); // 文件大小超出限制
-                    } else {
-                        this.addFileNode(file);
-                    }
-                } else {
-                    this.error(2); // 文件格式不支持
-                }
+                this.addFile(fileList[i]);
             }
 
             target.val('');
         });
 
-        // 点击文件
+        /**
+         * @event 点击文件
+         */
         this.node.on('click', '.fn_file-content', (e, target) => {
             this._children.filePreview.load(target.find('.fn_file-item')[0], this.node.find('.fn_file-item'));
         });
@@ -150,55 +132,103 @@ class FileUpload extends Component {
 
     /**
      * 重置
+     * @memberof FileUpload
      */
     reset() {
-        this.list.forEach((file) => (file.flag = 1));
-        this.id = 1;
+        this.list.forEach((file) => (file.remove = true));
         this.list = [];
     }
 
     /**
      * 加载
-     * @param {object} [params={}] 入参
+     * @param {Object} params 入参
+     * @param {Number} params.maxSize 文件上传最大值，单位 B
+     * @param {Number} params.maxCount 文件上传最大数量
+     * @param {String[]} params.acceptType 允许上传的文件类型
+     * @param {Object} params.acceptExtension 允许上传的文件扩展名
+     * @param {Function} params.errorCallback 发生错误回调函数
+     * @param {Function} params.removeCallback 删除文件回调函数
+     * @memberof FileUpload
      */
     load(params = {}) {
-        // 错误提示
-        if (typeof params.error == 'function') {
-            this.error = params.error;
-        }
-        // 删除文件响应事件
-        if (typeof params.removeCallback == 'function') {
-            this.removeCallback = params.removeCallback;
+        for (let key in params) {
+            if (['maxSize', 'maxCount'].includes(key) && typeof params[key] != 'number') {
+                continue;
+            }
+            if (['errorCallback', 'removeCallback'].includes(key) && typeof params[key] != 'function') {
+                continue;
+            }
+            this[key] = params[key];
         }
     }
 
     /**
      * 卸载
+     * @memberof FileUpload
      */
     unload() {
         this.reset();
     }
 
     /**
-     * @description 添加文件
-     * @param {string | File} file 文件地址 | 文件
-     * @param {object} [info={}] 文件相关信息
+     * 校验文件类型
+     * @param {FileNode} fileNode 文件节点
+     * @memberof FileUpload
      */
-    addFileNode(file, info = {}) {
-        // 先校验格式是否符合
-        let fileNode = new FileNode({
-            file: file,
-            id: this.id++,
-            info,
-            removeCallback: this.removeCallback,
-        });
+    validFileType(fileNode) {
+        if (this.acceptType.length === 0) {
+            return true;
+        }
 
-        this.node.find('.fu_add-file').before(fileNode.node);
-        this.list.push(fileNode);
+        return this.acceptType.includes(fileNode.fileType);
+    }
+
+    /**
+     * 校验文件后缀
+     * @param {FileNode} fileNode 文件节点
+     * @memberof FileUpload
+     */
+    validFileExtension(fileNode) {
+        if (this.acceptExtension == null || this.acceptExtension[fileNode.fileType] == null) {
+            return true;
+        }
+
+        return this.acceptExtension[fileNode.fileType].includes(fileNode.extension);
+    }
+
+    /**
+     * 添加文件
+     * @param {String|File} file 文件地址或文件
+     * @param {Object} info 附带信息
+     * @todo
+     * 1. 校验文件大小是否超出限制
+     * 2. 校验文件类型和扩展名是否符合规则
+     * 3. 情况1和2都符合条件，则添加节点
+     * @memberof FileUpload
+     */
+    addFile(file, info = {}) {
+        if (file instanceof File || typeof file === 'string') {
+            let fileNode = new FileNode();
+
+            fileNode.load(file);
+            if (this.maxSize != null && file instanceof File && file.size > this.size) {
+                this.errorCallback(1);
+                return;
+            }
+            if (!this.validFileType(fileNode) || !this.validFileExtension(fileNode)) {
+                this.errorCallback(2);
+                return;
+            }
+            fileNode.info = info;
+            fileNode.removeCallback = this.removeCallback;
+            this.node.find('.fu_add-file').before(fileNode.node);
+            this.list.push(fileNode);
+        }
     }
 
     /**
      * 获取FileNode详情
+     * @memberof FileUpload
      */
     getFileList() {
         let res = {
@@ -228,35 +258,18 @@ class FileUpload extends Component {
 
     /**
      * 获取FileNode个数
+     * @memberof FileUpload
      */
     getFileCount() {
         return this.list.filter((fileNode) => fileNode.remove === false).length;
     }
-
-    /**
-     * @description 根据文件名判断是否是允许的类型
-     * @param { String } fileName 文件名
-     */
-    allowFileTypeByName(fileName) {
-        // 默认无限制
-        if (this.type.length === 0) {
-            return true;
-        }
-
-        let result = false;
-        this.type.forEach((type) => {
-            let fileSuffix = this.fileSuffixMap[type];
-
-            result =
-                result ||
-                new RegExp('\\.' + fileSuffix.reduce((res, elem) => `${res}|(${elem}$)`, '').substr(1), 'gi').test(
-                    fileName
-                );
-        });
-        return result;
-    }
 }
 
+/**
+ * @member {String} _template 模板字符串
+ * @memberof FileUpload
+ * @static
+ */
 FileUpload._template = `<div class="ly-form ly-file-upload">
 <div class="fu_add-file">
     <input type="file" multiple="multiple">
