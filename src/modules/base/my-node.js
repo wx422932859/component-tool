@@ -143,7 +143,7 @@ class MyNode {
     insert(content, position = 0, insertLocation = 'beforeBegin', replaceNode = new MyNode()) {
         const INSERT_LOCATION = ['beforeBegin', 'afterEnd', 'beforeEnd', 'afterBegin', 'replaceWith'];
 
-        if (!INSERT_LOCATION.includes(insertLocation)) {
+        if (this.length == 0 || !INSERT_LOCATION.includes(insertLocation)) {
             return this;
         }
 

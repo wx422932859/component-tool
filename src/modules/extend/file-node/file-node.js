@@ -4,180 +4,206 @@ import Component from '../../base/component.js';
 /**
  * 文件节点
  * @extends {Component}
+ * @author wang.xin
  */
 class FileNode extends Component {
-    /**
-     * Creates an instance of FileNode.
-     * @param {object} option 入参
-     * @param {string | File} option.file 文件地址 | 文件
-     * @param {object} option.id 唯一标识
-     * @param {object} option.info 附带信息
-     * @param {function} option.removeCallback 删除触发的回调事件
-     */
-    constructor(option) {
+    constructor() {
         super();
-        this.init();
-        this.load(option);
     }
 
     /**
-     * 监听属性
+     * 挂载成功
+     * @memberof FileNode
      */
-    monitor() {
-        /**
-         * @member {object} file 文件
-         * @memberof FileNode
-         * @inner
-         */
-        this.file = null;
-
-        /**
-         * @member {object} id 唯一标识
-         * @memberof FileNode
-         * @inner
-         */
-        this.id = null;
-
-        /**
-         * @member {string | File} type 文件类型
-         * @memberof FileNode
-         * @inner
-         */
-        this.type = '';
-
-        /**
-         * @member {object} info 附带信息
-         * @memberof FileNode
-         * @inner
-         */
-        this.info = {};
-
-        /**
-         * @member {boolean} remove 移除标记
-         * @memberof FileNode
-         * @inner
-         */
-        this._observe('remove', false, (value) => {
-            value == true && this.node.remove();
-        });
-
-        /**
-         * @member {function} removeCallback 删除触发的回调事件
-         * @memberof FileNode
-         * @inner
-         */
-        this.removeCallback = () => {};
-    }
-
-    // 初始化
-    init() {
+    _mounted() {
         this.monitor();
         this.on();
     }
 
-    // 事件
+    /**
+     * 属性
+     * @memberof FileNode
+     */
+    monitor() {
+        /**
+         * @member {File|String} file 文件或文件地址
+         * @memberof FileNode#
+         */
+        this.file = null;
+
+        /**
+         * @member {String} fileType 文件类型
+         * @memberof FileNode#
+         */
+        this.fileType = '';
+
+        /**
+         * @member {String} extension 文件扩展名
+         * @memberof FileNode#
+         */
+        this.extension = '';
+
+        /**
+         * @member {Object} info 附带信息
+         * @memberof FileNode#
+         */
+        this.info = {};
+
+        /**
+         * @member {Boolean} remove 移除标记
+         * @memberof FileNode#
+         */
+        this._observe('remove', false, (value) => {
+            if (value) {
+                this.node.remove();
+            } else {
+                this.node.find('.fn_file-content').removeClass('fn_wait-delete');
+            }
+        });
+
+        /**
+         * @member {Function} removeCallback 删除触发的回调事件
+         * @memberof FileNode#
+         */
+        this.removeCallback = () => {};
+    }
+
+    /**
+     * 事件
+     * @memberof FileNode
+     */
     on() {
-        // 删除
-        this.node.on('click', '[data-action="remove"]', (e, target) => {
+        /**
+         * @event 删除
+         */
+        this.node.on('click', '.fn_btn[data-action="remove"]', (e, target) => {
             target.parent().find('.fn_file-content').addClass('fn_wait-delete');
-            this.removeCallback(this); // 点击删除时触发
+            this.removeCallback(this);
         });
     }
 
     /**
      * 加载
-     * @param {object} option 入参
-     * @param {string | File} option.file 文件地址 | 文件
-     * @param {object} option.id 唯一标识
-     * @param {object} option.info 附带信息
-     * @param {function} option.removeCallback 删除触发的回调事件
+     * @param {String|File} file 文件地址或文件
+     * @memberof FileNode
      */
-    load(option) {
-        this.file = option.file;
-        this.id = option.id || option.file;
-        this.info = option.info;
-        if (typeof option.removeCallback == 'function') {
-            this.removeCallback = option.removeCallback;
+    load(file) {
+        if (file instanceof File || typeof file === 'string') {
+            this.file = file;
+            this.setFileTypeAndExtension();
+            this.setNode();
+        } else {
+            console.warn('无法创建文件节点，入参必需是文件类型或文件地址！');
         }
-        this.setNode();
     }
 
-    // 卸载
-    unload() {
-        // 卸载子组件
+    /**
+     * 设置文件类型
+     * @memberof FileNode
+     */
+    setFileTypeAndExtension() {
+        const { FILE_TYPE } = FileNode;
+        let filePath = '';
 
-        // 重置
-        this.reset();
-    }
+        if (this.file instanceof File) {
+            filePath = this.file.name;
+        } else if (typeof this.file === 'string') {
+            filePath = this.file;
+        }
+        for (let type in FILE_TYPE) {
+            let extension = FILE_TYPE[type].extension,
+                result = new RegExp(
+                    '\\.(' + extension.reduce((res, elem) => `${res}|(${elem}$)`, '').substr(1) + ')',
+                    'gi'
+                ).exec(filePath); // 形如：'\.(mp3$)|(mp4$)'
 
-    // 设置节点
-    setNode() {
-        let fileType = Object.prototype.toString.call(this.file),
-            reader = new FileReader();
-
-        if (fileType === '[object String]') {
-            // 图片地址
-            let htmlStr = '';
-            switch (this.type) {
-                case 'image':
-                    htmlStr = this.renderImage(this.file);
-                    break;
-
-                case 'video':
-                    htmlStr = this.renderVideo(this.file);
-                    break;
-
-                case 'audio':
-                    htmlStr = this.renderAudio(this.file);
-                    break;
-
-                default:
-                    break;
+            if (result) {
+                this.fileType = type;
+                this.extension = result[1].toLowerCase();
+                return;
             }
-            this.node.html(
-                `<div class="fn_file-content">${htmlStr}</div>
-                <i data-action="remove"></i>`
-            );
-        } else if (fileType === '[object File]') {
-            // 本地文件
-            reader.readAsDataURL(this.file); // 文件转 URL
-            reader.onload = () => {
-                let htmlStr = '';
-                if (/image/.test(this.file.type)) {
-                    htmlStr = this.renderImage(reader.result);
-                } else if (/video/.test(this.file.type)) {
-                    htmlStr = this.renderVideo(reader.result);
-                } else if (/audio/.test(this.file.type)) {
-                    htmlStr = this.renderAudio(reader.result);
-                }
-                this.node.html(
-                    `<div class="fn_file-content">${htmlStr}</div>
-                    <i data-action="remove"></i>`
-                );
-                if (/video/.test(this.file.type) || /audio/.test(this.file.type)) {
-                    let file = new Audio(reader.result);
-                    file.addEventListener('loadedmetadata', () => {
-                        this.file.duration = Math.floor(file.duration);
-                    });
-                }
-            };
         }
+    }
+
+    /**
+     * 设置节点
+     * @memberof FileNode
+     */
+    setNode() {
+        if (this.file instanceof File) {
+            this.setNodeByFile();
+        }
+
+        if (typeof this.file === 'string') {
+            this.render(this.file);
+        }
+    }
+
+    /**
+     * 设置节点（文件）
+     * @memberof FileNode
+     */
+    setNodeByFile() {
+        let reader = new FileReader();
+
+        reader.readAsDataURL(this.file);
+        reader.onload = () => {
+            this.render(reader.result);
+            if (['video', 'audio'].includes(this.fileType)) {
+                let file = new Audio(reader.result);
+                file.addEventListener('loadedmetadata', () => {
+                    this.file.duration = Math.floor(file.duration);
+                });
+            }
+        };
+    }
+
+    /**
+     * 渲染
+     * @param {String} filePath 文件地址
+     * @memberof FileNode
+     */
+    render(filePath) {
+        let htmlStr = '';
+
+        switch (this.fileType) {
+            case 'image':
+                htmlStr = this.renderImage(filePath);
+                break;
+
+            case 'video':
+                htmlStr = this.renderVideo(filePath);
+                break;
+
+            case 'audio':
+                htmlStr = this.renderAudio(filePath);
+                break;
+
+            default:
+                break;
+        }
+        this.node.html(
+            `<div class="fn_file-content">${htmlStr}</div>
+            <i class="fn_btn" data-action="remove"></i>`
+        );
     }
 
     /**
      * 渲染图片
-     * @param {string} src 图片地址
+     * @param {string} filePath 图片地址
+     * @memberof FileNode
      */
-    renderImage(src) {
-        return `<img class="fn_file-item" src="${src}"/>`;
+    renderImage(filePath) {
+        return `<img class="fn_file-item" src="${filePath}"/>`;
     }
 
     /**
      * 渲染视频
-     * @param {string} src 视频地址
+     * @param {string} filePath 视频地址
+     * @memberof FileNode
      */
-    renderVideo(src) {
-        return `<video class="fn_file-item" src="${src}"></video>
+    renderVideo(filePath) {
+        return `<video class="fn_file-item" src="${filePath}"></video>
                 <svg class="ly-icon_svg fn_video-icon" aria-hidden="true">
                     <use xlink:href="#ly-play"></use>
                 </svg>`;
@@ -185,15 +211,62 @@ class FileNode extends Component {
 
     /**
      * 渲染音频
+     * @param {string} filePath 音频地址
+     * @memberof FileNode
      */
-    renderAudio(src) {
-        return `<audio class="fn_file-item" src="${src}"></audio>
+    renderAudio(filePath) {
+        return `<audio class="fn_file-item" src="${filePath}"></audio>
                 <svg class="ly-icon_svg fn_audio-icon" aria-hidden="true">
                     <use xlink:href="#ly-file-audio-o"></use>
                 </svg>`;
     }
 }
 
+/**
+ * @member {String} _template 模板字符串
+ * @memberof FileNode
+ * @static
+ */
 FileNode._template = `<div class="ly-file-node"></div>`;
+
+/**
+ * @member {Object} FILE_TYPE 常见文件类型
+ * @memberof FileNode
+ * @static
+ */
+FileNode.FILE_TYPE = {
+    audio: {
+        extension: ['mp3', 'm4a', 'wav'],
+        type: 'audio/*',
+    },
+    image: {
+        extension: ['webp', 'jpg', 'jpeg', 'png', 'bmp', 'gif'],
+        type: 'image/*',
+    },
+    video: {
+        extension: ['mpeg', 'mpg', 'dat', 'mov', 'asf', 'wmv', 'mp4', 'avi', 'flv', 'amv', '3gp'],
+        type: 'video/*',
+    },
+    pdf: {
+        extension: ['pdf'],
+        type: 'application/pdf',
+    },
+    zip: {
+        extension: ['zip'],
+        type: 'application/zip',
+    },
+    docx: {
+        extension: ['doc', 'docx'],
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    },
+    xlsx: {
+        extension: ['xls', 'xlsx'],
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    },
+    pptx: {
+        extension: ['ppt', 'pptx'],
+        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    },
+};
 
 export default FileNode;
