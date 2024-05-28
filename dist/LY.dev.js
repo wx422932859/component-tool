@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-05-24 20:08:20
+ * package: 2024-05-28 23:49:54
  * version: 1.1.2
  * exports: LY
  */
@@ -3190,6 +3190,7 @@ class MyNode {
 
         return res;
     }
+
     /**
      * 添加指定的 className，多个 className 用空格隔开（或直接使用字符串数组）
      * @param {String|String[]} className 类名
@@ -3840,7 +3841,7 @@ class Component {
         let self = this,
             _constructor = this.__proto__.constructor;
 
-        selector = selector || _constructor._template;
+        selector = selector || _constructor._template.trim();
 
         /**
          * @member {MyNode} node 组件根节点
@@ -4145,6 +4146,13 @@ class Component {
         return false;
     }
 }
+
+/**
+ * @member {String} _template 模板
+ * @memberof Component
+ * @static
+ */
+Component._template = '';
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Component);
 
@@ -7596,20 +7604,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scroll_bar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(48);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 /* harmony import */ var _base_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
+/* harmony import */ var _base_my_node__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
 
 
 
 
+
+/**
+ * 滚动条
+ * @extends {Component}
+ */
 class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    /**
+     * Creates an instance of ScrollBar.
+     * @memberof ScrollBar
+     */
     constructor() {
         super();
     }
 
     /**
      * 挂载成功
+     * @memberof ScrollBar
      */
     _mounted() {
         this.monitor();
+        this.on();
     }
 
     /**
@@ -7617,12 +7637,18 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      */
     monitor() {
         /**
-         * 容器
+         * @member {MyNode} container 容器
+         * @memberof ScrollBar#
          */
-        this.container = null;
+        this._observe('container', this.node.parent(), (value, prev) => {
+            if (prev.length === 0 || prev[0] != value[0]) {
+                this.onContainer();
+            }
+        });
 
         /**
-         * 比例
+         * @member {Number} rate 比例
+         * @memberof ScrollBar#
          */
         this._observe('rate', 1, (value) => {
             if (value < 1) {
@@ -7634,7 +7660,8 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         });
 
         /**
-         * @member {boolean} fixed 是否长显
+         * @member {Boolean} fixed 是否长显
+         * @memberof ScrollBar#
          */
         this._observe('fixed', false, (value) => {
             if (value) {
@@ -7644,7 +7671,8 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         });
 
         /**
-         * @member {function} delayCalcRate 延时计算比例
+         * @member {Function} delayCalcRate 延时计算比例
+         * @memberof ScrollBar#
          */
         this.delayCalcRate = _base_util__WEBPACK_IMPORTED_MODULE_2__["default"].debounce(() => {
             let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
@@ -7656,10 +7684,59 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
 
     /**
      * 事件
+     * @memberof ScrollBar
      */
     on() {
         /**
-         * 滚轮
+         * @event node mousedown 鼠标按下
+         * @memberof ScrollBar#
+         * @todo
+         * 1. 点击的是滑块，标记滑块可以进行拖拽 <br/>
+         * 2. 其余情况，滚动条直接跳转到鼠标位置
+         */
+        this.node.on('mousedown', (e, sourceNode, listenNode, triggerNode) => {
+            if (triggerNode.hasClass('sb_thumb')) {
+                this.mousedown = true;
+                this.pageY = e.pageY;
+            } else {
+                if (this.container.length > 0) {
+                    this.container[0].scrollTop = e.offsetY * this.rate;
+                }
+            }
+        });
+
+        /**
+         * @event node mousemove 鼠标移动
+         * @memberof ScrollBar#
+         * @todo 当滑块属于拖拽情况下，滚动条进行平移，距离为鼠标移动距离
+         */
+        this.node.on('mousemove', (e) => {
+            if (this.mousedown == true && this.container.length > 0) {
+                this.container[0].scrollTop += e.pageY - this.pageY;
+                this.pageY = e.pageY;
+            }
+        });
+
+        /**
+         * @event document mouseup 鼠标释放
+         * @memberof ScrollBar#
+         * @todo 清除拖拽标记以及偏移量
+         */
+        document.addEventListener('mouseup', (e) => {
+            this.mousedown = false;
+            this.pageY = 0;
+        });
+    }
+
+    /**
+     * 监听容器的事件
+     * @memberof ScrollBar
+     */
+    onContainer() {
+        /**
+         * @event container onmousewheel 鼠标滚轮
+         * @memberof ScrollBar
+         * @todo 模拟滚动事件
          */
         this.container.on('mousewheel', (event) => {
             if (event.wheelDeltaY < 0) {
@@ -7670,7 +7747,11 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         });
 
         /**
-         * 发生滚动
+         * @event container onscroll 滚动条
+         * @memberof ScrollBar
+         * @todo
+         * 1. 修改滚动条位置 <br/>
+         * 2. 修改滑块位置
          */
         this.container.on('scroll', () => {
             let scrollTop = this.container[0].scrollTop;
@@ -7680,61 +7761,54 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         });
 
         /**
-         * 鼠标滑入
+         * @event container onmouseenter 鼠标滑入
+         * @memberof ScrollBar
+         * @todo 计算滑块占比
          */
         this.container.on('mouseenter', () => this.calcThumbRate());
 
         /**
-         * 鼠标滑出
+         * @event container onmouseleave 鼠标滑出
+         * @memberof ScrollBar
+         * @todo 隐藏滚动条
          */
         this.container.on('mouseleave', () => this.hideThumb());
 
         /**
-         * 鼠标移动
+         * @event container onmousemove 鼠标移动
+         * @memberof ScrollBar
+         * @todo 延时计算滑块占比
          */
         this.container.on('mousemove', () => this.delayCalcRate());
-
-        this.node.on('mousedown', (e) => {
-            this.mousedown = true;
-            this.mouseY = e.pageY;
-        });
-
-        this.node.on('mousemove', (e) => {
-            if (this.mousedown == true && this.container[0]) {
-                this.container[0].scrollTop += (e.pageY - this.pageY) * this.rate;
-            }
-        });
-
-        document.addEventListener('mouseup', (e) => {
-            this.mousedown = false;
-            this.mouseY = 0;
-        });
     }
 
     /**
      * 加载
-     * @param {object} options 入参
-     * @param {boolean} options.fixed 是否固定显示
+     * @param {Object} options 入参
+     * @param {MyNode} options.container 容器
+     * @param {Boolean} options.fixed 是否固定显示
+     * @memberof ScrollBar
      */
     load(options = {}) {
-        this.container = this.node.parent();
+        this.container = options.container || this.node.parent();
         this.setStyle();
         this.fixed = options.fixed || false;
-        this.on();
     }
 
     /**
      * 设置样式
+     * @memberof ScrollBar
      */
     setStyle() {
         if (!['relative', 'absolute', 'fixed'].includes(this.container.css('position'))) {
             this.container.css('position', 'relative');
         }
-        this.container.css('overflow', 'hidden');
+        this.container.css('overflow-y', 'hidden');
     }
 
     /**
      * 计算滑块占比
+     * @memberof ScrollBar
      */
     calcThumbRate() {
         this.rate = this.container[0].clientHeight / this.container[0].scrollHeight;
@@ -7742,6 +7816,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
 
     /**
      * 显示滚动条
+     * @memberof ScrollBar
      */
     showThumb() {
         let { paddingTop, paddingBottom } = getComputedStyle(this.node[0]);
@@ -7757,6 +7832,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
 
     /**
      * 隐藏滚动条
+     * @memberof ScrollBar
      */
     hideThumb() {
         this.node.removeClass('scroll-bar-active');
@@ -7765,6 +7841,8 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
 
 /**
  * 模板
+ * @memberof ScrollBar
+ * @static
  */
 ScrollBar._template = `<div class="scroll-bar">
     <div class="sb_scroll">
@@ -7845,6 +7923,8 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
+    --sb_width_scroll: 4px;
+
     position: absolute;
     top: 0;
     right: 0;
@@ -7864,7 +7944,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
 
 .scroll-bar > .sb_scroll {
     position: relative;
-    width: 4px;
+    width: var(--sb_width_scroll);
     height: 100%;
     box-sizing: border-box;
 }
@@ -7874,7 +7954,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
     width: 100%;
     top: 0;
     background-color: #000;
-    border-radius: 2px;
+    border-radius: calc(var(--sb_width_scroll) / 2);
 }
 `, ""]);
 // Exports
