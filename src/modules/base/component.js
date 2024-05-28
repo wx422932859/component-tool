@@ -18,7 +18,7 @@ class Component {
         let self = this,
             _constructor = this.__proto__.constructor;
 
-        selector = selector || _constructor._template;
+        selector = selector || _constructor._template.trim();
 
         /**
          * @member {MyNode} node 组件根节点
@@ -323,5 +323,12 @@ class Component {
         return false;
     }
 }
+
+/**
+ * @member {String} _template 模板
+ * @memberof Component
+ * @static
+ */
+Component._template = '';
 
 export default Component;

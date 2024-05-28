@@ -772,6 +772,7 @@ class MyNode {
 
         return res;
     }
+
     /**
      * 添加指定的 className，多个 className 用空格隔开（或直接使用字符串数组）
      * @param {String|String[]} className 类名

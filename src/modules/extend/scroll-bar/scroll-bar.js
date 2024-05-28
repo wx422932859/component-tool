@@ -1,17 +1,28 @@
 import './scroll-bar.css';
 import Component from '../../base/component';
 import Util from '../../base/util';
+import MyNode from '../../base/my-node';
 
+/**
+ * 滚动条
+ * @extends {Component}
+ */
 class ScrollBar extends Component {
+    /**
+     * Creates an instance of ScrollBar.
+     * @memberof ScrollBar
+     */
     constructor() {
         super();
     }
 
     /**
      * 挂载成功
+     * @memberof ScrollBar
      */
     _mounted() {
         this.monitor();
+        this.on();
     }
 
     /**
@@ -19,12 +30,18 @@ class ScrollBar extends Component {
      */
     monitor() {
         /**
-         * 容器
+         * @member {MyNode} container 容器
+         * @memberof ScrollBar#
          */
-        this.container = null;
+        this._observe('container', this.node.parent(), (value, prev) => {
+            if (prev.length === 0 || prev[0] != value[0]) {
+                this.onContainer();
+            }
+        });
 
         /**
-         * 比例
+         * @member {Number} rate 比例
+         * @memberof ScrollBar#
          */
         this._observe('rate', 1, (value) => {
             if (value < 1) {
@@ -36,7 +53,8 @@ class ScrollBar extends Component {
         });
 
         /**
-         * @member {boolean} fixed 是否长显
+         * @member {Boolean} fixed 是否长显
+         * @memberof ScrollBar#
          */
         this._observe('fixed', false, (value) => {
             if (value) {
@@ -46,7 +64,8 @@ class ScrollBar extends Component {
         });
 
         /**
-         * @member {function} delayCalcRate 延时计算比例
+         * @member {Function} delayCalcRate 延时计算比例
+         * @memberof ScrollBar#
          */
         this.delayCalcRate = Util.debounce(() => {
             let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
@@ -58,10 +77,59 @@ class ScrollBar extends Component {
 
     /**
      * 事件
+     * @memberof ScrollBar
      */
     on() {
         /**
-         * 滚轮
+         * @event node mousedown 鼠标按下
+         * @memberof ScrollBar#
+         * @todo
+         * 1. 点击的是滑块，标记滑块可以进行拖拽 <br/>
+         * 2. 其余情况，滚动条直接跳转到鼠标位置
+         */
+        this.node.on('mousedown', (e, sourceNode, listenNode, triggerNode) => {
+            if (triggerNode.hasClass('sb_thumb')) {
+                this.mousedown = true;
+                this.pageY = e.pageY;
+            } else {
+                if (this.container.length > 0) {
+                    this.container[0].scrollTop = e.offsetY * this.rate;
+                }
+            }
+        });
+
+        /**
+         * @event node mousemove 鼠标移动
+         * @memberof ScrollBar#
+         * @todo 当滑块属于拖拽情况下，滚动条进行平移，距离为鼠标移动距离
+         */
+        this.node.on('mousemove', (e) => {
+            if (this.mousedown == true && this.container.length > 0) {
+                this.container[0].scrollTop += e.pageY - this.pageY;
+                this.pageY = e.pageY;
+            }
+        });
+
+        /**
+         * @event document mouseup 鼠标释放
+         * @memberof ScrollBar#
+         * @todo 清除拖拽标记以及偏移量
+         */
+        document.addEventListener('mouseup', (e) => {
+            this.mousedown = false;
+            this.pageY = 0;
+        });
+    }
+
+    /**
+     * 监听容器的事件
+     * @memberof ScrollBar
+     */
+    onContainer() {
+        /**
+         * @event container onmousewheel 鼠标滚轮
+         * @memberof ScrollBar
+         * @todo 模拟滚动事件
          */
         this.container.on('mousewheel', (event) => {
             if (event.wheelDeltaY < 0) {
@@ -72,7 +140,11 @@ class ScrollBar extends Component {
         });
 
         /**
-         * 发生滚动
+         * @event container onscroll 滚动条
+         * @memberof ScrollBar
+         * @todo
+         * 1. 修改滚动条位置 <br/>
+         * 2. 修改滑块位置
          */
         this.container.on('scroll', () => {
             let scrollTop = this.container[0].scrollTop;
@@ -82,61 +154,54 @@ class ScrollBar extends Component {
         });
 
         /**
-         * 鼠标滑入
+         * @event container onmouseenter 鼠标滑入
+         * @memberof ScrollBar
+         * @todo 计算滑块占比
          */
         this.container.on('mouseenter', () => this.calcThumbRate());
 
         /**
-         * 鼠标滑出
+         * @event container onmouseleave 鼠标滑出
+         * @memberof ScrollBar
+         * @todo 隐藏滚动条
          */
         this.container.on('mouseleave', () => this.hideThumb());
 
         /**
-         * 鼠标移动
+         * @event container onmousemove 鼠标移动
+         * @memberof ScrollBar
+         * @todo 延时计算滑块占比
          */
         this.container.on('mousemove', () => this.delayCalcRate());
-
-        this.node.on('mousedown', (e) => {
-            this.mousedown = true;
-            this.mouseY = e.pageY;
-        });
-
-        this.node.on('mousemove', (e) => {
-            if (this.mousedown == true && this.container[0]) {
-                this.container[0].scrollTop += (e.pageY - this.pageY) * this.rate;
-            }
-        });
-
-        document.addEventListener('mouseup', (e) => {
-            this.mousedown = false;
-            this.mouseY = 0;
-        });
     }
 
     /**
      * 加载
-     * @param {object} options 入参
-     * @param {boolean} options.fixed 是否固定显示
+     * @param {Object} options 入参
+     * @param {MyNode} options.container 容器
+     * @param {Boolean} options.fixed 是否固定显示
+     * @memberof ScrollBar
      */
     load(options = {}) {
-        this.container = this.node.parent();
+        this.container = options.container || this.node.parent();
         this.setStyle();
         this.fixed = options.fixed || false;
-        this.on();
     }
 
     /**
      * 设置样式
+     * @memberof ScrollBar
      */
     setStyle() {
         if (!['relative', 'absolute', 'fixed'].includes(this.container.css('position'))) {
             this.container.css('position', 'relative');
         }
-        this.container.css('overflow', 'hidden');
+        this.container.css('overflow-y', 'hidden');
     }
 
     /**
      * 计算滑块占比
+     * @memberof ScrollBar
      */
     calcThumbRate() {
         this.rate = this.container[0].clientHeight / this.container[0].scrollHeight;
@@ -144,6 +209,7 @@ class ScrollBar extends Component {
 
     /**
      * 显示滚动条
+     * @memberof ScrollBar
      */
     showThumb() {
         let { paddingTop, paddingBottom } = getComputedStyle(this.node[0]);
@@ -159,6 +225,7 @@ class ScrollBar extends Component {
 
     /**
      * 隐藏滚动条
+     * @memberof ScrollBar
      */
     hideThumb() {
         this.node.removeClass('scroll-bar-active');
@@ -167,6 +234,8 @@ class ScrollBar extends Component {
 
 /**
  * 模板
+ * @memberof ScrollBar
+ * @static
  */
 ScrollBar._template = `<div class="scroll-bar">
     <div class="sb_scroll">

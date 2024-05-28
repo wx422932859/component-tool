@@ -1,4 +1,6 @@
 .scroll-bar {
+    --sb_width_scroll: 4px;
+
     position: absolute;
     top: 0;
     right: 0;
@@ -18,7 +20,7 @@
 
 .scroll-bar > .sb_scroll {
     position: relative;
-    width: 4px;
+    width: var(--sb_width_scroll);
     height: 100%;
     box-sizing: border-box;
 }
@@ -28,5 +30,5 @@
     width: 100%;
     top: 0;
     background-color: #000;
-    border-radius: 2px;
+    border-radius: calc(var(--sb_width_scroll) / 2);
 }
