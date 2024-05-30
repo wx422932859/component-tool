@@ -1,7 +1,7 @@
 import './fixed-thead-table.css';
 import Component from '../../base/component';
 
-class FixTheadTable extends Component {
+class FixedTheadTable extends Component {
     constructor() {
         super();
     }
@@ -107,7 +107,7 @@ class FixTheadTable extends Component {
 /**
  * @member {string} _template 模板
  */
-FixTheadTable._template = `
+FixedTheadTable._template = `
 <div class="fixed-thead-table">
     <div class="ftt_thead-container">
         <table class="ftt_table">
@@ -122,4 +122,4 @@ FixTheadTable._template = `
     </div>
 </div>`;
 
-export default FixTheadTable;
+export default FixedTheadTable;

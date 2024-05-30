@@ -1,17 +1,6 @@
 const { Util, Component, Form, Observe, VC, Extend, Time, Ajax } = LY;
-const {
-    ScrollTop,
-    DropList,
-    Radio,
-    Switch,
-    Slider,
-    Checkbox,
-
-    FilePreview,
-    MultipleList,
-    Popup,
-} = Form;
-const { WaterMark, ScrollBar, FileUpload, Pagination } = Extend;
+const { DropList, Radio, Switch, Slider, Checkbox, MultipleList } = Form;
+const { WaterMark, ScrollBar, FileUpload, FilePreview, ScrollTop, Popup, Pagination } = Extend;
 const CPM = {
     TestForm: '../component/TestForm.vc',
     T: '../component/T.vc',

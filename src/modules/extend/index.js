@@ -1,6 +1,6 @@
 import WaterMark from './water-mark/water-mark';
 import ScrollBar from './scroll-bar/scroll-bar';
-import FixTheadTable from './fixed-thead-table/fixed-thead-table';
+import FixedTheadTable from './fixed-thead-table/fixed-thead-table';
 import Pagination from './pagination/pagination.js';
 import FileUpload from './file-upload/file-upload.js';
 import ScrollTop from './scroll-top/scroll-top.js';
@@ -21,9 +21,9 @@ Extend.ScrollBar = ScrollBar;
 
 /**
  * 固定表头
- * @see FixTheadTable
+ * @see FixedTheadTable
  */
-Extend.FixTheadTable = FixTheadTable;
+Extend.FixedTheadTable = FixedTheadTable;
 
 /**
  * @member {class} Pagination 页码
