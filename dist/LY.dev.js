@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-05-28 23:49:54
+ * package: 2024-05-30 21:21:14
  * version: 1.1.2
  * exports: LY
  */
@@ -7177,9 +7177,9 @@ Extend.ScrollBar = _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_1__["default"
 
 /**
  * 固定表头
- * @see FixTheadTable
+ * @see FixedTheadTable
  */
-Extend.FixTheadTable = _fixed_thead_table_fixed_thead_table__WEBPACK_IMPORTED_MODULE_2__["default"];
+Extend.FixedTheadTable = _fixed_thead_table_fixed_thead_table__WEBPACK_IMPORTED_MODULE_2__["default"];
 
 /**
  * @member {class} Pagination 页码
@@ -7975,7 +7975,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class FixTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class FixedTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
     constructor() {
         super();
     }
@@ -8081,7 +8081,7 @@ class FixTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defaul
 /**
  * @member {string} _template 模板
  */
-FixTheadTable._template = `
+FixedTheadTable._template = `
 <div class="fixed-thead-table">
     <div class="ftt_thead-container">
         <table class="ftt_table">
@@ -8096,7 +8096,7 @@ FixTheadTable._template = `
     </div>
 </div>`;
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FixTheadTable);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FixedTheadTable);
 
 
 /***/ }),
