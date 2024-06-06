@@ -86,7 +86,7 @@ const VC = {
     importScript(fullPath, realPath, callback) {
         let target = document.createElement('script');
 
-        target.src = fullPath;
+        target.src = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         return new Promise((resolve, reject) => {
             let scriptList = [...document.scripts]
                 .filter((item) => typeof item.src == 'string')
@@ -119,7 +119,7 @@ const VC = {
     importStyle(fullPath, realPath, callback) {
         let target = document.createElement('link');
 
-        target.href = fullPath;
+        target.href = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         target.rel = 'stylesheet';
         return new Promise((resolve, reject) => {
             let styleList = [...document.styleSheets]

@@ -33,3 +33,4 @@ class App extends Component {
 
 var app = new App('#app');
 app.load();
+console.log(app);

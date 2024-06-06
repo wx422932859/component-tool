@@ -28,12 +28,18 @@
         "recurse": true
     },
     "docdash": {
+        "static": true,
         "collapse": true,
         "search": true,
+        "typedefs": true,
         "sectionOrder": [
             "Namespaces",
             "Modules",
-            "Classes"
+            "Classes",
+            "Externals",
+            "Mixins",
+            "Tutorials",
+            "Interfaces"
         ]
     }
 }
