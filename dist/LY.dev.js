@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-05-30 21:21:14
+ * package: 2024-06-07 00:11:96
  * version: 1.1.2
  * exports: LY
  */
@@ -2055,7 +2055,7 @@ const VC = {
     importScript(fullPath, realPath, callback) {
         let target = document.createElement('script');
 
-        target.src = fullPath;
+        target.src = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         return new Promise((resolve, reject) => {
             let scriptList = [...document.scripts]
                 .filter((item) => typeof item.src == 'string')
@@ -2088,7 +2088,7 @@ const VC = {
     importStyle(fullPath, realPath, callback) {
         let target = document.createElement('link');
 
-        target.href = fullPath;
+        target.href = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         target.rel = 'stylesheet';
         return new Promise((resolve, reject) => {
             let styleList = [...document.styleSheets]
@@ -3856,29 +3856,25 @@ class Component {
 
         /**
          * @member {EventBus} _bus 事件总线
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._bus = new _event_bus_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
 
         /**
          * @member {Component} _parent 指向父组件
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._parent = null;
 
         /**
          * @member {Component} _root 指向根组件
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._root = this;
 
         /**
          * @member {Proxy} _children 存放子组件的代理对象
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._children = new Proxy(
             {},
@@ -3895,7 +3891,7 @@ class Component {
         );
 
         /**
-         * @member {function} _destroyed 销毁
+         * @member {Function} _destroyed 销毁
          * @memberof Component
          * @inner
          */
@@ -3912,7 +3908,7 @@ class Component {
         });
 
         /**
-         * @member {function} _send_msg 发送消息
+         * @member {Function} _send_msg 发送消息
          * @memberof Component
          * @inner
          */
@@ -3938,7 +3934,7 @@ class Component {
         });
 
         /**
-         * @member {function} _o 监听器
+         * @member {Function} _o 监听器
          * @memberof Component
          * @inner
          */
@@ -3951,7 +3947,7 @@ class Component {
         });
 
         /**
-         * 增加默认全局事件监听
+         * @event 增加默认全局事件监听
          */
         this._bus.on(this.__proto__.constructor.name, (msg) => {
             const { component, action, data } = msg;
@@ -10808,84 +10804,98 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 对外暴露的全局变量
+ *
  * @namespace
  */
 const LY = {};
 
 /**
  * 接口请求相关方法
+ *
  * @see module:Ajax
  */
 LY.Ajax = _modules_base_ajax_js__WEBPACK_IMPORTED_MODULE_2__["default"];
 
 /**
  * 常用工具方法
+ *
  * @see module:Util
  */
 LY.Util = _modules_base_util_js__WEBPACK_IMPORTED_MODULE_3__["default"];
 
 /**
  * 组件引入相关方法
+ *
  * @see module:VC
  */
 LY.VC = _modules_base_vc_js__WEBPACK_IMPORTED_MODULE_4__["default"];
 
 /**
  * 扩展功能
+ *
  * @see module:Extend
  */
 LY.Extend = _modules_extend_index_js__WEBPACK_IMPORTED_MODULE_13__["default"];
 
 /**
  * 组件基类
+ *
  * @see Component
  */
 LY.Component = _modules_base_component_js__WEBPACK_IMPORTED_MODULE_5__["default"];
 
 /**
  * 事件总线
+ *
  * @see EventBus
  */
 LY.EventBus = _modules_base_event_bus_js__WEBPACK_IMPORTED_MODULE_6__["default"];
 
 /**
  * 封装 DOM 操作
+ *
  * @see MyNode
  */
 LY.MyNode = _modules_base_my_node_js__WEBPACK_IMPORTED_MODULE_7__["default"];
 
 /**
  * 监听器
+ *
  * @see Observe
  */
 LY.Observe = _modules_base_observe_js__WEBPACK_IMPORTED_MODULE_8__["default"];
 
 /**
  * 任务队列
+ *
  * @see TaskQueue
  */
 LY.TaskQueue = _modules_base_task_queue_js__WEBPACK_IMPORTED_MODULE_9__["default"];
 
 /**
  * 时间
+ *
  * @see Time
  */
 LY.Time = _modules_base_time_js__WEBPACK_IMPORTED_MODULE_10__["default"];
 
 /**
  * 观察者
+ *
  * @see Watcher
  */
 LY.Watcher = _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_11__["default"];
 
 /**
  * 表单
+ *
  * @see Form
  */
 LY.Form = _modules_form_index_js__WEBPACK_IMPORTED_MODULE_12__["default"];
 
 /**
  * XML 节点
+ *
  * @see XMLNode
  */
 LY.XMLNode = _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_14__["default"];
