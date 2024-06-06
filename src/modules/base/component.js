@@ -33,29 +33,25 @@ class Component {
 
         /**
          * @member {EventBus} _bus 事件总线
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._bus = new EventBus();
 
         /**
          * @member {Component} _parent 指向父组件
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._parent = null;
 
         /**
          * @member {Component} _root 指向根组件
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._root = this;
 
         /**
          * @member {Proxy} _children 存放子组件的代理对象
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         this._children = new Proxy(
             {},
@@ -72,7 +68,7 @@ class Component {
         );
 
         /**
-         * @member {function} _destroyed 销毁
+         * @member {Function} _destroyed 销毁
          * @memberof Component
          * @inner
          */
@@ -89,7 +85,7 @@ class Component {
         });
 
         /**
-         * @member {function} _send_msg 发送消息
+         * @member {Function} _send_msg 发送消息
          * @memberof Component
          * @inner
          */
@@ -115,7 +111,7 @@ class Component {
         });
 
         /**
-         * @member {function} _o 监听器
+         * @member {Function} _o 监听器
          * @memberof Component
          * @inner
          */
@@ -128,7 +124,7 @@ class Component {
         });
 
         /**
-         * 增加默认全局事件监听
+         * @event 增加默认全局事件监听
          */
         this._bus.on(this.__proto__.constructor.name, (msg) => {
             const { component, action, data } = msg;
