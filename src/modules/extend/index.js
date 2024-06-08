@@ -9,6 +9,7 @@ import Popup from './popup/popup.js';
 
 /**
  * 扩展功能
+ *
  * @exports Extend
  */
 const Extend = {};
