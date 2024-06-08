@@ -1,5 +1,6 @@
 /**
  * 时间对象
+ *
  * @author wang.xin
  */
 class Time {
@@ -73,10 +74,7 @@ class Time {
 
         for (let key in reg) {
             if (new RegExp(`(${key})`).test(res)) {
-                res = res.replace(
-                    RegExp.$1,
-                    reg[key].substring(reg[key].length - RegExp.$1.length)
-                );
+                res = res.replace(RegExp.$1, reg[key].substring(reg[key].length - RegExp.$1.length));
             }
         }
 

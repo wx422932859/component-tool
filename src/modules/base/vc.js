@@ -5,6 +5,7 @@ import Time from './time.js';
 
 /**
  * View Component
+ *
  * @author wang.xin
  * @exports VC
  */

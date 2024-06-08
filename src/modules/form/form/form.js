@@ -10,6 +10,7 @@ import Component from '../../base/component.js';
  * @param {string | Node | MyNode} option.elem Node节点、CSS选择器、MyNode
  * @param {string} option.relation 嵌入关系
  * @param {string} option.template 表单模版
+ * @exports Form
  */
 class Form extends Component {
     /**

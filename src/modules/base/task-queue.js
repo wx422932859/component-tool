@@ -2,6 +2,7 @@ import Util from './util.js';
 
 /**
  * 任务队列
+ *
  * @author wang.xin
  */
 class TaskQueue {

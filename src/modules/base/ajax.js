@@ -2,6 +2,7 @@ import Util from './util';
 
 /**
  * 接口请求相关方法
+ *
  * @author wang.xin
  * @exports Ajax
  */
