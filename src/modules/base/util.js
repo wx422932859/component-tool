@@ -10,7 +10,7 @@ import loading from '../../assets/img/loading.gif';
 let Util = {};
 
 /**
- * @description 动画
+ * 动画
  */
 Util.animation = {
     node: (function () {
@@ -37,7 +37,8 @@ Util.animation = {
 };
 
 /**
- * @description 将 str-str-str 转换为strStrStr
+ * 将 str-str-str 转换为strStrStr
+ *
  * @param {String} str 字符串
  * @returns {String}
  */
@@ -46,7 +47,8 @@ Util.toLowerUpper = function (str) {
 };
 
 /**
- * @description 将目标对象转换为数组
+ * 将目标对象转换为数组
+ *
  * @param {Object} obj 目标对象
  * @returns {Array}
  */
@@ -69,18 +71,23 @@ Util.toArray = function (obj) {
  * @description 比较两个对象内容是否相等
  * @param {Object} obj1 对象1
  * @param {Object} obj2 对象2
+ * @param {String[]} exclusion 不需要匹配的字段
  * @returns {Boolean}
  */
-Util.compare = function (obj1, obj2) {
+Util.compare = function (obj1, obj2, exclusion = []) {
     let res = true;
 
     if (Object.prototype.toString.call(obj1) === Object.prototype.toString.call(obj2)) {
         switch (Object.prototype.toString.call(obj1)) {
-            case '[object Object]': // 对象
+            case '[object Object]':
                 if (Object.keys(obj1).length !== Object.keys(obj2).length) {
                     res = false;
                 } else {
                     for (let key in obj1) {
+                        if (exclusion.includes(key)) {
+                            continue;
+                        }
+
                         if (!Util.compare(obj1[key], obj2[key])) {
                             res = false;
                             break;
@@ -89,7 +96,7 @@ Util.compare = function (obj1, obj2) {
                 }
                 break;
 
-            case '[object Array]': // 数组
+            case '[object Array]':
                 if (obj1.length !== obj2.length) {
                     res = false;
                 } else {
