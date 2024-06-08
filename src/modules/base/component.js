@@ -7,6 +7,7 @@ import TaskQueue from './task-queue.js';
 
 /**
  * 组件基类
+ *
  * @author wang.xin
  */
 class Component {

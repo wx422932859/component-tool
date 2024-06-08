@@ -2,6 +2,7 @@ import Util from './util.js';
 
 /**
  * 观察者
+ *
  * @author wang.xin
  */
 class Watcher {
@@ -19,8 +20,7 @@ class Watcher {
     // 初始化
     init(data, watch) {
         for (let key in data) {
-            let handle =
-                Util.type(watch[key]) === 'function' ? watch[key] : () => {};
+            let handle = Util.type(watch[key]) === 'function' ? watch[key] : () => {};
 
             this.monitor(key, handle, data[key]);
         }

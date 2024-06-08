@@ -29,10 +29,7 @@ class XMLNode {
         }
         this.childNodes.push(xmlNode);
         xmlNode.parentNode = this;
-        if (
-            (this instanceof RootNode || this instanceof ElementNode) &&
-            xmlNode instanceof ElementNode
-        ) {
+        if ((this instanceof RootNode || this instanceof ElementNode) && xmlNode instanceof ElementNode) {
             this.children.push(xmlNode);
         }
     }
@@ -46,9 +43,7 @@ class XMLNode {
         }
         this.children.forEach((elementNode) => {
             if (result[elementNode.nodeName] == null) {
-                let nodeList = this.children.filter(
-                    (item) => item.nodeName === elementNode.nodeName
-                );
+                let nodeList = this.children.filter((item) => item.nodeName === elementNode.nodeName);
 
                 result[elementNode.nodeName] = nodeList.length > 1 ? [] : {};
             }
@@ -134,8 +129,7 @@ function parseXML(data) {
      * 7 CDATA节点标志位，匹配失败为 undefined
      * 8 值
      */
-    let xmlRegExp =
-        /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)|(<!--([\s\S]*?)-->)|(<!\[CDATA\[([\s\S]*?)\]\]>)/gi; // 匹配器
+    let xmlRegExp = /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)|(<!--([\s\S]*?)-->)|(<!\[CDATA\[([\s\S]*?)\]\]>)/gi; // 匹配器
     let root = new RootNode(), // 根节点
         stack = [root]; // 栈，至少含有根节点一个元素
 

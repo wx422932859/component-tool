@@ -3,6 +3,7 @@ import EventBus from './event-bus.js';
 
 /**
  * 监听器
+ *
  * @author wang.xin
  */
 class Observe {
@@ -109,28 +110,14 @@ class Observe {
                         if (self.deep && deep) {
                             // 当赋值为 Array | Object | Function 时，需要进一步注册事件
                             if (Util.type(value) === 'array') {
-                                self._data[property] = self.proxyArray(
-                                    value,
-                                    callback[property],
-                                    property
-                                );
-                            } else if (
-                                ['object', 'function'].includes(
-                                    Util.type(value)
-                                )
-                            ) {
-                                self._data[property] = self.proxyObject(
-                                    value,
-                                    callback[property],
-                                    property
-                                );
+                                self._data[property] = self.proxyArray(value, callback[property], property);
+                            } else if (['object', 'function'].includes(Util.type(value))) {
+                                self._data[property] = self.proxyObject(value, callback[property], property);
                             }
                         }
                     } else {
                         console.log(
-                            `属性【${property}】：初始类型【${type}】，赋值类型【${Util.type(
-                                value
-                            )}，修改无效！`
+                            `属性【${property}】：初始类型【${type}】，赋值类型【${Util.type(value)}，修改无效！`
                         );
                     }
                 },
@@ -153,15 +140,7 @@ class Observe {
         let self = this,
             proxy = null,
             name = eventName || 'change',
-            methods = [
-                'push',
-                'pop',
-                'shift',
-                'unshift',
-                'splice',
-                'sort',
-                'reverse',
-            ];
+            methods = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'];
 
         proxy = new Proxy(target, {
             set(t, p, v, r) {
@@ -212,19 +191,9 @@ class Observe {
                 if (type1 === type2 || self.isModifiable) {
                     // 当赋值为 Array | Object | Function 时，需要进一步注册事件
                     if (Util.type(proxyValue) === 'array') {
-                        proxyValue = self.proxyArray(
-                            proxyValue,
-                            callback,
-                            name
-                        );
-                    } else if (
-                        ['object', 'function'].includes(Util.type(proxyValue))
-                    ) {
-                        proxyValue = self.proxyObject(
-                            proxyValue,
-                            callback,
-                            name
-                        );
+                        proxyValue = self.proxyArray(proxyValue, callback, name);
+                    } else if (['object', 'function'].includes(Util.type(proxyValue))) {
+                        proxyValue = self.proxyObject(proxyValue, callback, name);
                     }
 
                     let value1 = Util.proxyToJSON(value),
@@ -235,9 +204,7 @@ class Observe {
                     return res;
                 }
 
-                console.log(
-                    `属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`
-                );
+                console.log(`属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`);
                 return false;
             },
         });
@@ -245,9 +212,7 @@ class Observe {
         for (let prop in target) {
             if (Util.type(target[prop]) === 'array') {
                 target[prop] = this.proxyArray(target[prop], callback, name);
-            } else if (
-                ['object', 'function'].includes(Util.type(target[prop]))
-            ) {
+            } else if (['object', 'function'].includes(Util.type(target[prop]))) {
                 target[prop] = this.proxyObject(target[prop], callback, name);
             }
         }
@@ -270,10 +235,7 @@ class Observe {
     addCallback(eventName, callback, target) {
         if (Util.type(callback) === 'function') {
             if (this.delay !== -1) {
-                this.eventBus.on(
-                    eventName,
-                    Util.debounce(callback, this.delay).bind(target)
-                );
+                this.eventBus.on(eventName, Util.debounce(callback, this.delay).bind(target));
             } else {
                 this.eventBus.on(eventName, callback.bind(target));
             }
