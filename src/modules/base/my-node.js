@@ -323,6 +323,25 @@ class MyNode {
     }
 
     /**
+     * 找出元素集合中符合 CSS 选择器的元素
+     * @param {String|Node} selector CSS选择器
+     * @returns {MyNode}
+     */
+    matches(selector) {
+        let result = new MyNode([], this);
+
+        this.node.forEach((elem) => {
+            if (selector instanceof Node && elem === selector) {
+                result.push(elem);
+            }
+            if (Util.type(selector) === 'string' && elem.matches(selector)) {
+                result.push(elem);
+            }
+        });
+        return result;
+    }
+
+    /**
      * 查找节点位置
      * @param {Node} elem 节点
      * @returns {Number}
@@ -1100,6 +1119,49 @@ class MyNode {
         return this.find('*').reduce((res, elem) => {
             return Math.max(res, +window.getComputedStyle(elem).zIndex || 0);
         }, 0);
+    }
+
+    /**
+     * 合并单元格，针对表格单元格合并
+     * @param {Number} col 第 col 列合并
+     */
+    mergeCell(col) {
+        if (this.node.matches('tr').length !== this.node.length) {
+            return;
+        }
+
+        let content = '',
+            rowSpan = 1,
+            td = null, // 单元格
+            trCount = trList.length; // 总行数
+
+        this.node.forEach((item, index, list) => {
+            let curTd = list.eq(index).find('td').eq(col),
+                curContent = curTd.html();
+
+            if (index === 0) {
+                // 遍历第一行的时候
+                content = curContent;
+                td = curTd;
+            } else {
+                if (curContent == content) {
+                    // 当前行与上一行内容相同
+                    rowSpan++; // 行数累加
+                    curTd.remove(); // 移除单元格
+
+                    // 最后一行的时候，设置 rowSpan 属性
+                    index + 1 === trCount && td.attr('rowSpan', rowSpan);
+                } else {
+                    // 当前行与上一行内容不同，设置 rowSpan 属性
+                    td.attr('rowSpan', rowSpan);
+
+                    // 从新计算
+                    content = curContent;
+                    td = curTd;
+                    rowSpan = 1;
+                }
+            }
+        });
     }
 }
 

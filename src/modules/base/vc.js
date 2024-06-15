@@ -106,6 +106,9 @@ const VC = {
                         reject();
                     }
                 };
+                target.onerror = function () {
+                    reject();
+                };
             }
         });
     },
@@ -139,6 +142,9 @@ const VC = {
                     } else {
                         reject();
                     }
+                };
+                target.onerror = function () {
+                    reject();
                 };
             }
         });

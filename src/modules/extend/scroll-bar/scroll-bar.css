@@ -1,11 +1,11 @@
 .scroll-bar {
     --sb_width_scroll: 4px;
+    --sb_margin_scroll: 6px;
 
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
-    padding: 6px;
     box-sizing: border-box;
     opacity: 0;
 }
@@ -20,15 +20,18 @@
 
 .scroll-bar > .sb_scroll {
     position: relative;
-    width: var(--sb_width_scroll);
+    width: calc(var(--sb_width_scroll) + 2 * var(--sb_margin_scroll));
     height: 100%;
     box-sizing: border-box;
 }
 
 .scroll-bar > .sb_scroll > .sb_thumb {
     position: absolute;
-    width: 100%;
+    width: var(--sb_width_scroll);
     top: 0;
+    right: 0;
+    margin: var(--sb_margin_scroll);
     background-color: #000;
     border-radius: calc(var(--sb_width_scroll) / 2);
+    cursor: pointer;
 }
