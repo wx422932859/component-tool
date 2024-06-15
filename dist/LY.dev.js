@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-06-07 00:11:96
+ * package: 2024-06-15 09:28:64
  * version: 1.1.2
  * exports: LY
  */
@@ -658,6 +658,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 接口请求相关方法
+ *
  * @author wang.xin
  * @exports Ajax
  */
@@ -1021,7 +1022,7 @@ __webpack_require__.r(__webpack_exports__);
 let Util = {};
 
 /**
- * @description 动画
+ * 动画
  */
 Util.animation = {
     node: (function () {
@@ -1048,7 +1049,8 @@ Util.animation = {
 };
 
 /**
- * @description 将 str-str-str 转换为strStrStr
+ * 将 str-str-str 转换为strStrStr
+ *
  * @param {String} str 字符串
  * @returns {String}
  */
@@ -1057,7 +1059,8 @@ Util.toLowerUpper = function (str) {
 };
 
 /**
- * @description 将目标对象转换为数组
+ * 将目标对象转换为数组
+ *
  * @param {Object} obj 目标对象
  * @returns {Array}
  */
@@ -1080,18 +1083,23 @@ Util.toArray = function (obj) {
  * @description 比较两个对象内容是否相等
  * @param {Object} obj1 对象1
  * @param {Object} obj2 对象2
+ * @param {String[]} exclusion 不需要匹配的字段
  * @returns {Boolean}
  */
-Util.compare = function (obj1, obj2) {
+Util.compare = function (obj1, obj2, exclusion = []) {
     let res = true;
 
     if (Object.prototype.toString.call(obj1) === Object.prototype.toString.call(obj2)) {
         switch (Object.prototype.toString.call(obj1)) {
-            case '[object Object]': // 对象
+            case '[object Object]':
                 if (Object.keys(obj1).length !== Object.keys(obj2).length) {
                     res = false;
                 } else {
                     for (let key in obj1) {
+                        if (exclusion.includes(key)) {
+                            continue;
+                        }
+
                         if (!Util.compare(obj1[key], obj2[key])) {
                             res = false;
                             break;
@@ -1100,7 +1108,7 @@ Util.compare = function (obj1, obj2) {
                 }
                 break;
 
-            case '[object Array]': // 数组
+            case '[object Array]':
                 if (obj1.length !== obj2.length) {
                     res = false;
                 } else {
@@ -1563,6 +1571,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 监听器
+ *
  * @author wang.xin
  */
 class Observe {
@@ -1669,28 +1678,14 @@ class Observe {
                         if (self.deep && deep) {
                             // 当赋值为 Array | Object | Function 时，需要进一步注册事件
                             if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(value) === 'array') {
-                                self._data[property] = self.proxyArray(
-                                    value,
-                                    callback[property],
-                                    property
-                                );
-                            } else if (
-                                ['object', 'function'].includes(
-                                    _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(value)
-                                )
-                            ) {
-                                self._data[property] = self.proxyObject(
-                                    value,
-                                    callback[property],
-                                    property
-                                );
+                                self._data[property] = self.proxyArray(value, callback[property], property);
+                            } else if (['object', 'function'].includes(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(value))) {
+                                self._data[property] = self.proxyObject(value, callback[property], property);
                             }
                         }
                     } else {
                         console.log(
-                            `属性【${property}】：初始类型【${type}】，赋值类型【${_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(
-                                value
-                            )}，修改无效！`
+                            `属性【${property}】：初始类型【${type}】，赋值类型【${_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(value)}，修改无效！`
                         );
                     }
                 },
@@ -1713,15 +1708,7 @@ class Observe {
         let self = this,
             proxy = null,
             name = eventName || 'change',
-            methods = [
-                'push',
-                'pop',
-                'shift',
-                'unshift',
-                'splice',
-                'sort',
-                'reverse',
-            ];
+            methods = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'];
 
         proxy = new Proxy(target, {
             set(t, p, v, r) {
@@ -1772,19 +1759,9 @@ class Observe {
                 if (type1 === type2 || self.isModifiable) {
                     // 当赋值为 Array | Object | Function 时，需要进一步注册事件
                     if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(proxyValue) === 'array') {
-                        proxyValue = self.proxyArray(
-                            proxyValue,
-                            callback,
-                            name
-                        );
-                    } else if (
-                        ['object', 'function'].includes(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(proxyValue))
-                    ) {
-                        proxyValue = self.proxyObject(
-                            proxyValue,
-                            callback,
-                            name
-                        );
+                        proxyValue = self.proxyArray(proxyValue, callback, name);
+                    } else if (['object', 'function'].includes(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(proxyValue))) {
+                        proxyValue = self.proxyObject(proxyValue, callback, name);
                     }
 
                     let value1 = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].proxyToJSON(value),
@@ -1795,9 +1772,7 @@ class Observe {
                     return res;
                 }
 
-                console.log(
-                    `属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`
-                );
+                console.log(`属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`);
                 return false;
             },
         });
@@ -1805,9 +1780,7 @@ class Observe {
         for (let prop in target) {
             if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(target[prop]) === 'array') {
                 target[prop] = this.proxyArray(target[prop], callback, name);
-            } else if (
-                ['object', 'function'].includes(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(target[prop]))
-            ) {
+            } else if (['object', 'function'].includes(_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(target[prop]))) {
                 target[prop] = this.proxyObject(target[prop], callback, name);
             }
         }
@@ -1830,10 +1803,7 @@ class Observe {
     addCallback(eventName, callback, target) {
         if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(callback) === 'function') {
             if (this.delay !== -1) {
-                this.eventBus.on(
-                    eventName,
-                    _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].debounce(callback, this.delay).bind(target)
-                );
+                this.eventBus.on(eventName, _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].debounce(callback, this.delay).bind(target));
             } else {
                 this.eventBus.on(eventName, callback.bind(target));
             }
@@ -1974,6 +1944,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * View Component
+ *
  * @author wang.xin
  * @exports VC
  */
@@ -2074,6 +2045,9 @@ const VC = {
                         reject();
                     }
                 };
+                target.onerror = function () {
+                    reject();
+                };
             }
         });
     },
@@ -2107,6 +2081,9 @@ const VC = {
                     } else {
                         reject();
                     }
+                };
+                target.onerror = function () {
+                    reject();
                 };
             }
         });
@@ -2738,6 +2715,25 @@ class MyNode {
         });
 
         return res;
+    }
+
+    /**
+     * 找出元素集合中符合 CSS 选择器的元素
+     * @param {String|Node} selector CSS选择器
+     * @returns {MyNode}
+     */
+    matches(selector) {
+        let result = new MyNode([], this);
+
+        this.node.forEach((elem) => {
+            if (selector instanceof Node && elem === selector) {
+                result.push(elem);
+            }
+            if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(selector) === 'string' && elem.matches(selector)) {
+                result.push(elem);
+            }
+        });
+        return result;
     }
 
     /**
@@ -3519,6 +3515,49 @@ class MyNode {
             return Math.max(res, +window.getComputedStyle(elem).zIndex || 0);
         }, 0);
     }
+
+    /**
+     * 合并单元格，针对表格单元格合并
+     * @param {Number} col 第 col 列合并
+     */
+    mergeCell(col) {
+        if (this.node.matches('tr').length !== this.node.length) {
+            return;
+        }
+
+        let content = '',
+            rowSpan = 1,
+            td = null, // 单元格
+            trCount = trList.length; // 总行数
+
+        this.node.forEach((item, index, list) => {
+            let curTd = list.eq(index).find('td').eq(col),
+                curContent = curTd.html();
+
+            if (index === 0) {
+                // 遍历第一行的时候
+                content = curContent;
+                td = curTd;
+            } else {
+                if (curContent == content) {
+                    // 当前行与上一行内容相同
+                    rowSpan++; // 行数累加
+                    curTd.remove(); // 移除单元格
+
+                    // 最后一行的时候，设置 rowSpan 属性
+                    index + 1 === trCount && td.attr('rowSpan', rowSpan);
+                } else {
+                    // 当前行与上一行内容不同，设置 rowSpan 属性
+                    td.attr('rowSpan', rowSpan);
+
+                    // 从新计算
+                    content = curContent;
+                    td = curTd;
+                    rowSpan = 1;
+                }
+            }
+        });
+    }
 }
 
 /**
@@ -3577,6 +3616,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 任务队列
+ *
  * @author wang.xin
  */
 class TaskQueue {
@@ -3641,6 +3681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /**
  * 时间对象
+ *
  * @author wang.xin
  */
 class Time {
@@ -3714,10 +3755,7 @@ class Time {
 
         for (let key in reg) {
             if (new RegExp(`(${key})`).test(res)) {
-                res = res.replace(
-                    RegExp.$1,
-                    reg[key].substring(reg[key].length - RegExp.$1.length)
-                );
+                res = res.replace(RegExp.$1, reg[key].substring(reg[key].length - RegExp.$1.length));
             }
         }
 
@@ -3830,6 +3868,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 组件基类
+ *
  * @author wang.xin
  */
 class Component {
@@ -4167,6 +4206,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 观察者
+ *
  * @author wang.xin
  */
 class Watcher {
@@ -4184,8 +4224,7 @@ class Watcher {
     // 初始化
     init(data, watch) {
         for (let key in data) {
-            let handle =
-                _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(watch[key]) === 'function' ? watch[key] : () => {};
+            let handle = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(watch[key]) === 'function' ? watch[key] : () => {};
 
             this.monitor(key, handle, data[key]);
         }
@@ -4300,6 +4339,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {string | Node | MyNode} option.elem Node节点、CSS选择器、MyNode
  * @param {string} option.relation 嵌入关系
  * @param {string} option.template 表单模版
+ * @exports Form
  */
 class Form extends _base_component_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
     /**
@@ -7161,6 +7201,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 扩展功能
+ *
  * @exports Extend
  */
 const Extend = {};
@@ -7633,6 +7674,14 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      */
     monitor() {
         /**
+         * @member {Boolean} mousedown 鼠标按下
+         * @memberof ScrollBar#
+         */
+        this._observe('mousedown', false, (value) => {
+            this.container.css('user-select', value ? 'none' : 'unset');
+        });
+
+        /**
          * @member {MyNode} container 容器
          * @memberof ScrollBar#
          */
@@ -7667,6 +7716,18 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         });
 
         /**
+         * @member {Number} smoothY 平滑滚动距离
+         * @memberof ScrollBar#
+         */
+        this._observe('smoothY', 30, () => {});
+
+        /**
+         * @member {Number} scrollId 滚动ID，避免重复滚动
+         * @memberof ScrollBar#
+         */
+        this._observe('scrollId', () => {});
+
+        /**
          * @member {Function} delayCalcRate 延时计算比例
          * @memberof ScrollBar#
          */
@@ -7696,20 +7757,8 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
                 this.pageY = e.pageY;
             } else {
                 if (this.container.length > 0) {
-                    this.container[0].scrollTop = e.offsetY * this.rate;
+                    this.smoothScrollTo(e.offsetY / this.rate);
                 }
-            }
-        });
-
-        /**
-         * @event node mousemove 鼠标移动
-         * @memberof ScrollBar#
-         * @todo 当滑块属于拖拽情况下，滚动条进行平移，距离为鼠标移动距离
-         */
-        this.node.on('mousemove', (e) => {
-            if (this.mousedown == true && this.container.length > 0) {
-                this.container[0].scrollTop += e.pageY - this.pageY;
-                this.pageY = e.pageY;
             }
         });
 
@@ -7721,6 +7770,19 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         document.addEventListener('mouseup', (e) => {
             this.mousedown = false;
             this.pageY = 0;
+        });
+
+        /**
+         * @event document mouseup 鼠标释放
+         * @memberof ScrollBar#
+         * @todo 清除拖拽标记以及偏移量
+         */
+        document.addEventListener('mousemove', (e) => {
+            if (this.mousedown == true && this.container.length > 0) {
+                let step = this.container[0].scrollTop + (e.pageY - this.pageY) / this.rate;
+                this.smoothScrollTo(step);
+                this.pageY = e.pageY;
+            }
         });
     }
 
@@ -7735,11 +7797,15 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          * @todo 模拟滚动事件
          */
         this.container.on('mousewheel', (event) => {
+            let step = this.container[0].clientHeight / 2,
+                scrollTop = 0;
+
             if (event.wheelDeltaY < 0) {
-                this.container[0].scrollTop += 40;
+                scrollTop = this.container[0].scrollTop + step;
             } else {
-                this.container[0].scrollTop -= 40;
+                scrollTop = this.container[0].scrollTop - step;
             }
+            this.smoothScrollTo(scrollTop, event.wheelDeltaY < 0);
         });
 
         /**
@@ -7783,12 +7849,16 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      * @param {Object} options 入参
      * @param {MyNode} options.container 容器
      * @param {Boolean} options.fixed 是否固定显示
+     * @param {Number} options.smoothY 平滑滑动距离
      * @memberof ScrollBar
      */
     load(options = {}) {
         this.container = options.container || this.node.parent();
         this.setStyle();
         this.fixed = options.fixed || false;
+        if (typeof options.smoothY === 'number') {
+            this.smoothY = options.smoothY;
+        }
     }
 
     /**
@@ -7815,13 +7885,13 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      * @memberof ScrollBar
      */
     showThumb() {
-        let { paddingTop, paddingBottom } = getComputedStyle(this.node[0]);
+        const { marginTop, marginBottom } = window.getComputedStyle(this.node.find('.sb_thumb')[0]);
 
         this.node
             .find('.sb_thumb')
             .css(
                 'height',
-                this.container[0].clientHeight * this.rate - (parseInt(paddingTop) + parseInt(paddingBottom)) + 'px'
+                this.container[0].clientHeight * this.rate - (parseInt(marginTop) + parseInt(marginBottom)) + 'px'
             );
         this.node.addClass('scroll-bar-active');
     }
@@ -7832,6 +7902,43 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      */
     hideThumb() {
         this.node.removeClass('scroll-bar-active');
+    }
+
+    /**
+     * 平滑滚动
+     * @param {Number} targetY 滚动条目标位置
+     * @todo
+     * this.smoothY === 0 直接滚动，否则平滑滚动
+     */
+    smoothScrollTo(targetY) {
+        if (this.smoothY === 0) {
+            this.container[0].scrollTop = targetY;
+            return;
+        }
+
+        const scrollId = Math.random(); // 本次滚动ID
+        const startY = this.container[0].scrollTop; // 起始位置
+        const diff = targetY - startY; // 间距
+        const maxCount = Math.ceil(diff / this.smoothY); // 步长
+        let count = 1;
+
+        this.scrollId = scrollId;
+        const smoothScroll = () => {
+            let aimPosition = startY + count * this.smoothY;
+
+            if (scrollId != this.scrollId) {
+                return;
+            }
+
+            count++;
+            if (count >= maxCount) {
+                this.container[0].scrollTop = targetY; // 确保最终位置正确
+            } else {
+                this.container[0].scrollTop = aimPosition;
+                window.requestAnimationFrame(smoothScroll);
+            }
+        };
+        smoothScroll();
     }
 }
 
@@ -7920,12 +8027,12 @@ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBP
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
     --sb_width_scroll: 4px;
+    --sb_margin_scroll: 6px;
 
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
-    padding: 6px;
     box-sizing: border-box;
     opacity: 0;
 }
@@ -7940,17 +8047,20 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
 
 .scroll-bar > .sb_scroll {
     position: relative;
-    width: var(--sb_width_scroll);
+    width: calc(var(--sb_width_scroll) + 2 * var(--sb_margin_scroll));
     height: 100%;
     box-sizing: border-box;
 }
 
 .scroll-bar > .sb_scroll > .sb_thumb {
     position: absolute;
-    width: 100%;
+    width: var(--sb_width_scroll);
     top: 0;
+    right: 0;
+    margin: var(--sb_margin_scroll);
     background-color: #000;
     border-radius: calc(var(--sb_width_scroll) / 2);
+    cursor: pointer;
 }
 `, ""]);
 // Exports
@@ -10451,10 +10561,7 @@ class XMLNode {
         }
         this.childNodes.push(xmlNode);
         xmlNode.parentNode = this;
-        if (
-            (this instanceof RootNode || this instanceof ElementNode) &&
-            xmlNode instanceof ElementNode
-        ) {
+        if ((this instanceof RootNode || this instanceof ElementNode) && xmlNode instanceof ElementNode) {
             this.children.push(xmlNode);
         }
     }
@@ -10468,9 +10575,7 @@ class XMLNode {
         }
         this.children.forEach((elementNode) => {
             if (result[elementNode.nodeName] == null) {
-                let nodeList = this.children.filter(
-                    (item) => item.nodeName === elementNode.nodeName
-                );
+                let nodeList = this.children.filter((item) => item.nodeName === elementNode.nodeName);
 
                 result[elementNode.nodeName] = nodeList.length > 1 ? [] : {};
             }
@@ -10556,8 +10661,7 @@ function parseXML(data) {
      * 7 CDATA节点标志位，匹配失败为 undefined
      * 8 值
      */
-    let xmlRegExp =
-        /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)|(<!--([\s\S]*?)-->)|(<!\[CDATA\[([\s\S]*?)\]\]>)/gi; // 匹配器
+    let xmlRegExp = /(<([\/a-z][\a-z\d\-\.]*)([\s\S]*?)(\/)?>)|(<!--([\s\S]*?)-->)|(<!\[CDATA\[([\s\S]*?)\]\]>)/gi; // 匹配器
     let root = new RootNode(), // 根节点
         stack = [root]; // 栈，至少含有根节点一个元素
 

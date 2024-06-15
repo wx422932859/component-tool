@@ -30,6 +30,14 @@ class ScrollBar extends Component {
      */
     monitor() {
         /**
+         * @member {Boolean} mousedown 鼠标按下
+         * @memberof ScrollBar#
+         */
+        this._observe('mousedown', false, (value) => {
+            this.container.css('user-select', value ? 'none' : 'unset');
+        });
+
+        /**
          * @member {MyNode} container 容器
          * @memberof ScrollBar#
          */
@@ -64,6 +72,18 @@ class ScrollBar extends Component {
         });
 
         /**
+         * @member {Number} smoothY 平滑滚动距离
+         * @memberof ScrollBar#
+         */
+        this._observe('smoothY', 30, () => {});
+
+        /**
+         * @member {Number} scrollId 滚动ID，避免重复滚动
+         * @memberof ScrollBar#
+         */
+        this._observe('scrollId', () => {});
+
+        /**
          * @member {Function} delayCalcRate 延时计算比例
          * @memberof ScrollBar#
          */
@@ -93,20 +113,8 @@ class ScrollBar extends Component {
                 this.pageY = e.pageY;
             } else {
                 if (this.container.length > 0) {
-                    this.container[0].scrollTop = e.offsetY * this.rate;
+                    this.smoothScrollTo(e.offsetY / this.rate);
                 }
-            }
-        });
-
-        /**
-         * @event node mousemove 鼠标移动
-         * @memberof ScrollBar#
-         * @todo 当滑块属于拖拽情况下，滚动条进行平移，距离为鼠标移动距离
-         */
-        this.node.on('mousemove', (e) => {
-            if (this.mousedown == true && this.container.length > 0) {
-                this.container[0].scrollTop += e.pageY - this.pageY;
-                this.pageY = e.pageY;
             }
         });
 
@@ -118,6 +126,19 @@ class ScrollBar extends Component {
         document.addEventListener('mouseup', (e) => {
             this.mousedown = false;
             this.pageY = 0;
+        });
+
+        /**
+         * @event document mouseup 鼠标释放
+         * @memberof ScrollBar#
+         * @todo 清除拖拽标记以及偏移量
+         */
+        document.addEventListener('mousemove', (e) => {
+            if (this.mousedown == true && this.container.length > 0) {
+                let step = this.container[0].scrollTop + (e.pageY - this.pageY) / this.rate;
+                this.smoothScrollTo(step);
+                this.pageY = e.pageY;
+            }
         });
     }
 
@@ -132,11 +153,15 @@ class ScrollBar extends Component {
          * @todo 模拟滚动事件
          */
         this.container.on('mousewheel', (event) => {
+            let step = this.container[0].clientHeight / 2,
+                scrollTop = 0;
+
             if (event.wheelDeltaY < 0) {
-                this.container[0].scrollTop += 40;
+                scrollTop = this.container[0].scrollTop + step;
             } else {
-                this.container[0].scrollTop -= 40;
+                scrollTop = this.container[0].scrollTop - step;
             }
+            this.smoothScrollTo(scrollTop, event.wheelDeltaY < 0);
         });
 
         /**
@@ -180,12 +205,16 @@ class ScrollBar extends Component {
      * @param {Object} options 入参
      * @param {MyNode} options.container 容器
      * @param {Boolean} options.fixed 是否固定显示
+     * @param {Number} options.smoothY 平滑滑动距离
      * @memberof ScrollBar
      */
     load(options = {}) {
         this.container = options.container || this.node.parent();
         this.setStyle();
         this.fixed = options.fixed || false;
+        if (typeof options.smoothY === 'number') {
+            this.smoothY = options.smoothY;
+        }
     }
 
     /**
@@ -212,13 +241,13 @@ class ScrollBar extends Component {
      * @memberof ScrollBar
      */
     showThumb() {
-        let { paddingTop, paddingBottom } = getComputedStyle(this.node[0]);
+        const { marginTop, marginBottom } = window.getComputedStyle(this.node.find('.sb_thumb')[0]);
 
         this.node
             .find('.sb_thumb')
             .css(
                 'height',
-                this.container[0].clientHeight * this.rate - (parseInt(paddingTop) + parseInt(paddingBottom)) + 'px'
+                this.container[0].clientHeight * this.rate - (parseInt(marginTop) + parseInt(marginBottom)) + 'px'
             );
         this.node.addClass('scroll-bar-active');
     }
@@ -229,6 +258,43 @@ class ScrollBar extends Component {
      */
     hideThumb() {
         this.node.removeClass('scroll-bar-active');
+    }
+
+    /**
+     * 平滑滚动
+     * @param {Number} targetY 滚动条目标位置
+     * @todo
+     * this.smoothY === 0 直接滚动，否则平滑滚动
+     */
+    smoothScrollTo(targetY) {
+        if (this.smoothY === 0) {
+            this.container[0].scrollTop = targetY;
+            return;
+        }
+
+        const scrollId = Math.random(); // 本次滚动ID
+        const startY = this.container[0].scrollTop; // 起始位置
+        const diff = targetY - startY; // 间距
+        const maxCount = Math.ceil(diff / this.smoothY); // 步长
+        let count = 1;
+
+        this.scrollId = scrollId;
+        const smoothScroll = () => {
+            let aimPosition = startY + count * this.smoothY;
+
+            if (scrollId != this.scrollId) {
+                return;
+            }
+
+            count++;
+            if (count >= maxCount) {
+                this.container[0].scrollTop = targetY; // 确保最终位置正确
+            } else {
+                this.container[0].scrollTop = aimPosition;
+                window.requestAnimationFrame(smoothScroll);
+            }
+        };
+        smoothScroll();
     }
 }
 
