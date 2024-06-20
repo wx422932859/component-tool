@@ -1,7 +1,5 @@
 .ly-popup {
     display: none;
-    justify-content: center;
-    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -9,46 +7,124 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+}
+
+.ly-popup * {
+    box-sizing: border-box;
 }
 
 .ly-popup > .ly-popup_container {
-    min-width: 300px;
-    height: 150px;
+    position: fixed;
+    min-width: 120px;
+    min-height: 40px;
     background-color: #fff;
-    border-radius: 4px;
-    box-shadow: var(--ly-form_box-shadow);
+    border-radius: 2px;
 }
 
-.ly-popup .ly-popup_header {
+.ly-popup > .ly-popup_container > .ly-popup_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 40px;
-    padding: 0 20px;
+    padding: 0 14px;
     color: #fff;
-    border-radius: 4px 4px 0 0;
-    background-color: var(--ly-form_color_blue);
-    font-family: Medium;
+    border-radius: 2px 2px 0 0;
+    background-color: #192f75;
     font-size: 16px;
+    letter-spacing: 2px;
+    cursor: move;
 }
 
-.ly-popup .ly-popup_header > .ly-icon_close {
-    --ly-form_color_icon: #fff;
+.ly-popup > .ly-popup_container[data-dragRule='0'] > .ly-popup_header {
+    cursor: default;
 }
 
-.ly-popup .ly-popup_header > .ly-icon_close:hover {
+.ly-popup > .ly-popup_container > .ly-popup_header > [data-action='close']:hover {
     opacity: 0.8;
     cursor: pointer;
 }
+/* ä¼¸ç¼© */
+.ly-popup > .ly-popup_container > .ly-popup_resize {
+    --ly-popup_width_resize: 4px;
 
-.ly-popup .ly-popup_center {
-    height: calc(100% - 40px);
-    padding: 20px;
+    display: none;
+    position: absolute;
+    top: calc(-1 * var(--ly-popup_width_resize));
+    left: calc(-1 * var(--ly-popup_width_resize));
+    width: calc(100% + 2 * var(--ly-popup_width_resize));
+    height: calc(100% + 2 * var(--ly-popup_width_resize));
+    z-index: -1;
 }
 
-.ly-popup .ly-popup_footer {
-    display: flex;
-    justify-content: space-around;
-    margin: 10px 0;
+.ly-popup > .ly-popup_container[data-resizeRule='1'] > .ly-popup_resize {
+    display: block;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-e,
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-w {
+    position: absolute;
+    top: var(--ly-popup_width_resize);
+    width: var(--ly-popup_width_resize);
+    height: calc(100% - 2 * var(--ly-popup_width_resize));
+    cursor: e-resize;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-s,
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-n {
+    position: absolute;
+    left: var(--ly-popup_width_resize);
+    width: calc(100% - 2 * var(--ly-popup_width_resize));
+    height: var(--ly-popup_width_resize);
+    cursor: n-resize;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-e {
+    right: 0;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-w {
+    left: 0;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-s {
+    bottom: 0;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-n {
+    top: 0;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-es,
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-ws,
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-wn,
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-en {
+    position: absolute;
+    width: calc(2 * var(--ly-popup_width_resize));
+    height: calc(2 * var(--ly-popup_width_resize));
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-es {
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-ws {
+    bottom: 0;
+    left: 0;
+    cursor: nesw-resize;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-wn {
+    top: 0;
+    left: 0;
+    cursor: nwse-resize;
+}
+
+.ly-popup > .ly-popup_container > .ly-popup_resize > .ly_popup_resize-en {
+    top: 0;
+    right: 0;
+    cursor: nesw-resize;
 }
