@@ -28,6 +28,8 @@ class App extends Component {
             }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
             interval: 1000, // 刷新频率，单位ms
         });
+
+        app._children.popup.load();
     }
 }
 

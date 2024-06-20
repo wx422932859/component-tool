@@ -527,6 +527,10 @@ Util.updateURLSearchParams = function (key = 'params', value, encode) {
 Util.getURLSearchParams = function (key = 'params', decode) {
     let value = new URL(window.location).searchParams.get(key);
 
+    if (value == null) {
+        return;
+    }
+
     if (typeof decode === 'function') {
         return decode(value);
     } else {
