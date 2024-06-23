@@ -14,16 +14,9 @@ class Popup extends Component {
             return Popup._cache.get(this.node[0]);
         }
         Popup._cache.set(this.node[0], this);
-    }
 
-    /**
-     * 挂载
-     */
-    _mounted() {
         this.superMonitor();
-        this.dragEvent();
-        this.resizeEvent();
-        this.on();
+        this.superEvent();
     }
 
     /**
@@ -78,6 +71,21 @@ class Popup extends Component {
          * @member {Object} dragRange 拖拽边界
          */
         this._observe('dragRange', null, () => {});
+    }
+
+    /**
+     * 事件
+     */
+    superEvent() {
+        this.dragEvent();
+        this.resizeEvent();
+        /**
+         * 尺寸大小变化
+         */
+        window.addEventListener('resize', () => {
+            this.calcDragRange();
+            this.moveTo();
+        });
     }
 
     /**
@@ -240,18 +248,10 @@ class Popup extends Component {
     }
 
     /**
-     * 隐藏
+     * 挂载
      */
-    hide() {
-        this.node.hide();
-        this.moveTo();
-    }
-
-    /**
-     * 显示
-     */
-    show() {
-        this.moveTo();
+    _mounted() {
+        this.on();
     }
 
     /**
@@ -261,32 +261,27 @@ class Popup extends Component {
         this.node.on('click', '.ly-popup_header>[data-action="close"]', (e) => {
             this.unload();
         });
-
-        /**
-         * 尺寸大小变化
-         */
-        window.addEventListener('resize', () => {
-            this.calcDragRange();
-            this.moveTo();
-        });
     }
 
     /**
      * 卸载
      */
     unload() {
+        this.node.hide();
         this.dragPosition = null;
-        this.hide();
+        this.moveTo();
     }
 
     /**
      * 加载
      * @param {String} title 标题
+     * @param {String} content 内容
      * @param {Number} [dragRule] 拖拽规则
      */
     load(options = {}) {
         this.node.show();
-        this.node.find('.ly-popup_title').text(options.title);
+        this.node.find('.ly-popup_title').html(options.title);
+        this.node.find('.ly-popup_center').html(options.content);
         this.dragRule = options.dragRule || 1; // 配置是否可以拖拽
         this.resizeRule = options.resizeRule || 1;
     }
@@ -307,9 +302,7 @@ Popup._template = `
                 <use xlink:href="#ly-close"></use>
             </svg>
         </div>
-        <div class="ly-popup_center"></div>
         <div class="ly-popup_footer"></div>
-        
     </div>
 </div>`;
 

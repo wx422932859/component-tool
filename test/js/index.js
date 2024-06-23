@@ -1,6 +1,3 @@
-const { Util, Component, Form, Observe, VC, Extend, Time, Ajax } = LY;
-const { DropList, Radio, Switch, Slider, Checkbox, MultipleList } = Form;
-const { WaterMark, ScrollBar, FileUpload, FilePreview, ScrollTop, Popup, Pagination } = Extend;
 const CPM = {
     TestForm: '../component/TestForm.vc',
     T: '../component/T.vc',
@@ -29,10 +26,11 @@ class App extends Component {
             interval: 1000, // 刷新频率，单位ms
         });
 
-        app._children.popup.load();
+        new Tip().warn('请重新输入！');
     }
 }
 
 var app = new App('#app');
+
 app.load();
 console.log(app);
