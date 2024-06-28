@@ -544,4 +544,26 @@ Util.getURLSearchParams = function (key = 'params', decode) {
     return value;
 };
 
+/**
+ * 获取浏览器信息
+ */
+Util.getBrowserInfo = function () {
+    let browserList = ['Edg', 'Chrome', 'Firefox'],
+        browserInfo = null;
+
+    for (let i = 0; i < browserList.length; i++) {
+        let reg = new RegExp(`${browserList[i]}/([\\d]*)`, 'gi'),
+            result = reg.exec(window.navigator.userAgent);
+
+        if (result) {
+            browserInfo = {
+                name: browserList[i],
+                version: result[i],
+            };
+            break;
+        }
+    }
+    return browserInfo;
+};
+
 export default Util;

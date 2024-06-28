@@ -131,8 +131,39 @@ class Component {
             const { component, action, data } = msg;
             this._listen_bus(component, action, data);
         });
+
+        /**
+         * @member {Proxy} load 加载
+         * @memberof Component
+         * @inner
+         */
+        Object.defineProperty(this, 'load', {
+            writable: false,
+            enumerable: false,
+            value: new Proxy(this.load, {
+                apply(target, thisArg, params) {
+                    self._before_load(params);
+                    let res = Reflect.apply(...arguments);
+                    return res;
+                },
+            }),
+        });
+
         this._mount_component();
     }
+
+    /**
+     * 加载前操作
+     */
+    _before_load(...parameter) {
+        this._arguments = parameter;
+        console.log(this._arguments);
+    }
+
+    /**
+     * 加载
+     */
+    load() {}
 
     /**
      * 子组件实例化完成后执行的函数
