@@ -29,14 +29,25 @@
             });
         }
 
-        /**
-         * 事件总线
-         */
-        _listen_bus(component, action, data) {
-            console.log(component, action, data);
+        _listen_component(component, action, data) {
+            console.log('App', component, action, data);
         }
 
-        load() {}
+        load() {
+            try {
+                this._send_msg({
+                    action: 't',
+                    data: 1,
+                });
+            } catch (err) {
+                console.log(err);
+            }
+            this._bus.emit(['App', 'MyCheckbox'], {
+                component: this,
+                action: 'up',
+                data: {},
+            });
+        }
     }
 </script>
 
