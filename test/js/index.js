@@ -10,9 +10,7 @@ class App extends Component {
     }
 
     _mounted() {
-        app._children.fileUpload.addFileNode(
-            'https://puui.qpic.cn/vpic_cover/a352039hrht/a352039hrht_1699515662_hz.jpg'
-        );
+        this._children.t.load();
     }
 
     load() {
@@ -28,9 +26,12 @@ class App extends Component {
 
         new Tip().warn('请重新输入！');
     }
+
+    _listen_component(component, action, data) {
+        console.log('App', component, action, data);
+    }
 }
 
 var app = new App('#app');
 
 app.load();
-console.log(app);
