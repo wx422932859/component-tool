@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-06-23 23:50:65
+ * package: 2024-07-03 00:07:01
  * version: 1.1.2
  * exports: LY
  */
@@ -1556,6 +1556,28 @@ Util.getURLSearchParams = function (key = 'params', decode) {
     return value;
 };
 
+/**
+ * 获取浏览器信息
+ */
+Util.getBrowserInfo = function () {
+    let browserList = ['Edg', 'Chrome', 'Firefox'],
+        browserInfo = null;
+
+    for (let i = 0; i < browserList.length; i++) {
+        let reg = new RegExp(`${browserList[i]}/([\\d]*)`, 'gi'),
+            result = reg.exec(window.navigator.userAgent);
+
+        if (result) {
+            browserInfo = {
+                name: browserList[i],
+                version: result[i],
+            };
+            break;
+        }
+    }
+    return browserInfo;
+};
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Util);
 
 
@@ -1895,6 +1917,11 @@ class EventBus {
      * @param {*} handle
      */
     off(fn, handle) {
+        if (Array.isArray(fn)) {
+            fn.forEach((fnItem) => this.off(fnItem));
+            return;
+        }
+
         if (this.map.has(fn)) {
             if (handle) {
                 let list = this.map.get(fn);
@@ -1911,6 +1938,11 @@ class EventBus {
      * @param  {...any} arg
      */
     emit(fn, ...arg) {
+        if (Array.isArray(fn)) {
+            fn.forEach((fnItem) => this.emit(fnItem, ...arg));
+            return;
+        }
+
         if (this.map.has(fn)) {
             this.map.get(fn).forEach((elem) => {
                 elem(...arg);
@@ -3878,7 +3910,7 @@ __webpack_require__.r(__webpack_exports__);
 class Component {
     /**
      * Creates an instance of Component.
-     * @param {string | DOM | MyNode} selector 选择器
+     * @param {String|Node|MyNode} selector 选择器
      */
     constructor(selector) {
         let self = this,
@@ -3952,15 +3984,15 @@ class Component {
 
         /**
          * @member {Function} _send_msg 发送消息
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         Object.defineProperty(this, '_send_msg', {
             writable: false,
             enumerable: false,
             value: new Proxy(this._send_msg, {
                 apply(target, thisArg, params) {
-                    let parent = self._parent;
+                    let parent = self._parent,
+                        { action, data } = params[0];
 
                     if (params[1] === true) {
                         while (parent instanceof Component) {
@@ -3968,7 +4000,10 @@ class Component {
                             parent = parent._parent;
                         }
                     } else {
-                        parent instanceof Component && parent._listen_msg(self, ...params);
+                        if (parent instanceof Component) {
+                            parent._listen_msg(self, ...params);
+                            parent._listen_component(self, action, data);
+                        }
                     }
 
                     return Reflect.apply(...arguments);
@@ -3992,12 +4027,43 @@ class Component {
         /**
          * @event 增加默认全局事件监听
          */
-        this._bus.on(this.__proto__.constructor.name, (msg) => {
+        this._bus.on(_constructor.name, (msg) => {
+            console.log(msg);
             const { component, action, data } = msg;
-            this._listen_bus(component, action, data);
+            this._listen_component(component, action, data);
         });
+
+        /**
+         * @member {Proxy} load 加载
+         * @memberof Component
+         * @inner
+         */
+        Object.defineProperty(this, 'load', {
+            writable: false,
+            enumerable: false,
+            value: new Proxy(this.load, {
+                apply(target, thisArg, params) {
+                    self._before_load(params);
+                    let res = Reflect.apply(...arguments);
+                    return res;
+                },
+            }),
+        });
+
         this._mount_component();
     }
+
+    /**
+     * 加载前操作
+     */
+    _before_load(...parameter) {
+        this._arguments = parameter;
+    }
+
+    /**
+     * 加载
+     */
+    load() {}
 
     /**
      * 子组件实例化完成后执行的函数
@@ -4024,30 +4090,25 @@ class Component {
     }
 
     /**
-     * 发送消息，仅限用于子组件给父组件传递消息
-     * @param {object} 消息
-     * @example
-     * this._send_msg({
-     *     action: '动作'
-     *     info: '消息'
-     * })
+     * 发送消息，仅限用于子组件给父组件传递消息，建议使用 _listen_component
+     * @param {object} msg 消息
      */
     _send_msg(msg) {}
 
     /**
      * 监听子组件消息，使用时重写该方法
-     * @param {Component} component 消息来源组件
+     * @param {Component} component 消息来源组件，建议使用 _listen_component
      * @param {object} msg 消息
      */
     _listen_msg(component, msg) {}
 
     /**
-     * 监听事件总线，使用时重写该方法
+     * 监听组件，使用时重写该方法
      * @param {Component} component 消息来源组件
-     * @param {string} action 动作
-     * @param {object} data 数据
+     * @param {String} action 动作
+     * @param {Object} data 数据
      */
-    _listen_bus(component, action, data) {}
+    _listen_component(component, action, data) {}
 
     /**
      * 监听属性

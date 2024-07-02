@@ -20,6 +20,10 @@
 
             this.node.find('.ly-checkbox_list').html(htmlStr);
         }
+
+        _listen_component(component, action, data) {
+            console.log('MyCheckbox', component, action, data);
+        }
     }
 </script>
 

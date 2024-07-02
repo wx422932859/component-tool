@@ -35,6 +35,11 @@ class EventBus {
      * @param {*} handle
      */
     off(fn, handle) {
+        if (Array.isArray(fn)) {
+            fn.forEach((fnItem) => this.off(fnItem));
+            return;
+        }
+
         if (this.map.has(fn)) {
             if (handle) {
                 let list = this.map.get(fn);
@@ -51,6 +56,11 @@ class EventBus {
      * @param  {...any} arg
      */
     emit(fn, ...arg) {
+        if (Array.isArray(fn)) {
+            fn.forEach((fnItem) => this.emit(fnItem, ...arg));
+            return;
+        }
+
         if (this.map.has(fn)) {
             this.map.get(fn).forEach((elem) => {
                 elem(...arg);
