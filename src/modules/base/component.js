@@ -131,7 +131,6 @@ class Component {
          * @event 增加默认全局事件监听
          */
         this._bus.on(_constructor.name, (msg) => {
-            console.log(msg);
             const { component, action, data } = msg;
             this._listen_component(component, action, data);
         });
@@ -206,7 +205,21 @@ class Component {
     _listen_msg(component, msg) {}
 
     /**
-     * 监听组件，使用时重写该方法
+     * 给组件传递消息
+     * @param {String|String[]} componentName 组件类名
+     * @param {String} action 动作
+     * @param {Object} data 数据
+     */
+    _send_component(componentName, action, data) {
+        this._bus.emit(componentName, {
+            component: this,
+            action,
+            data,
+        });
+    }
+
+    /**
+     * 接收组件消息，使用时重写该方法
      * @param {Component} component 消息来源组件
      * @param {String} action 动作
      * @param {Object} data 数据
