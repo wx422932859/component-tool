@@ -57,7 +57,18 @@ class Component {
         this._children = new Proxy(
             {},
             {
-                get: Reflect.get,
+                get(target, prop) {
+                    if (prop in target) {
+                        return Reflect.get(...arguments);
+                    } else {
+                        try {
+                            throw new ReferenceError(`Children component ${prop} does not exit.`);
+                        } catch (err) {
+                            console.log(err);
+                            return new Component();
+                        }
+                    }
+                },
                 set(target, prop, value) {
                     if (value instanceof Component) {
                         value._parent = self;

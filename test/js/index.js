@@ -25,6 +25,9 @@ class App extends Component {
         });
 
         new Tip().warn('请重新输入！');
+
+        app._children.a.load();
+        console.log(123);
     }
 
     _listen_component(component, action, data) {
