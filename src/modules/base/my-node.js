@@ -691,10 +691,11 @@ class MyNode {
      * 获取或设置样式
      * @param {String|Object} style 属性
      * @param {String} [styleValue] 属性值
+     * @param {String} [priority] 样式属性的优先级
      * @returns {MyNode|String}
      * @memberof MyNode
      */
-    css(style, styleValue) {
+    css(style, styleValue, priority = '') {
         /**
          * Object
          */
@@ -713,7 +714,7 @@ class MyNode {
                 return this[0] ? this[0].style.getPropertyValue(style) || window.getComputedStyle(this[0])[style] : '';
             }
 
-            this.forEach((item) => item.nodeType === 1 && item.style.setProperty(style, String(styleValue)));
+            this.forEach((item) => item.nodeType === 1 && item.style.setProperty(style, String(styleValue), priority));
             return this;
         }
 
