@@ -179,6 +179,11 @@ class Component {
     load() {}
 
     /**
+     * 卸载
+     */
+    unload() {}
+
+    /**
      * 子组件实例化完成后执行的函数
      */
     _mounted() {}

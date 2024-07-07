@@ -566,4 +566,38 @@ Util.getBrowserInfo = function () {
     return browserInfo;
 };
 
+/**
+ * 转换数值
+ */
+Util.transformNumber = (number) => {
+    let result = null;
+    try {
+        result = number < Number.MAX_SAFE_INTEGER ? Number(number) : BigInt(number);
+    } catch (err) {
+        // 转换失败
+    }
+    return result;
+};
+
+/**
+ * 获取最大值
+ */
+Util.max = function (...numbers) {
+    if (numbers.length === 0) {
+        return null;
+    }
+
+    if (typeof BigInt === 'undefined') {
+        return Math.max(...numbers);
+    }
+
+    return numbers.reduce((res, elem) => {
+        let next = Util.transformNumber(elem);
+        if (res === null || next === null) {
+            return res || next;
+        }
+        return res > next ? res : next;
+    }, Util.transformNumber(numbers[0]));
+};
+
 export default Util;
