@@ -13,6 +13,40 @@
             <slot data-component="Popup"></slot>
             <slot data-src="CPM.T"></slot>
             <slot data-src="CPM.MyCheckbox"></slot>
+
+            <div style="position: absolute; z-index: 99; background-color: red; width: 100px; height: 100px">
+                <div
+                    style="
+                        position: absolute;
+                        right: 0;
+                        z-index: 999;
+                        background-color: green;
+                        width: 50px;
+                        height: 50px;
+                    "
+                ></div>
+            </div>
+            <div
+                style="
+                    position: absolute;
+                    left: 50px;
+                    z-index: 9999999999999999999;
+                    background-color: #ddd;
+                    width: 100px;
+                    height: 100px;
+                "
+            >
+                <div
+                    style="
+                        position: absolute;
+                        left: 0;
+                        z-index: 9999;
+                        background-color: #fff;
+                        width: 50px;
+                        height: 50px;
+                    "
+                ></div>
+            </div>
         </div>
         <script defer src="./js/common.js"></script>
         <script defer src="./js/test/test-my-node.js"></script>

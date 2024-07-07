@@ -1,5 +1,6 @@
 import MyNode from '../../base/my-node';
 import Component from '../../base/component';
+import Util from '../../base/util';
 
 /**
  * 水印
@@ -64,6 +65,7 @@ class WaterMark extends Component {
          */
         this._observe('interval', 1000, (value) => {
             setInterval(() => {
+                this.setZIndex();
                 this.markInfo = this.options.getMarkInfo();
             }, value);
         });
@@ -88,6 +90,13 @@ class WaterMark extends Component {
         this._observe('fillStyle', (value) => {
             this.mark.fillStyle = value;
         });
+
+        /**
+         * 最大层级
+         * @member {Number} maxZIndex
+         * @memberof WaterMark#
+         */
+        this.maxZIndex = Math.pow(2, 31) - 1;
     }
 
     /**
@@ -96,17 +105,19 @@ class WaterMark extends Component {
      * @todo 渲染样式，不能通过外联样式，否则修改样式不会触发节点更新
      */
     init() {
-        this.node.append(this.mark.node).css({
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            'z-index': 999999,
-            'pointer-events': 'none',
-            width: '100%',
-            height: '100%',
-            overflow: 'hidden',
-            opacity: this.opacity,
-        });
+        this.node
+            .append(this.mark.node)
+            .css('display', 'block', 'important')
+            .css('visibility', 'visible', 'important')
+            .css('position', 'fixed', 'important')
+            .css('top', '0', 'important')
+            .css('left', '0', 'important')
+            .css('z-index', this.maxZIndex, 'important')
+            .css('pointer-events', 'none', 'important')
+            .css('width', '100%', 'important')
+            .css('height', '100%', 'important')
+            .css('overflow', 'hidden', 'important')
+            .css('opacity', this.opacity, 'important');
     }
 
     /**
@@ -124,7 +135,7 @@ class WaterMark extends Component {
         // 控制显示
         if (options.show) {
             options.parent && new MyNode(options.parent).prepend(this.node);
-            this.node.css('position', options.position);
+            this.node.css('position', options.position, 'important');
             this.copyNode = new MyNode(this.node[0].cloneNode(true));
             this.markInfo = options.getMarkInfo();
 
@@ -205,6 +216,22 @@ class WaterMark extends Component {
         this.node.find('canvas').replaceWith(this.mark.node);
         // 刷新水印信息
         this.markInfo = this.options.getMarkInfo();
+    }
+
+    /**
+     * 降低比自己层级高的节点
+     */
+    setZIndex() {
+        let parentNode = this.node.parent();
+
+        while (parentNode.length > 0) {
+            parentNode.children().forEach((elem) => {
+                if (+window.getComputedStyle(elem).zIndex === this.maxZIndex && elem !== this.node[0]) {
+                    elem.style.zIndex = this.maxZIndex - 1;
+                }
+            });
+            parentNode = parentNode.parent();
+        }
     }
 }
 
@@ -291,6 +318,7 @@ class CanvasMark extends Component {
                 y: this.width / padding.y,
             }; // 个数
 
+        this.node.css('display', 'block', 'important').css('visibility', 'visible', 'important');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         context.font = `normal ${this.fontSize}px Regular`;
