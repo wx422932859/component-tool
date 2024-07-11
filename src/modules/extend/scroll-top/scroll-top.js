@@ -38,6 +38,10 @@ class ScrollTop extends Component {
      */
     on() {
         this.node.on('click', () => (this.parentNode[0].scrollTop = 0));
+
+        window.addEventListener('resize', () => {
+            this.updatePosition();
+        });
     }
 
     /**

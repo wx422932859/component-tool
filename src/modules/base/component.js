@@ -58,16 +58,14 @@ class Component {
             {},
             {
                 get(target, prop) {
-                    if (prop in target) {
-                        return Reflect.get(...arguments);
-                    } else {
+                    if (!prop in target) {
                         try {
                             throw new ReferenceError(`Children component ${prop} does not exit.`);
                         } catch (err) {
                             console.log(err);
-                            return new Component();
                         }
                     }
+                    return Reflect.get(...arguments);
                 },
                 set(target, prop, value) {
                     if (value instanceof Component) {
