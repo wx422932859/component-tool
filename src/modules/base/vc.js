@@ -190,7 +190,14 @@ const VC = {
         }
 
         return fetch(fullPath)
-            .then((response) => response.text())
+            .then((response) => {
+                if (response.status === 200) {
+                    return response.text();
+                }
+                return new Promise((resolve, reject) => {
+                    reject();
+                });
+            })
             .then((res) => VC.parseViewComponent(res, componentName, globalName, callback));
     },
 
@@ -202,7 +209,7 @@ const VC = {
         let path = Util.eval(src);
 
         if (path != null) {
-            let componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
+            let componentName = path.match(/([a-zA-Z0-9]*?)\.((vc)|(js))/);
             if (componentName != null && componentName[1] != null) {
                 return componentName[1];
             }

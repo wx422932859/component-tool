@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-07-07 23:50:72
+ * package: 2024-07-11 19:21:52
  * version: 1.1.2
  * exports: LY
  */
@@ -2199,7 +2199,14 @@ const VC = {
         }
 
         return fetch(fullPath)
-            .then((response) => response.text())
+            .then((response) => {
+                if (response.status === 200) {
+                    return response.text();
+                }
+                return new Promise((resolve, reject) => {
+                    reject();
+                });
+            })
             .then((res) => VC.parseViewComponent(res, componentName, globalName, callback));
     },
 
@@ -2211,7 +2218,7 @@ const VC = {
         let path = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].eval(src);
 
         if (path != null) {
-            let componentName = path.match(/\/([a-zA-Z0-9]*?)\.vc/);
+            let componentName = path.match(/([a-zA-Z0-9]*?)\.((vc)|(js))/);
             if (componentName != null && componentName[1] != null) {
                 return componentName[1];
             }
@@ -3990,16 +3997,14 @@ class Component {
             {},
             {
                 get(target, prop) {
-                    if (prop in target) {
-                        return Reflect.get(...arguments);
-                    } else {
+                    if (!prop in target) {
                         try {
                             throw new ReferenceError(`Children component ${prop} does not exit.`);
                         } catch (err) {
                             console.log(err);
-                            return new Component();
                         }
                     }
+                    return Reflect.get(...arguments);
                 },
                 set(target, prop, value) {
                     if (value instanceof Component) {
@@ -10349,6 +10354,10 @@ class ScrollTop extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default
      */
     on() {
         this.node.on('click', () => (this.parentNode[0].scrollTop = 0));
+
+        window.addEventListener('resize', () => {
+            this.updatePosition();
+        });
     }
 
     /**
