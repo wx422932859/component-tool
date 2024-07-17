@@ -28,8 +28,15 @@ class Component {
          */
         this.node = new MyNode(selector);
 
-        if (_constructor._version != undefined) {
-            this.node.attr(`vc-${_constructor._version}`, '');
+        /**
+         * 添加版本号
+         */
+        let tempConstructor = _constructor;
+        while (tempConstructor !== Component) {
+            if (tempConstructor._version !== undefined) {
+                this.node.attr(`vc-${tempConstructor._version}`, '');
+            }
+            tempConstructor = tempConstructor.__proto__;
         }
 
         /**
