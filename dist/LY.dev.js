@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-07-11 19:21:52
+ * package: 2024-07-17 19:37:03
  * version: 1.1.2
  * exports: LY
  */
@@ -3967,8 +3967,15 @@ class Component {
          */
         this.node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
-        if (_constructor._version != undefined) {
-            this.node.attr(`vc-${_constructor._version}`, '');
+        /**
+         * 添加版本号
+         */
+        let tempConstructor = _constructor;
+        while (tempConstructor !== Component) {
+            if (tempConstructor._version !== undefined) {
+                this.node.attr(`vc-${tempConstructor._version}`, '');
+            }
+            tempConstructor = tempConstructor.__proto__;
         }
 
         /**
