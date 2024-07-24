@@ -40,6 +40,8 @@ class Time {
         this.hours = timeArr[3]; // 时
         this.minutes = timeArr[4]; // 分
         this.seconds = timeArr[5]; // 秒
+        this.milliseconds = `000${time.getMilliseconds()}`; // 毫秒
+        this.milliseconds = this.milliseconds.substring(this.milliseconds.length - 3);
         this.timeStamp = time.getTime(); // 时间戳
         this.week = '星期' + dayArr[time.getDay()]; // 星期
         this.formatDate = this.format('yyyy-mm-dd');
@@ -69,6 +71,7 @@ class Time {
                 'H+': this.hours, // 时
                 'M+': this.minutes, // 分
                 'S+': this.seconds, // 秒
+                'Z+': this.milliseconds, // 毫秒
             },
             res = formatStr || 'yyyy-mm-dd HH:MM:SS';
 

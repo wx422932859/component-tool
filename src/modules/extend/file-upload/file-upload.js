@@ -211,7 +211,7 @@ class FileUpload extends Component {
             let fileNode = new FileNode();
 
             fileNode.load(file);
-            if (this.maxSize != null && file instanceof File && file.size > this.size) {
+            if (this.maxSize != null && file instanceof File && file.size > this.maxSize) {
                 this.errorCallback(1);
                 return;
             }

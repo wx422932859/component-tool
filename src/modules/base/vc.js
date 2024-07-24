@@ -437,7 +437,7 @@ const VC = {
      * @param {string} unique 唯一标识
      */
     handleCSSStyleRule(selectorText, unique) {
-        let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
+        let req = /^[-a-zA-Z0-9="'\.\[\]#_\u4e00-\u9fa5]*/, // 匹配选择器
             selectorList = selectorText.split(',');
 
         return selectorList
