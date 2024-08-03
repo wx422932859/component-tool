@@ -14,7 +14,7 @@ let Util = {};
  */
 Util.animation = {
     node: (function () {
-        if (typeof document != 'undefined') {
+        if (typeof document !== 'undefined') {
             let container = document.createElement('div');
 
             container.style =
@@ -33,7 +33,7 @@ Util.animation = {
 
     hide() {
         this.node.remove();
-    },
+    }
 };
 
 /**
@@ -136,7 +136,7 @@ Util.class2type = function (name) {
         '[object RegExp]': 'regexp',
         '[object Object]': 'object',
         '[object Error]': 'error',
-        '[object Symbol]': 'symbol',
+        '[object Symbol]': 'symbol'
     }[name];
 };
 
@@ -262,7 +262,7 @@ Util.monitor = function (target, property, callback, value, immediate, delay, is
             immediate,
             delay,
             isModifiable,
-            deep,
+            deep
         }).watcher;
     }
 };
@@ -358,11 +358,11 @@ Util.deepClone = function (target, map = new Map()) {
         map.set(target, result);
         if (Array.isArray(target)) {
             target.forEach((item, index) => {
-                result[index] = deepClone(item, map);
+                result[index] = Util.deepClone(item, map);
             });
         } else {
             Object.keys(target).forEach((key) => {
-                result[key] = deepClone(target[key], map);
+                result[key] = Util.deepClone(target[key], map);
             });
         }
 
@@ -435,7 +435,7 @@ function convertImageToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        if (typeof file == 'string') {
+        if (typeof file === 'string') {
             // 字符串
             const image = new Image();
             image.onload = function () {
@@ -558,7 +558,7 @@ Util.getBrowserInfo = function () {
         if (result) {
             browserInfo = {
                 name: browserList[i],
-                version: result[i],
+                version: result[i]
             };
             break;
         }
@@ -572,6 +572,7 @@ Util.getBrowserInfo = function () {
 Util.transformNumber = (number) => {
     let result = null;
     try {
+        // eslint-disable-next-line
         result = number < Number.MAX_SAFE_INTEGER ? Number(number) : BigInt(number);
     } catch (err) {
         // 转换失败

@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-07-17 19:37:03
+ * package: 2024-08-03 14:30:79
  * version: 1.1.2
  * exports: LY
  */
@@ -672,15 +672,16 @@ const Ajax = {};
 Ajax.filterHTML = function (object, rule) {
     rule = rule || {
         whiteList: {
-            a: ['href', 'target'],
+            a: ['href', 'target']
         },
         stripIgnoreTag: true, // 过滤所有非白名单中的 HTML，false 只对标签进行转义
-        stripIgnoreBody: ['script'], // 过滤标签和内容
+        stripIgnoreBody: ['script'] // 过滤标签和内容
     };
 
     switch (Object.prototype.toString.call(object)) {
         case '[object String]':
             if (typeof filterCSS !== 'undefined') {
+                // eslint-disable-next-line
                 object = filterXSS(object, rule);
             }
             break;
@@ -724,12 +725,12 @@ Ajax.req = function (opts) {
             header = opts.header || {}; // 请求头
 
         // 设置超时
-        if (_util__WEBPACK_IMPORTED_MODULE_0__["default"].type(opts.timeout) == 'number') {
+        if (_util__WEBPACK_IMPORTED_MODULE_0__["default"].type(opts.timeout) === 'number') {
             xhr.timeout = opts.timeout;
         }
 
         // 启动请求
-        if (type.toUpperCase() === 'GET' && JSON.stringify(data) != '{}') {
+        if (type.toUpperCase() === 'GET' && JSON.stringify(data) !== '{}') {
             xhr.open(type, `${url}?${new URLSearchParams(data).toString()}`, defer);
         } else {
             xhr.open(type, url, defer);
@@ -864,7 +865,7 @@ Ajax.formatParam = function (obj) {
             'complete',
             'success',
             'error',
-            'timeout',
+            'timeout'
         ],
         res = null;
 
@@ -907,7 +908,7 @@ Ajax.request = function () {
         error = opts.error || (() => {});
 
     if (Ajax.intercept != null) {
-        if (typeof Ajax.intercept == 'function') {
+        if (typeof Ajax.intercept === 'function') {
             let response = Ajax.intercept(opts);
             if (response != null) {
                 return new Promise((resolve) => {
@@ -1026,7 +1027,7 @@ let Util = {};
  */
 Util.animation = {
     node: (function () {
-        if (typeof document != 'undefined') {
+        if (typeof document !== 'undefined') {
             let container = document.createElement('div');
 
             container.style =
@@ -1045,7 +1046,7 @@ Util.animation = {
 
     hide() {
         this.node.remove();
-    },
+    }
 };
 
 /**
@@ -1148,7 +1149,7 @@ Util.class2type = function (name) {
         '[object RegExp]': 'regexp',
         '[object Object]': 'object',
         '[object Error]': 'error',
-        '[object Symbol]': 'symbol',
+        '[object Symbol]': 'symbol'
     }[name];
 };
 
@@ -1274,7 +1275,7 @@ Util.monitor = function (target, property, callback, value, immediate, delay, is
             immediate,
             delay,
             isModifiable,
-            deep,
+            deep
         }).watcher;
     }
 };
@@ -1370,11 +1371,11 @@ Util.deepClone = function (target, map = new Map()) {
         map.set(target, result);
         if (Array.isArray(target)) {
             target.forEach((item, index) => {
-                result[index] = deepClone(item, map);
+                result[index] = Util.deepClone(item, map);
             });
         } else {
             Object.keys(target).forEach((key) => {
-                result[key] = deepClone(target[key], map);
+                result[key] = Util.deepClone(target[key], map);
             });
         }
 
@@ -1447,7 +1448,7 @@ function convertImageToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        if (typeof file == 'string') {
+        if (typeof file === 'string') {
             // 字符串
             const image = new Image();
             image.onload = function () {
@@ -1570,7 +1571,7 @@ Util.getBrowserInfo = function () {
         if (result) {
             browserInfo = {
                 name: browserList[i],
-                version: result[i],
+                version: result[i]
             };
             break;
         }
@@ -1584,6 +1585,7 @@ Util.getBrowserInfo = function () {
 Util.transformNumber = (number) => {
     let result = null;
     try {
+        // eslint-disable-next-line
         result = number < Number.MAX_SAFE_INTEGER ? Number(number) : BigInt(number);
     } catch (err) {
         // 转换失败
@@ -1650,14 +1652,14 @@ class Observe {
     constructor(params = {}) {
         Object.defineProperty(this, '_data', {
             enumerable: false,
-            value: {},
+            value: {}
         }); // 数据仓库
         this.eventBus = new _event_bus_js__WEBPACK_IMPORTED_MODULE_1__["default"](false); // 事件总线
         this.watcher = null; // 监听器
-        this.immediate = params.immediate == true;
+        this.immediate = params.immediate === true;
         this.delay = params.delay || -1;
-        this.isModifiable = params.isModifiable != false;
-        this.deep = params.deep == true;
+        this.isModifiable = params.isModifiable !== false;
+        this.deep = params.deep === true;
         this.create(params);
     }
 
@@ -1694,7 +1696,7 @@ class Observe {
         let self = this,
             { target, property, callback = {}, value, deep = false } = params;
 
-        if (property == undefined) {
+        if (property === undefined) {
             // 针对 target 进行监听，此时 callback 是个 map
             for (let prop in target) {
                 this.defineObject({
@@ -1702,10 +1704,10 @@ class Observe {
                     property: prop,
                     callback: callback[prop],
                     value: target[prop],
-                    deep,
+                    deep
                 });
             }
-        } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(property) == 'object') {
+        } else if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(property) === 'object') {
             // 针对 target 进行监听，此时 property 是个 map
             for (let prop in property) {
                 this.defineObject({
@@ -1713,7 +1715,7 @@ class Observe {
                     property: prop,
                     callback: callback[prop],
                     value: property[prop],
-                    deep,
+                    deep
                 });
             }
         } else {
@@ -1748,7 +1750,7 @@ class Observe {
                             `属性【${property}】：初始类型【${type}】，赋值类型【${_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(value)}，修改无效！`
                         );
                     }
-                },
+                }
             });
             target[property] = value; // 执行一次 set()
 
@@ -1773,7 +1775,9 @@ class Observe {
         proxy = new Proxy(target, {
             set(t, p, v, r) {
                 // 当修改的是方法，直接赋值返回，不触发响应
-                if (methods.includes(p)) return Reflect.set(t, p, v, r);
+                if (methods.includes(p)) {
+                    return Reflect.set(t, p, v, r);
+                }
 
                 // 当监听对象是对象 A 的属性时，返回的对象 A 改变前后的值，否则返回自身改变前后的值
                 let value = self._data[name] || t,
@@ -1783,7 +1787,7 @@ class Observe {
 
                 self.eventBus.emit(name, value2, value1);
                 return res;
-            },
+            }
         });
         this.monitorMethodsOfArray(methods, proxy, name);
 
@@ -1834,7 +1838,7 @@ class Observe {
 
                 console.log(`属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`);
                 return false;
-            },
+            }
         });
 
         for (let prop in target) {
@@ -1880,7 +1884,10 @@ class Observe {
         let self = this;
 
         methods.forEach((method) => {
-            if (proxy.hasOwnProperty(method)) return;
+            if (proxy.hasOwnProperty(method)) {
+                return;
+            }
+
             Object.defineProperty(proxy, method, {
                 configurable: false,
                 enumerable: false,
@@ -1892,11 +1899,14 @@ class Observe {
                         }
 
                         let result = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].proxyToJSON(self.watcher[name]);
-                        if (typeof result[method] !== 'function') return;
+                        if (typeof result[method] !== 'function') {
+                            return;
+                        }
+
                         result[method](...arrArray);
                         self.watcher[name] = result;
-                    },
-                }),
+                    }
+                })
             });
         });
     }
@@ -2024,7 +2034,7 @@ const VC = {
      * @property {string} [config.basicPath=''] 基地址
      */
     config: {
-        basicPath: '',
+        basicPath: ''
     },
 
     /**
@@ -2099,7 +2109,7 @@ const VC = {
         target.src = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         return new Promise((resolve, reject) => {
             let scriptList = [...document.scripts]
-                .filter((item) => typeof item.src == 'string')
+                .filter((item) => typeof item.src === 'string')
                 .map((item) => item.src.split('?')[0]);
 
             if (scriptList.includes(realPath)) {
@@ -2136,7 +2146,7 @@ const VC = {
         target.rel = 'stylesheet';
         return new Promise((resolve, reject) => {
             let styleList = [...document.styleSheets]
-                .filter((item) => typeof item.href == 'string')
+                .filter((item) => typeof item.href === 'string')
                 .map((item) => item.href.split('?')[0]);
 
             if (styleList.includes(realPath)) {
@@ -2179,10 +2189,10 @@ const VC = {
         globalName = alias || componentName;
 
         // 组件已引入的情况
-        if (realPath == undefined || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
+        if (realPath == null || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
             return new Promise((resolve) => {
                 callback.call(VC, {
-                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : '',
+                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : ''
                 });
                 resolve();
             });
@@ -2247,7 +2257,7 @@ const VC = {
                 taskQueue.add(() => {
                     return new Promise((resolve2) => {
                         callback.call(VC, {
-                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : '',
+                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : ''
                         });
                         resolve2();
                         resolve();
@@ -2297,7 +2307,7 @@ const VC = {
         // 解析 template 节点
         VC.parseTemplateNode(taskQueue, myNode.children('template').html(), globalName, unique);
 
-        //解析 style 节点
+        // 解析 style 节点
         VC.parseStyleNode(taskQueue, myNode.children('style'), unique);
     },
 
@@ -2326,7 +2336,7 @@ const VC = {
                 alias = elem.attr('alias');
 
             // 是否添加随机数
-            if (elem.attr('random') != undefined) {
+            if (elem.attr('random') != null) {
                 src += `?ver=${Math.random()}`;
             }
 
@@ -2371,10 +2381,10 @@ const VC = {
                 let node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](template);
 
                 if (eval(`typeof ${globalName} != 'undefined'`)) {
-                    if (node.length == 0) {
+                    if (node.length === 0) {
                         node = new _my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](eval(`${globalName}._template`));
                     }
-                    if (node.length != 0) {
+                    if (node.length !== 0) {
                         node.attr(`vc-${unique}`, '');
                         eval(globalName)._template = node[0].outerHTML;
                     }
@@ -2446,7 +2456,7 @@ const VC = {
      * @param {string} unique 唯一标识
      */
     handleCSSStyleRule(selectorText, unique) {
-        let req = /^[-a-zA-Z0-9="'\.\[\]#_]*/, // 匹配选择器
+        let req = /^[-a-zA-Z0-9="'\.\[\]#_\u4e00-\u9fa5]*/, // 匹配选择器
             selectorList = selectorText.split(',');
 
         return selectorList
@@ -2454,7 +2464,7 @@ const VC = {
                 return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
             })
             .join(',');
-    },
+    }
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VC);
@@ -2615,7 +2625,7 @@ class MyNode {
     insert(content, position = 0, insertLocation = 'beforeBegin', replaceNode = new MyNode()) {
         const INSERT_LOCATION = ['beforeBegin', 'afterEnd', 'beforeEnd', 'afterBegin', 'replaceWith'];
 
-        if (this.length == 0 || !INSERT_LOCATION.includes(insertLocation)) {
+        if (this.length === 0 || !INSERT_LOCATION.includes(insertLocation)) {
             return this;
         }
 
@@ -2692,7 +2702,7 @@ class MyNode {
             this.insert(documentFragment, position, insertLocation, replaceNode);
         }
 
-        return insertLocation != INSERT_LOCATION[4] ? this : replaceNode;
+        return insertLocation !== INSERT_LOCATION[4] ? this : replaceNode;
     }
 
     /**
@@ -2756,7 +2766,7 @@ class MyNode {
      */
     remove() {
         this.forEach((item) => {
-            _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(item.remove) == 'function' && item.remove();
+            _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(item.remove) === 'function' && item.remove();
         });
     }
 
@@ -2982,7 +2992,9 @@ class MyNode {
                     res.push(parent);
                 }
 
-                if (parent === until || parent.matches(until)) break;
+                if (parent === until || parent.matches(until)) {
+                    break;
+                }
                 parent = parent.parentNode;
             }
         });
@@ -3181,7 +3193,7 @@ class MyNode {
         /**
          * String
          */
-        if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(style) === 'string' && style.trim() != '') {
+        if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(style) === 'string' && style.trim() !== '') {
             if (styleValue == null) {
                 return this[0] ? this[0].style.getPropertyValue(style) || window.getComputedStyle(this[0])[style] : '';
             }
@@ -3214,7 +3226,7 @@ class MyNode {
         /**
          * String
          */
-        if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(attribute) === 'string' && attribute.trim() != '') {
+        if (_util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(attribute) === 'string' && attribute.trim() !== '') {
             if (attributeValue == null) {
                 return this[0] && this[0].getAttribute(attribute);
             }
@@ -3251,7 +3263,7 @@ class MyNode {
      */
     hasClass(className) {
         let res = false,
-            classList = MyNode._string2Array(className).filter((elem) => elem != '');
+            classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             res =
@@ -3272,7 +3284,7 @@ class MyNode {
      * @memberof MyNode
      */
     addClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             item.nodeType === 1 &&
@@ -3291,7 +3303,7 @@ class MyNode {
      * @memberof MyNode
      */
     removeClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             item.nodeType === 1 &&
@@ -3310,7 +3322,7 @@ class MyNode {
      * @memberof MyNode
      */
     toggleClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             let myNode = new MyNode(item);
@@ -3457,7 +3469,7 @@ class MyNode {
      * @memberof MyNode
      */
     offset() {
-        if (this.length == 0 || this[0].ownerDocument == null) {
+        if (this.length === 0 || this[0].ownerDocument == null) {
             return;
         }
 
@@ -3467,7 +3479,7 @@ class MyNode {
 
         return {
             top: res.top + window.scrollY - documentElement.clientTop,
-            left: res.left + window.scrollY - documentElement.clientLeft,
+            left: res.left + window.scrollY - documentElement.clientLeft
         };
     }
 
@@ -3481,7 +3493,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display != 'none') {
+            if (display !== 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
                 cache.display = display;
@@ -3506,7 +3518,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display == 'none') {
+            if (display === 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
                 cache.display = cache.display || 'block';
@@ -3544,7 +3556,7 @@ class MyNode {
         /**
          * 设置宽度
          */
-        let width = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(num) == 'string' ? num : num + 'px';
+        let width = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(num) === 'string' ? num : num + 'px';
         this.forEach((elem) => {
             elem.style.width = width;
         });
@@ -3576,7 +3588,7 @@ class MyNode {
         /**
          * 设置高度
          */
-        let height = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(num) == 'string' ? num : num + 'px';
+        let height = _util_js__WEBPACK_IMPORTED_MODULE_0__["default"].type(num) === 'string' ? num : num + 'px';
         this.forEach((elem) => {
             elem.style.height = height;
         });
@@ -3606,7 +3618,7 @@ class MyNode {
         let content = '',
             rowSpan = 1,
             td = null, // 单元格
-            trCount = trList.length; // 总行数
+            trCount = this.node.length; // 总行数
 
         this.node.forEach((item, index, list) => {
             let curTd = list.eq(index).find('td').eq(col),
@@ -3617,7 +3629,7 @@ class MyNode {
                 content = curContent;
                 td = curTd;
             } else {
-                if (curContent == content) {
+                if (curContent === content) {
                     // 当前行与上一行内容相同
                     rowSpan++; // 行数累加
                     curTd.remove(); // 移除单元格
@@ -3722,7 +3734,7 @@ class TaskQueue {
     add(fn, params = []) {
         this.queue.push({
             fn,
-            params,
+            params
         });
         this.free = this.free;
         return this;
@@ -3787,7 +3799,7 @@ class Time {
                 time.getDate(),
                 time.getHours(),
                 time.getMinutes(),
-                time.getSeconds(),
+                time.getSeconds()
             ],
             dayArr = ['日', '一', '二', '三', '四', '五', '六'];
 
@@ -3799,6 +3811,8 @@ class Time {
         this.hours = timeArr[3]; // 时
         this.minutes = timeArr[4]; // 分
         this.seconds = timeArr[5]; // 秒
+        this.milliseconds = `000${time.getMilliseconds()}`; // 毫秒
+        this.milliseconds = this.milliseconds.substring(this.milliseconds.length - 3);
         this.timeStamp = time.getTime(); // 时间戳
         this.week = '星期' + dayArr[time.getDay()]; // 星期
         this.formatDate = this.format('yyyy-mm-dd');
@@ -3828,6 +3842,7 @@ class Time {
                 'H+': this.hours, // 时
                 'M+': this.minutes, // 分
                 'S+': this.seconds, // 秒
+                'Z+': this.milliseconds // 毫秒
             },
             res = formatStr || 'yyyy-mm-dd HH:MM:SS';
 
@@ -4019,7 +4034,7 @@ class Component {
                         self._reset_root(value);
                     }
                     return Reflect.set(target, prop, value);
-                },
+                }
             }
         );
 
@@ -4036,8 +4051,8 @@ class Component {
                     let res = Reflect.apply(...arguments);
                     self._after_destroyed();
                     return res;
-                },
-            }),
+                }
+            })
         });
 
         /**
@@ -4065,8 +4080,8 @@ class Component {
                     }
 
                     return Reflect.apply(...arguments);
-                },
-            }),
+                }
+            })
         });
 
         /**
@@ -4078,8 +4093,8 @@ class Component {
             value: new _observe_js__WEBPACK_IMPORTED_MODULE_0__["default"]({
                 target: this,
                 property: {},
-                callback: {},
-            }),
+                callback: {}
+            })
         });
 
         /**
@@ -4103,8 +4118,8 @@ class Component {
                     self._before_load(params);
                     let res = Reflect.apply(...arguments);
                     return res;
-                },
-            }),
+                }
+            })
         });
 
         this._mount_component();
@@ -4174,7 +4189,7 @@ class Component {
         this._bus.emit(componentName, {
             component: this,
             action,
-            data,
+            data
         });
     }
 
@@ -4194,13 +4209,13 @@ class Component {
      * @param {boolean} [deep=true] 是否深度监听
      */
     _observe(property, value, callback = () => {}, deep = true) {
-        if (arguments.length == 1) {
+        if (arguments.length === 1) {
             this._observe(property, undefined, callback);
         } else if (_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].type(value) === 'function') {
             this._observe(property, undefined, value);
         } else {
             if (property in this) {
-                if (value != undefined) {
+                if (value != null) {
                     this[property] = value;
                 }
                 this._o.addCallback(property, callback, this);
@@ -4210,7 +4225,7 @@ class Component {
                     property,
                     value,
                     callback: callback.bind(this),
-                    deep,
+                    deep
                 });
             }
         }
@@ -4226,7 +4241,20 @@ class Component {
         this.node.find('slot').forEach((elem, index, list) => {
             let slot = list.eq(index), // 插槽
                 src = slot.attr('data-src'), // 组件地址
-                componentName = slot.attr('data-component') || _vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseComponentName(src); // 组件类名
+                componentName = slot.attr('data-component'), // 组件类名
+                authority = slot.attr('data-auth');
+
+            if (authority && (authority === 'false' || _util_js__WEBPACK_IMPORTED_MODULE_3__["default"].eval(authority) === false)) {
+                return;
+            }
+
+            if (componentName && componentName.includes('${')) {
+                componentName = _util_js__WEBPACK_IMPORTED_MODULE_3__["default"].eval(componentName);
+            }
+
+            if (componentName == null || componentName === '') {
+                componentName = _vc_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseComponentName(src);
+            }
 
             if (componentName === '') {
                 console.log(`组件${src}获取失败！`);
@@ -4239,8 +4267,8 @@ class Component {
                         filePath: src,
                         handle: () => {
                             this._instantiate_component(slot, componentName);
-                        },
-                    },
+                        }
+                    }
                 ]);
             } else {
                 // 已存在指定的组件变量
@@ -4349,6 +4377,7 @@ __webpack_require__.r(__webpack_exports__);
  * 观察者
  *
  * @author wang.xin
+ * @deprecated
  */
 class Watcher {
     /**
@@ -4534,7 +4563,7 @@ class Form extends _base_component_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
                         res.push({
                             key: item.key == null ? index + 1 : item.key, // 键
                             value: item.value, // 值
-                            info: item.info || '', // 附加信息
+                            info: item.info || '' // 附加信息
                         });
                     });
                     break;
@@ -4545,7 +4574,7 @@ class Form extends _base_component_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
                         res.push({
                             key: index + 1, // 键
                             value: item, // 值
-                            info: '', // 附加信息
+                            info: '' // 附加信息
                         });
                     });
                     break;
@@ -4590,7 +4619,7 @@ class Form extends _base_component_js__WEBPACK_IMPORTED_MODULE_3__["default"] {
         } else if (_base_util_js__WEBPACK_IMPORTED_MODULE_1__["default"].type(item) === 'array') {
             res = item.reduce((prev, cur) => {
                 let pos = this.findItem(cur, list);
-                if (pos != -1) {
+                if (pos !== -1) {
                     prev.push(pos);
                 }
                 return prev;
@@ -4789,7 +4818,7 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: option.template || DropList._template,
+            template: option.template || DropList._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -4866,7 +4895,7 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
          * @inner
          */
         this._observe('pos', '-1', (value) => {
-            this.value = value != -1 ? this.list[value] : null;
+            this.value = value !== -1 ? this.list[value] : null;
         });
 
         /**
@@ -4910,7 +4939,7 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
         if (option.check != null) {
             this.check = option.check;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -4921,7 +4950,7 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
     on() {
         // 点击输入框
         this.node.on('click', '.ly-form_content', () => {
-            if (this.hover != true) {
+            if (this.hover !== true) {
                 let show = this.show;
                 DropList._hideAll();
                 this.show = !show;
@@ -4935,14 +4964,14 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
 
         // 鼠标滑入
         this.node.on('mouseover', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = true;
             }
         });
 
         // 鼠标滑出
         this.node.on('mouseout', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = false;
             }
         });
@@ -4996,12 +5025,12 @@ class DropList extends _form_form_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
 }
 
 // 当点击的不是下拉列表的时候，关闭下拉列表
-if (typeof document != 'undefined') {
+if (typeof document !== 'undefined') {
     document.addEventListener('click', (e) => {
         let elem = new _base_my_node_js__WEBPACK_IMPORTED_MODULE_1__["default"](e.target);
 
         // 当点击的不是下拉列表的时候
-        if (elem.parents('.ly-drop-list .ly-form_content').length == 0) {
+        if (elem.parents('.ly-drop-list .ly-form_content').length === 0) {
             DropList._hideAll();
         }
     });
@@ -5302,7 +5331,7 @@ class Radio extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Radio._template,
+            template: Radio._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -5370,7 +5399,7 @@ class Radio extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
          * @inner
          */
         this._observe('pos', (value) => {
-            this.value = value != -1 ? this.list[value] : null;
+            this.value = value !== -1 ? this.list[value] : null;
         });
 
         /**
@@ -5402,7 +5431,7 @@ class Radio extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
      */
     on() {
         this.node.on('click', '.ly-radio_item', (e, target) => {
-            if (this.required == false && target.hasClass('ly-radio_item-active')) {
+            if (this.required === false && target.hasClass('ly-radio_item-active')) {
                 this.check = null;
             } else {
                 this.check = target.posOfSiblings();
@@ -5424,11 +5453,11 @@ class Radio extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this.check = option.check;
         this.required = option.required || this.required;
         if (this.required) {
-            if (this.value == null && this.list.length != 0) {
+            if (this.value == null && this.list.length !== 0) {
                 this.check = 0;
             }
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -5673,7 +5702,7 @@ class Checkbox extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Checkbox._template,
+            template: Checkbox._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -5847,8 +5876,8 @@ class Checkbox extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         // 单个选项
         this.node.on('click', '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)', (e, target) => {
             if (
-                this.maxCount != -1 &&
-                this.check.length == this.maxCount &&
+                this.maxCount !== -1 &&
+                this.check.length === this.maxCount &&
                 !target.hasClass('ly-checkbox_item-active')
             ) {
                 this.error(0);
@@ -5891,16 +5920,16 @@ class Checkbox extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this.label = option.label;
         this.list = option.list || [];
         this.all = option.all || false;
-        this.check = option.check != undefined ? option.check : [];
-        this.disabled = option.disabled != undefined ? option.disabled : [];
+        this.check = option.check != null ? option.check : [];
+        this.disabled = option.disabled != null ? option.disabled : [];
         this.maxCount = option.maxCount || this.maxCount;
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
-        if (typeof option.error == 'function') {
+        if (typeof option.error === 'function') {
             this.error = option.error;
         }
     }
@@ -6182,7 +6211,7 @@ class Switch extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Switch._template,
+            template: Switch._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -6253,7 +6282,7 @@ class Switch extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
     load(option = {}) {
         this.label = option.label;
         this.value = option.value;
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -6442,7 +6471,7 @@ class Slider extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: DropList._template,
+            template: Slider._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -6620,7 +6649,7 @@ class Slider extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         this.max = option.max || 100;
         this.step = option.step || 1;
         this.valid = option.value || 0;
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -6637,7 +6666,7 @@ class Slider extends _form_form_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
     }
 }
 
-if (typeof document != 'undefined') {
+if (typeof document !== 'undefined') {
     // 当滑块的拖动状态为 true，鼠标拖动
     document.addEventListener('mousemove', function (e) {
         Slider._cache.forEach((item) => {
@@ -6872,7 +6901,7 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
     constructor(option = {}) {
         super(
             Object.assign(option, {
-                template: option.template || MultipleList._template,
+                template: option.template || MultipleList._template
             })
         );
     }
@@ -6987,7 +7016,7 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
             let show = this.show;
             this.constructor._hideAll();
 
-            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length != 0) {
+            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length !== 0) {
                 // 当触发源是下拉列表项时，不改变显示状态
                 this.show = show;
             } else if (source.hasClass('ly-icon_remove')) {
@@ -6996,7 +7025,7 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
                 let list = _base_util_js__WEBPACK_IMPORTED_MODULE_3__["default"].proxyToJSON(this.check);
                 list.shift();
                 this.check = list;
-            } else if (this.hover != true) {
+            } else if (this.hover !== true) {
                 // 当未做悬浮触发时，隐藏下拉列表
                 this.show = !show;
             }
@@ -7005,8 +7034,8 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
         // 切换列表项
         this.node.on('click', '.ly-drop-list_item', (e, target) => {
             if (
-                this.maxCount != -1 &&
-                this.check.length == this.maxCount &&
+                this.maxCount !== -1 &&
+                this.check.length === this.maxCount &&
                 !target.hasClass('ly-drop-list_item-active')
             ) {
                 this.error(0);
@@ -7021,14 +7050,14 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
 
         // 鼠标滑入
         this.node.on('mouseover', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = true;
             }
         });
 
         // 鼠标滑出
         this.node.on('mouseout', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = false;
             }
         });
@@ -7054,10 +7083,10 @@ class MultipleList extends _drop_list_drop_list_js__WEBPACK_IMPORTED_MODULE_2__[
         if (option.check != null) {
             this.check = option.check;
         }
-        if (typeof option.error == 'function') {
+        if (typeof option.error === 'function') {
             this.error = option.error;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -7498,7 +7527,7 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          * @memberof WaterMark#
          */
         this._observe('markInfo', (value) => {
-            if (!Array.isArray(value) || value.length == 0) {
+            if (!Array.isArray(value) || value.length === 0) {
                 return;
             }
             this.mark.render(value);
@@ -7573,7 +7602,7 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      * 监听节点变化
      */
     listenNodeChange() {
-        if (typeof MutationObserver == 'undefined') {
+        if (typeof MutationObserver === 'undefined') {
             return;
         }
 
@@ -7594,7 +7623,7 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
                 // 节点发生变化
                 if (targetNode[0] === this.node[0] || targetNode[0] === this.mark.node[0]) {
                     // 修改属性值，但是改变前后值没有变化
-                    if (elem.addedNodes.length == 0 && targetNode.attr(elem.attributeName) == elem.oldValue) {
+                    if (elem.addedNodes.length === 0 && targetNode.attr(elem.attributeName) === elem.oldValue) {
                         return;
                     }
 
@@ -7621,7 +7650,7 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
             attributes: true,
             attributeOldValue: true,
             childList: true,
-            subtree: true,
+            subtree: true
         });
     }
 
@@ -7729,15 +7758,15 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"]
         let context = this.context,
             base = {
                 x: 50,
-                y: 50,
+                y: 50
             },
             padding = {
                 x: 240, // 行间距
-                y: 180, // 列间距
+                y: 180 // 列间距
             },
             count = {
                 x: this.height / padding.x,
-                y: this.width / padding.y,
+                y: this.width / padding.y
             }; // 个数
 
         this.node.css('display', 'block', 'important').css('visibility', 'visible', 'important');
@@ -7790,7 +7819,7 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"]
             return {
                 text: info,
                 x: (baseLength - context.measureText(info).width) / 2,
-                y: lineHeight * index,
+                y: lineHeight * index
             };
         });
     }
@@ -7856,7 +7885,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          * @memberof ScrollBar#
          */
         this._observe('container', this.node.parent(), (value, prev) => {
-            if (prev.length === 0 || prev[0] != value[0]) {
+            if (prev.length === 0 || prev[0] !== value[0]) {
                 this.onContainer();
             }
         });
@@ -7903,7 +7932,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          */
         this.delayCalcRate = _base_util__WEBPACK_IMPORTED_MODULE_2__["default"].debounce(() => {
             let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
-            if (rate != this.rate) {
+            if (rate !== this.rate) {
                 this.rate = rate;
             }
         }, 200);
@@ -7948,7 +7977,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          * @todo 清除拖拽标记以及偏移量
          */
         document.addEventListener('mousemove', (e) => {
-            if (this.mousedown == true && this.container.length > 0) {
+            if (this.mousedown === true && this.container.length > 0) {
                 let step = this.container[0].scrollTop + (e.pageY - this.pageY) / this.rate;
                 this.smoothScrollTo(step);
                 this.pageY = e.pageY;
@@ -8096,7 +8125,7 @@ class ScrollBar extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
         const smoothScroll = () => {
             let aimPosition = startY + count * this.smoothY;
 
-            if (scrollId != this.scrollId) {
+            if (scrollId !== this.scrollId) {
                 return;
             }
 
@@ -8287,7 +8316,7 @@ class FixedTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defa
          * @member {string} tbody 表格内容
          */
         this._observe('tbody', (value) => {
-            if (value != '') {
+            if (value !== '') {
                 this.node.find('tbody').html(value);
             } else {
                 this.reset();
@@ -8299,7 +8328,7 @@ class FixedTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defa
          * @member {number} width 宽度
          */
         this._observe('width', (value, prev) => {
-            if (value != 0 && value != prev) {
+            if (value !== 0 && value !== prev) {
                 this.node.find('.ftt_thead-container').css('width', `${value}px`);
             }
         });
@@ -8337,7 +8366,7 @@ class FixedTheadTable extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defa
     resize(tableContainer = this.node) {
         // 先设置高度，让滚动条自适应
         let height = tableContainer.find('.ftt_tbody-container>.ftt_table').height();
-        if (height == 0) {
+        if (height === 0) {
             return;
         }
         tableContainer.css('height', `${height}px`);
@@ -8649,58 +8678,34 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
      */
     on() {
         // 页码
-        this.node.on(
-            'click',
-            '[data-action="page"]:not(.ly-pagination_current-page)',
-            (e, target) => {
-                this.pageNo = parseInt(target.text());
-            }
-        );
+        this.node.on('click', '[data-action="page"]:not(.ly-pagination_current-page)', (e, target) => {
+            this.pageNo = parseInt(target.text());
+        });
 
         // 上一页
-        this.node.on(
-            'click',
-            '[data-action="previousPage"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo--;
-            }
-        );
+        this.node.on('click', '[data-action="previousPage"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo--;
+        });
 
         // 下一页
-        this.node.on(
-            'click',
-            '[data-action="nextPage"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo++;
-            }
-        );
+        this.node.on('click', '[data-action="nextPage"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo++;
+        });
 
         // 左侧省略号
-        this.node.on(
-            'click',
-            '[data-action="leftOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((1 + this.pageNo) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="leftOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((1 + this.pageNo) / 2);
+        });
 
         // 中间省略号
-        this.node.on(
-            'click',
-            '[data-action="centerOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((1 + this.pageCount) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="centerOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((1 + this.pageCount) / 2);
+        });
 
         // 右侧省略号
-        this.node.on(
-            'click',
-            '[data-action="rightOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((this.pageNo + this.pageCount) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="rightOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((this.pageNo + this.pageCount) / 2);
+        });
 
         // 跳转
         this.node.on('click', '[data-action="gotoPage"]', () => {
@@ -8709,7 +8714,7 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
 
         // 回车
         this.node.on('keydown', '[data-value="page"]', (e) => {
-            if (e.key == 'Enter' || e.keyCode == 13) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
                 this.valid() && (this.pageNo = this.valid());
             }
         });
@@ -8731,7 +8736,7 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
      */
     load(option = {}) {
         for (let key in option) {
-            if (option[key] != undefined && key != 'change') {
+            if (option[key] != null && key !== 'change') {
                 this[key] = option[key];
             }
         }
@@ -8756,9 +8761,7 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
     renderPreviousPage() {
         this.node.find('ul').append(
             `<li class="ly-pagination_item">
-                <a class="ly-pagination_page ${
-                    this.pageNo == 1 ? 'ly-pagination_disabled-page' : ''
-                }"
+                <a class="ly-pagination_page ${this.pageNo === 1 ? 'ly-pagination_disabled-page' : ''}"
                     data-action="previousPage">« 上一页</a>
             </li>`
         );
@@ -8774,30 +8777,18 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
             // 当 pageCount <= limitPage，直接显示页码
             elem.append(this.createPageLabel(1, this.pageCount));
         } else {
-            if (
-                this.pageNo <= this.limitNum ||
-                this.pageCount - this.pageNo < this.limitNum
-            ) {
+            if (this.pageNo <= this.limitNum || this.pageCount - this.pageNo < this.limitNum) {
                 // 当页码在前 limitNum 或后 limitNum 页时
                 elem.append(this.createPageLabel(1, this.limitNum))
                     .append(this.createOmit('center'))
-                    .append(
-                        this.createPageLabel(
-                            this.pageCount - this.limitNum + 1,
-                            this.pageCount
-                        )
-                    );
+                    .append(this.createPageLabel(this.pageCount - this.limitNum + 1, this.pageCount));
             } else {
                 // 当页码超过 limitPage 页，且当前页码不在前 limitNum 页或者后 limitNum 页时
                 elem.append(this.createPageLabel(1, 1))
                     .append(this.createOmit('left'))
-                    .append(
-                        this.createPageLabel(this.pageNo - 1, this.pageNo + 1)
-                    )
+                    .append(this.createPageLabel(this.pageNo - 1, this.pageNo + 1))
                     .append(this.createOmit('right'))
-                    .append(
-                        this.createPageLabel(this.pageCount, this.pageCount)
-                    );
+                    .append(this.createPageLabel(this.pageCount, this.pageCount));
             }
         }
     }
@@ -8808,11 +8799,7 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
     renderNextPage() {
         this.node.find('ul').append(
             `<li class="ly-pagination_item">
-                <a class="ly-pagination_page ${
-                    this.pageNo == this.pageCount
-                        ? 'ly-pagination_disabled-page'
-                        : ''
-                }"
+                <a class="ly-pagination_page ${this.pageNo === this.pageCount ? 'ly-pagination_disabled-page' : ''}"
                     data-action="nextPage">下一页 »</a>
             </li>`
         );
@@ -8857,8 +8844,8 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
         for (let i = startPage; i <= endPage; i++) {
             let tempClass = '';
 
-            tempClass += i == this.pageNo ? 'ly-pagination_current-page' : '';
-            tempClass += i == this.pageCount ? ' ly-pagination_last-page' : '';
+            tempClass += i === this.pageNo ? 'ly-pagination_current-page' : '';
+            tempClass += i === this.pageCount ? ' ly-pagination_last-page' : '';
             result += `<li class="ly-pagination_item"><a class="ly-pagination_page ${tempClass}" data-action="page">${i}</a></li>`;
         }
         return result;
@@ -9112,7 +9099,7 @@ class FileUpload extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
          * 仅有一个文件类型的时候做限制
          */
         this._observe('acceptType', [], (value) => {
-            if (value.length === 1 && FILE_TYPE[value[0]].type != undefined) {
+            if (value.length === 1 && FILE_TYPE[value[0]].type != null) {
                 this.node.find('input[type="file"]').attr('accept', FILE_TYPE[value[0]].type);
             } else {
                 this.node.find('input[type="file"]').removeAttr('accept');
@@ -9202,10 +9189,10 @@ class FileUpload extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
      */
     load(params = {}) {
         for (let key in params) {
-            if (['maxSize', 'maxCount'].includes(key) && typeof params[key] != 'number') {
+            if (['maxSize', 'maxCount'].includes(key) && typeof params[key] !== 'number') {
                 continue;
             }
-            if (['errorCallback', 'removeCallback'].includes(key) && typeof params[key] != 'function') {
+            if (['errorCallback', 'removeCallback'].includes(key) && typeof params[key] !== 'function') {
                 continue;
             }
             this[key] = params[key];
@@ -9261,7 +9248,7 @@ class FileUpload extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
             let fileNode = new _file_node_file_node_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
 
             fileNode.load(file);
-            if (this.maxSize != null && file instanceof File && file.size > this.size) {
+            if (this.maxSize != null && file instanceof File && file.size > this.maxSize) {
                 this.errorCallback(1);
                 return;
             }
@@ -9284,7 +9271,7 @@ class FileUpload extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
         let res = {
             webFile: [], // 文件名数组（服务器文件）
             localFile: [], // 文件数组（本地文件）
-            delFile: [], // 删除的服务器文件
+            delFile: [] // 删除的服务器文件
         };
 
         this.list.forEach((fileNode) => {
@@ -9698,36 +9685,36 @@ FileNode._template = `<div class="ly-file-node"></div>`;
 FileNode.FILE_TYPE = {
     audio: {
         extension: ['mp3', 'm4a', 'wav'],
-        type: 'audio/*',
+        type: 'audio/*'
     },
     image: {
         extension: ['webp', 'jpg', 'jpeg', 'png', 'bmp', 'gif'],
-        type: 'image/*',
+        type: 'image/*'
     },
     video: {
         extension: ['mpeg', 'mpg', 'dat', 'mov', 'asf', 'wmv', 'mp4', 'avi', 'flv', 'amv', '3gp'],
-        type: 'video/*',
+        type: 'video/*'
     },
     pdf: {
         extension: ['pdf'],
-        type: 'application/pdf',
+        type: 'application/pdf'
     },
     zip: {
         extension: ['zip'],
-        type: 'application/zip',
+        type: 'application/zip'
     },
     docx: {
         extension: ['doc', 'docx'],
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     },
     xlsx: {
         extension: ['xls', 'xlsx'],
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     },
     pptx: {
         extension: ['ppt', 'pptx'],
-        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    },
+        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    }
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FileNode);
@@ -10626,7 +10613,7 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
             this.dragPosition = {
                 x: e.pageX,
-                y: e.pageY,
+                y: e.pageY
             };
         });
 
@@ -10647,7 +10634,7 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
                 );
                 this.dragPosition = {
                     x: e.pageX,
-                    y: e.pageY,
+                    y: e.pageY
                 };
             }
         });
@@ -10675,7 +10662,7 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
             this.resizePosition = {
                 direction: target.attr('data-direction'),
                 x: e.pageX,
-                y: e.pageY,
+                y: e.pageY
             };
         });
 
@@ -10690,13 +10677,13 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
             if (this.resizePosition != null) {
                 let offset = {
                         x: e.pageX - this.resizePosition.x,
-                        y: e.pageY - this.resizePosition.y,
+                        y: e.pageY - this.resizePosition.y
                     }, // 偏移量
                     result = {
                         top: this.popupNode[0].offsetTop,
                         left: this.popupNode[0].offsetLeft,
                         width: this.popupNode[0].clientWidth,
-                        height: this.popupNode[0].clientHeight,
+                        height: this.popupNode[0].clientHeight
                     };
 
                 if (this.resizePosition.direction.includes('e')) {
@@ -10722,7 +10709,7 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
                 }
                 this.popupNode.css({
                     'width': result.width + 'px',
-                    'height': result.height + 'px',
+                    'height': result.height + 'px'
                 });
                 this.calcDragRange();
                 this.moveTo(result.top, result.left);
@@ -10748,14 +10735,14 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
         top = (window.innerHeight - this.popupNode[0].clientHeight) / 2,
         left = (window.innerWidth - this.popupNode[0].clientWidth) / 2
     ) {
-        if (this.dragRule == 1 && this.dragRange != null) {
+        if (this.dragRule === 1 && this.dragRange != null) {
             top = Math.max(Math.min(top, this.dragRange.topMax), this.dragRange.topMin);
             left = Math.max(Math.min(left, this.dragRange.leftMax), this.dragRange.leftMin);
         }
 
         this.popupNode.css({
             top: top + 'px',
-            left: left + 'px',
+            left: left + 'px'
         });
     }
 
@@ -10767,7 +10754,7 @@ class Popup extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
             topMin: 0,
             leftMin: 0,
             topMax: window.innerHeight - this.popupNode[0].clientHeight,
-            leftMax: window.innerWidth - this.popupNode[0].clientWidth,
+            leftMax: window.innerWidth - this.popupNode[0].clientWidth
         };
     }
 
@@ -11077,13 +11064,6 @@ __webpack_require__.r(__webpack_exports__);
  * XML 节点
  */
 class XMLNode {
-    static ROOT_NODE = 0;
-    static ELEMENT_NODE = 1;
-    static ATTRIBUTE_NODE = 2;
-    static TEXT_NODE = 3;
-    static CDATA_SECTION_NODE = 4;
-    static COMMENT_NODE = 8;
-
     constructor(data, nodeName) {
         if (typeof data === 'number') {
             this.nodeType = data;
@@ -11113,7 +11093,7 @@ class XMLNode {
      * 转为 JSON 格式
      */
     toJson(result = {}) {
-        if (this.children.length == 0) {
+        if (this.children.length === 0) {
             return this.text;
         }
         this.children.forEach((elementNode) => {
@@ -11131,6 +11111,13 @@ class XMLNode {
         return result;
     }
 }
+
+XMLNode.ROOT_NODE = 0;
+XMLNode.ELEMENT_NODE = 1;
+XMLNode.ATTRIBUTE_NODE = 2;
+XMLNode.TEXT_NODE = 3;
+XMLNode.CDATA_SECTION_NODE = 4;
+XMLNode.COMMENT_NODE = 8;
 
 /**
  * 根节点
@@ -11232,7 +11219,7 @@ function parseXML(data) {
                 6: comment,
                 7: cdataSectionNodeSign,
                 8: cdata,
-                index,
+                index
             } = result;
 
             if (lastIndex !== index) {
@@ -11250,7 +11237,7 @@ function parseXML(data) {
                 // ElementNode
                 let elementNode = new ElementNode(elementLabel, {
                     0: index,
-                    1: xmlRegExp.lastIndex,
+                    1: xmlRegExp.lastIndex
                 });
                 parseAttribute(elementNode, attribute);
                 if (singleLabelSign !== undefined) {
@@ -11298,7 +11285,7 @@ function parseXML(data) {
     function parseAttribute(elem, attribute) {
         let attributeReg = /([a-z\-:]+)(="([\s\S]*?)")?/gi;
 
-        if (attribute != undefined && attribute.trim() != '') {
+        if (attribute != null && attribute.trim() !== '') {
             attribute.replace(attributeReg, (item, key, value1, value2) => {
                 elem.attribute[key] = value1 !== undefined ? value2 : '';
                 return '';
@@ -11316,7 +11303,7 @@ function parseXML(data) {
 
         let text = '';
 
-        if (node.childNodes.length == 0) {
+        if (node.childNodes.length === 0) {
             return '';
         }
         node.childNodes.forEach((child) => {

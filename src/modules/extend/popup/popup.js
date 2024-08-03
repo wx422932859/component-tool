@@ -102,7 +102,7 @@ class Popup extends Component {
 
             this.dragPosition = {
                 x: e.pageX,
-                y: e.pageY,
+                y: e.pageY
             };
         });
 
@@ -123,7 +123,7 @@ class Popup extends Component {
                 );
                 this.dragPosition = {
                     x: e.pageX,
-                    y: e.pageY,
+                    y: e.pageY
                 };
             }
         });
@@ -151,7 +151,7 @@ class Popup extends Component {
             this.resizePosition = {
                 direction: target.attr('data-direction'),
                 x: e.pageX,
-                y: e.pageY,
+                y: e.pageY
             };
         });
 
@@ -166,13 +166,13 @@ class Popup extends Component {
             if (this.resizePosition != null) {
                 let offset = {
                         x: e.pageX - this.resizePosition.x,
-                        y: e.pageY - this.resizePosition.y,
+                        y: e.pageY - this.resizePosition.y
                     }, // 偏移量
                     result = {
                         top: this.popupNode[0].offsetTop,
                         left: this.popupNode[0].offsetLeft,
                         width: this.popupNode[0].clientWidth,
-                        height: this.popupNode[0].clientHeight,
+                        height: this.popupNode[0].clientHeight
                     };
 
                 if (this.resizePosition.direction.includes('e')) {
@@ -198,7 +198,7 @@ class Popup extends Component {
                 }
                 this.popupNode.css({
                     'width': result.width + 'px',
-                    'height': result.height + 'px',
+                    'height': result.height + 'px'
                 });
                 this.calcDragRange();
                 this.moveTo(result.top, result.left);
@@ -224,14 +224,14 @@ class Popup extends Component {
         top = (window.innerHeight - this.popupNode[0].clientHeight) / 2,
         left = (window.innerWidth - this.popupNode[0].clientWidth) / 2
     ) {
-        if (this.dragRule == 1 && this.dragRange != null) {
+        if (this.dragRule === 1 && this.dragRange != null) {
             top = Math.max(Math.min(top, this.dragRange.topMax), this.dragRange.topMin);
             left = Math.max(Math.min(left, this.dragRange.leftMax), this.dragRange.leftMin);
         }
 
         this.popupNode.css({
             top: top + 'px',
-            left: left + 'px',
+            left: left + 'px'
         });
     }
 
@@ -243,7 +243,7 @@ class Popup extends Component {
             topMin: 0,
             leftMin: 0,
             topMax: window.innerHeight - this.popupNode[0].clientHeight,
-            leftMax: window.innerWidth - this.popupNode[0].clientWidth,
+            leftMax: window.innerWidth - this.popupNode[0].clientWidth
         };
     }
 

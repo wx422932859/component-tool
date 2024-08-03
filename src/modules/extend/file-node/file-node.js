@@ -237,36 +237,36 @@ FileNode._template = `<div class="ly-file-node"></div>`;
 FileNode.FILE_TYPE = {
     audio: {
         extension: ['mp3', 'm4a', 'wav'],
-        type: 'audio/*',
+        type: 'audio/*'
     },
     image: {
         extension: ['webp', 'jpg', 'jpeg', 'png', 'bmp', 'gif'],
-        type: 'image/*',
+        type: 'image/*'
     },
     video: {
         extension: ['mpeg', 'mpg', 'dat', 'mov', 'asf', 'wmv', 'mp4', 'avi', 'flv', 'amv', '3gp'],
-        type: 'video/*',
+        type: 'video/*'
     },
     pdf: {
         extension: ['pdf'],
-        type: 'application/pdf',
+        type: 'application/pdf'
     },
     zip: {
         extension: ['zip'],
-        type: 'application/zip',
+        type: 'application/zip'
     },
     docx: {
         extension: ['doc', 'docx'],
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     },
     xlsx: {
         extension: ['xls', 'xlsx'],
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     },
     pptx: {
         extension: ['ppt', 'pptx'],
-        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    },
+        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    }
 };
 
 export default FileNode;

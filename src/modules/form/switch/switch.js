@@ -25,7 +25,7 @@ class Switch extends Form {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Switch._template,
+            template: Switch._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -96,7 +96,7 @@ class Switch extends Form {
     load(option = {}) {
         this.label = option.label;
         this.value = option.value;
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }

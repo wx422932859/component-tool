@@ -22,14 +22,14 @@ class Observe {
     constructor(params = {}) {
         Object.defineProperty(this, '_data', {
             enumerable: false,
-            value: {},
+            value: {}
         }); // 数据仓库
         this.eventBus = new EventBus(false); // 事件总线
         this.watcher = null; // 监听器
-        this.immediate = params.immediate == true;
+        this.immediate = params.immediate === true;
         this.delay = params.delay || -1;
-        this.isModifiable = params.isModifiable != false;
-        this.deep = params.deep == true;
+        this.isModifiable = params.isModifiable !== false;
+        this.deep = params.deep === true;
         this.create(params);
     }
 
@@ -66,7 +66,7 @@ class Observe {
         let self = this,
             { target, property, callback = {}, value, deep = false } = params;
 
-        if (property == undefined) {
+        if (property === undefined) {
             // 针对 target 进行监听，此时 callback 是个 map
             for (let prop in target) {
                 this.defineObject({
@@ -74,10 +74,10 @@ class Observe {
                     property: prop,
                     callback: callback[prop],
                     value: target[prop],
-                    deep,
+                    deep
                 });
             }
-        } else if (Util.type(property) == 'object') {
+        } else if (Util.type(property) === 'object') {
             // 针对 target 进行监听，此时 property 是个 map
             for (let prop in property) {
                 this.defineObject({
@@ -85,7 +85,7 @@ class Observe {
                     property: prop,
                     callback: callback[prop],
                     value: property[prop],
-                    deep,
+                    deep
                 });
             }
         } else {
@@ -120,7 +120,7 @@ class Observe {
                             `属性【${property}】：初始类型【${type}】，赋值类型【${Util.type(value)}，修改无效！`
                         );
                     }
-                },
+                }
             });
             target[property] = value; // 执行一次 set()
 
@@ -145,7 +145,9 @@ class Observe {
         proxy = new Proxy(target, {
             set(t, p, v, r) {
                 // 当修改的是方法，直接赋值返回，不触发响应
-                if (methods.includes(p)) return Reflect.set(t, p, v, r);
+                if (methods.includes(p)) {
+                    return Reflect.set(t, p, v, r);
+                }
 
                 // 当监听对象是对象 A 的属性时，返回的对象 A 改变前后的值，否则返回自身改变前后的值
                 let value = self._data[name] || t,
@@ -155,7 +157,7 @@ class Observe {
 
                 self.eventBus.emit(name, value2, value1);
                 return res;
-            },
+            }
         });
         this.monitorMethodsOfArray(methods, proxy, name);
 
@@ -206,7 +208,7 @@ class Observe {
 
                 console.log(`属性【${p}】：初始类型【${type1}】，赋值类型【${type2}】，修改无效！`);
                 return false;
-            },
+            }
         });
 
         for (let prop in target) {
@@ -252,7 +254,10 @@ class Observe {
         let self = this;
 
         methods.forEach((method) => {
-            if (proxy.hasOwnProperty(method)) return;
+            if (proxy.hasOwnProperty(method)) {
+                return;
+            }
+
             Object.defineProperty(proxy, method, {
                 configurable: false,
                 enumerable: false,
@@ -264,11 +269,14 @@ class Observe {
                         }
 
                         let result = Util.proxyToJSON(self.watcher[name]);
-                        if (typeof result[method] !== 'function') return;
+                        if (typeof result[method] !== 'function') {
+                            return;
+                        }
+
                         result[method](...arrArray);
                         self.watcher[name] = result;
-                    },
-                }),
+                    }
+                })
             });
         });
     }

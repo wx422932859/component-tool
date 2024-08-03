@@ -28,7 +28,7 @@ class Time {
                 time.getDate(),
                 time.getHours(),
                 time.getMinutes(),
-                time.getSeconds(),
+                time.getSeconds()
             ],
             dayArr = ['日', '一', '二', '三', '四', '五', '六'];
 
@@ -71,7 +71,7 @@ class Time {
                 'H+': this.hours, // 时
                 'M+': this.minutes, // 分
                 'S+': this.seconds, // 秒
-                'Z+': this.milliseconds, // 毫秒
+                'Z+': this.milliseconds // 毫秒
             },
             res = formatStr || 'yyyy-mm-dd HH:MM:SS';
 

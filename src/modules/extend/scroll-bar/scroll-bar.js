@@ -42,7 +42,7 @@ class ScrollBar extends Component {
          * @memberof ScrollBar#
          */
         this._observe('container', this.node.parent(), (value, prev) => {
-            if (prev.length === 0 || prev[0] != value[0]) {
+            if (prev.length === 0 || prev[0] !== value[0]) {
                 this.onContainer();
             }
         });
@@ -89,7 +89,7 @@ class ScrollBar extends Component {
          */
         this.delayCalcRate = Util.debounce(() => {
             let rate = this.container[0].clientHeight / this.container[0].scrollHeight;
-            if (rate != this.rate) {
+            if (rate !== this.rate) {
                 this.rate = rate;
             }
         }, 200);
@@ -134,7 +134,7 @@ class ScrollBar extends Component {
          * @todo 清除拖拽标记以及偏移量
          */
         document.addEventListener('mousemove', (e) => {
-            if (this.mousedown == true && this.container.length > 0) {
+            if (this.mousedown === true && this.container.length > 0) {
                 let step = this.container[0].scrollTop + (e.pageY - this.pageY) / this.rate;
                 this.smoothScrollTo(step);
                 this.pageY = e.pageY;
@@ -282,7 +282,7 @@ class ScrollBar extends Component {
         const smoothScroll = () => {
             let aimPosition = startY + count * this.smoothY;
 
-            if (scrollId != this.scrollId) {
+            if (scrollId !== this.scrollId) {
                 return;
             }
 

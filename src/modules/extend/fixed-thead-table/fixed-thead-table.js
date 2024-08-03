@@ -37,7 +37,7 @@ class FixedTheadTable extends Component {
          * @member {string} tbody 表格内容
          */
         this._observe('tbody', (value) => {
-            if (value != '') {
+            if (value !== '') {
                 this.node.find('tbody').html(value);
             } else {
                 this.reset();
@@ -49,7 +49,7 @@ class FixedTheadTable extends Component {
          * @member {number} width 宽度
          */
         this._observe('width', (value, prev) => {
-            if (value != 0 && value != prev) {
+            if (value !== 0 && value !== prev) {
                 this.node.find('.ftt_thead-container').css('width', `${value}px`);
             }
         });
@@ -87,7 +87,7 @@ class FixedTheadTable extends Component {
     resize(tableContainer = this.node) {
         // 先设置高度，让滚动条自适应
         let height = tableContainer.find('.ftt_tbody-container>.ftt_table').height();
-        if (height == 0) {
+        if (height === 0) {
             return;
         }
         tableContainer.css('height', `${height}px`);

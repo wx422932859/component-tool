@@ -4,6 +4,7 @@ import Util from './util.js';
  * 观察者
  *
  * @author wang.xin
+ * @deprecated
  */
 class Watcher {
     /**

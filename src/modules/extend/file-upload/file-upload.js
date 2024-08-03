@@ -62,7 +62,7 @@ class FileUpload extends Component {
          * 仅有一个文件类型的时候做限制
          */
         this._observe('acceptType', [], (value) => {
-            if (value.length === 1 && FILE_TYPE[value[0]].type != undefined) {
+            if (value.length === 1 && FILE_TYPE[value[0]].type != null) {
                 this.node.find('input[type="file"]').attr('accept', FILE_TYPE[value[0]].type);
             } else {
                 this.node.find('input[type="file"]').removeAttr('accept');
@@ -152,10 +152,10 @@ class FileUpload extends Component {
      */
     load(params = {}) {
         for (let key in params) {
-            if (['maxSize', 'maxCount'].includes(key) && typeof params[key] != 'number') {
+            if (['maxSize', 'maxCount'].includes(key) && typeof params[key] !== 'number') {
                 continue;
             }
-            if (['errorCallback', 'removeCallback'].includes(key) && typeof params[key] != 'function') {
+            if (['errorCallback', 'removeCallback'].includes(key) && typeof params[key] !== 'function') {
                 continue;
             }
             this[key] = params[key];
@@ -234,7 +234,7 @@ class FileUpload extends Component {
         let res = {
             webFile: [], // 文件名数组（服务器文件）
             localFile: [], // 文件数组（本地文件）
-            delFile: [], // 删除的服务器文件
+            delFile: [] // 删除的服务器文件
         };
 
         this.list.forEach((fileNode) => {

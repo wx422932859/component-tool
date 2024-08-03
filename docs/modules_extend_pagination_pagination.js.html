@@ -177,58 +177,34 @@ class Pagination extends Component {
      */
     on() {
         // 页码
-        this.node.on(
-            'click',
-            '[data-action="page"]:not(.ly-pagination_current-page)',
-            (e, target) => {
-                this.pageNo = parseInt(target.text());
-            }
-        );
+        this.node.on('click', '[data-action="page"]:not(.ly-pagination_current-page)', (e, target) => {
+            this.pageNo = parseInt(target.text());
+        });
 
         // 上一页
-        this.node.on(
-            'click',
-            '[data-action="previousPage"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo--;
-            }
-        );
+        this.node.on('click', '[data-action="previousPage"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo--;
+        });
 
         // 下一页
-        this.node.on(
-            'click',
-            '[data-action="nextPage"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo++;
-            }
-        );
+        this.node.on('click', '[data-action="nextPage"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo++;
+        });
 
         // 左侧省略号
-        this.node.on(
-            'click',
-            '[data-action="leftOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((1 + this.pageNo) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="leftOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((1 + this.pageNo) / 2);
+        });
 
         // 中间省略号
-        this.node.on(
-            'click',
-            '[data-action="centerOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((1 + this.pageCount) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="centerOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((1 + this.pageCount) / 2);
+        });
 
         // 右侧省略号
-        this.node.on(
-            'click',
-            '[data-action="rightOmit"]:not(.ly-pagination_disabled-page)',
-            () => {
-                this.pageNo = Math.floor((this.pageNo + this.pageCount) / 2);
-            }
-        );
+        this.node.on('click', '[data-action="rightOmit"]:not(.ly-pagination_disabled-page)', () => {
+            this.pageNo = Math.floor((this.pageNo + this.pageCount) / 2);
+        });
 
         // 跳转
         this.node.on('click', '[data-action="gotoPage"]', () => {
@@ -237,7 +213,7 @@ class Pagination extends Component {
 
         // 回车
         this.node.on('keydown', '[data-value="page"]', (e) => {
-            if (e.key == 'Enter' || e.keyCode == 13) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
                 this.valid() &amp;&amp; (this.pageNo = this.valid());
             }
         });
@@ -259,7 +235,7 @@ class Pagination extends Component {
      */
     load(option = {}) {
         for (let key in option) {
-            if (option[key] != undefined &amp;&amp; key != 'change') {
+            if (option[key] != null &amp;&amp; key !== 'change') {
                 this[key] = option[key];
             }
         }
@@ -284,9 +260,7 @@ class Pagination extends Component {
     renderPreviousPage() {
         this.node.find('ul').append(
             `&lt;li class="ly-pagination_item">
-                &lt;a class="ly-pagination_page ${
-                    this.pageNo == 1 ? 'ly-pagination_disabled-page' : ''
-                }"
+                &lt;a class="ly-pagination_page ${this.pageNo === 1 ? 'ly-pagination_disabled-page' : ''}"
                     data-action="previousPage">« 上一页&lt;/a>
             &lt;/li>`
         );
@@ -302,30 +276,18 @@ class Pagination extends Component {
             // 当 pageCount &lt;= limitPage，直接显示页码
             elem.append(this.createPageLabel(1, this.pageCount));
         } else {
-            if (
-                this.pageNo &lt;= this.limitNum ||
-                this.pageCount - this.pageNo &lt; this.limitNum
-            ) {
+            if (this.pageNo &lt;= this.limitNum || this.pageCount - this.pageNo &lt; this.limitNum) {
                 // 当页码在前 limitNum 或后 limitNum 页时
                 elem.append(this.createPageLabel(1, this.limitNum))
                     .append(this.createOmit('center'))
-                    .append(
-                        this.createPageLabel(
-                            this.pageCount - this.limitNum + 1,
-                            this.pageCount
-                        )
-                    );
+                    .append(this.createPageLabel(this.pageCount - this.limitNum + 1, this.pageCount));
             } else {
                 // 当页码超过 limitPage 页，且当前页码不在前 limitNum 页或者后 limitNum 页时
                 elem.append(this.createPageLabel(1, 1))
                     .append(this.createOmit('left'))
-                    .append(
-                        this.createPageLabel(this.pageNo - 1, this.pageNo + 1)
-                    )
+                    .append(this.createPageLabel(this.pageNo - 1, this.pageNo + 1))
                     .append(this.createOmit('right'))
-                    .append(
-                        this.createPageLabel(this.pageCount, this.pageCount)
-                    );
+                    .append(this.createPageLabel(this.pageCount, this.pageCount));
             }
         }
     }
@@ -336,11 +298,7 @@ class Pagination extends Component {
     renderNextPage() {
         this.node.find('ul').append(
             `&lt;li class="ly-pagination_item">
-                &lt;a class="ly-pagination_page ${
-                    this.pageNo == this.pageCount
-                        ? 'ly-pagination_disabled-page'
-                        : ''
-                }"
+                &lt;a class="ly-pagination_page ${this.pageNo === this.pageCount ? 'ly-pagination_disabled-page' : ''}"
                     data-action="nextPage">下一页 »&lt;/a>
             &lt;/li>`
         );
@@ -385,8 +343,8 @@ class Pagination extends Component {
         for (let i = startPage; i &lt;= endPage; i++) {
             let tempClass = '';
 
-            tempClass += i == this.pageNo ? 'ly-pagination_current-page' : '';
-            tempClass += i == this.pageCount ? ' ly-pagination_last-page' : '';
+            tempClass += i === this.pageNo ? 'ly-pagination_current-page' : '';
+            tempClass += i === this.pageCount ? ' ly-pagination_last-page' : '';
             result += `&lt;li class="ly-pagination_item">&lt;a class="ly-pagination_page ${tempClass}" data-action="page">${i}&lt;/a>&lt;/li>`;
         }
         return result;
@@ -436,7 +394,7 @@ export default Pagination;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Wed Jul 17 2024 19:37:58 GMT+0800 (GMT+08:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sat Aug 03 2024 14:30:55 GMT+0800 (GMT+08:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

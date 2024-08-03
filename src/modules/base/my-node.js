@@ -143,7 +143,7 @@ class MyNode {
     insert(content, position = 0, insertLocation = 'beforeBegin', replaceNode = new MyNode()) {
         const INSERT_LOCATION = ['beforeBegin', 'afterEnd', 'beforeEnd', 'afterBegin', 'replaceWith'];
 
-        if (this.length == 0 || !INSERT_LOCATION.includes(insertLocation)) {
+        if (this.length === 0 || !INSERT_LOCATION.includes(insertLocation)) {
             return this;
         }
 
@@ -220,7 +220,7 @@ class MyNode {
             this.insert(documentFragment, position, insertLocation, replaceNode);
         }
 
-        return insertLocation != INSERT_LOCATION[4] ? this : replaceNode;
+        return insertLocation !== INSERT_LOCATION[4] ? this : replaceNode;
     }
 
     /**
@@ -284,7 +284,7 @@ class MyNode {
      */
     remove() {
         this.forEach((item) => {
-            Util.type(item.remove) == 'function' && item.remove();
+            Util.type(item.remove) === 'function' && item.remove();
         });
     }
 
@@ -510,7 +510,9 @@ class MyNode {
                     res.push(parent);
                 }
 
-                if (parent === until || parent.matches(until)) break;
+                if (parent === until || parent.matches(until)) {
+                    break;
+                }
                 parent = parent.parentNode;
             }
         });
@@ -709,7 +711,7 @@ class MyNode {
         /**
          * String
          */
-        if (Util.type(style) === 'string' && style.trim() != '') {
+        if (Util.type(style) === 'string' && style.trim() !== '') {
             if (styleValue == null) {
                 return this[0] ? this[0].style.getPropertyValue(style) || window.getComputedStyle(this[0])[style] : '';
             }
@@ -742,7 +744,7 @@ class MyNode {
         /**
          * String
          */
-        if (Util.type(attribute) === 'string' && attribute.trim() != '') {
+        if (Util.type(attribute) === 'string' && attribute.trim() !== '') {
             if (attributeValue == null) {
                 return this[0] && this[0].getAttribute(attribute);
             }
@@ -779,7 +781,7 @@ class MyNode {
      */
     hasClass(className) {
         let res = false,
-            classList = MyNode._string2Array(className).filter((elem) => elem != '');
+            classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             res =
@@ -800,7 +802,7 @@ class MyNode {
      * @memberof MyNode
      */
     addClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             item.nodeType === 1 &&
@@ -819,7 +821,7 @@ class MyNode {
      * @memberof MyNode
      */
     removeClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             item.nodeType === 1 &&
@@ -838,7 +840,7 @@ class MyNode {
      * @memberof MyNode
      */
     toggleClass(className) {
-        let classList = MyNode._string2Array(className).filter((elem) => elem != '');
+        let classList = MyNode._string2Array(className).filter((elem) => elem !== '');
 
         this.forEach((item) => {
             let myNode = new MyNode(item);
@@ -985,7 +987,7 @@ class MyNode {
      * @memberof MyNode
      */
     offset() {
-        if (this.length == 0 || this[0].ownerDocument == null) {
+        if (this.length === 0 || this[0].ownerDocument == null) {
             return;
         }
 
@@ -995,7 +997,7 @@ class MyNode {
 
         return {
             top: res.top + window.scrollY - documentElement.clientTop,
-            left: res.left + window.scrollY - documentElement.clientLeft,
+            left: res.left + window.scrollY - documentElement.clientLeft
         };
     }
 
@@ -1009,7 +1011,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display != 'none') {
+            if (display !== 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
                 cache.display = display;
@@ -1034,7 +1036,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display == 'none') {
+            if (display === 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
                 cache.display = cache.display || 'block';
@@ -1072,7 +1074,7 @@ class MyNode {
         /**
          * 设置宽度
          */
-        let width = Util.type(num) == 'string' ? num : num + 'px';
+        let width = Util.type(num) === 'string' ? num : num + 'px';
         this.forEach((elem) => {
             elem.style.width = width;
         });
@@ -1104,7 +1106,7 @@ class MyNode {
         /**
          * 设置高度
          */
-        let height = Util.type(num) == 'string' ? num : num + 'px';
+        let height = Util.type(num) === 'string' ? num : num + 'px';
         this.forEach((elem) => {
             elem.style.height = height;
         });
@@ -1134,7 +1136,7 @@ class MyNode {
         let content = '',
             rowSpan = 1,
             td = null, // 单元格
-            trCount = trList.length; // 总行数
+            trCount = this.node.length; // 总行数
 
         this.node.forEach((item, index, list) => {
             let curTd = list.eq(index).find('td').eq(col),
@@ -1145,7 +1147,7 @@ class MyNode {
                 content = curContent;
                 td = curTd;
             } else {
-                if (curContent == content) {
+                if (curContent === content) {
                     // 当前行与上一行内容相同
                     rowSpan++; // 行数累加
                     curTd.remove(); // 移除单元格

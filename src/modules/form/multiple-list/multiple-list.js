@@ -31,7 +31,7 @@ class MultipleList extends DropList {
     constructor(option = {}) {
         super(
             Object.assign(option, {
-                template: option.template || MultipleList._template,
+                template: option.template || MultipleList._template
             })
         );
     }
@@ -146,7 +146,7 @@ class MultipleList extends DropList {
             let show = this.show;
             this.constructor._hideAll();
 
-            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length != 0) {
+            if (source.hasClass('ly-drop-list_item') || source.parents('.ly-drop-list_item').length !== 0) {
                 // 当触发源是下拉列表项时，不改变显示状态
                 this.show = show;
             } else if (source.hasClass('ly-icon_remove')) {
@@ -155,7 +155,7 @@ class MultipleList extends DropList {
                 let list = Util.proxyToJSON(this.check);
                 list.shift();
                 this.check = list;
-            } else if (this.hover != true) {
+            } else if (this.hover !== true) {
                 // 当未做悬浮触发时，隐藏下拉列表
                 this.show = !show;
             }
@@ -164,8 +164,8 @@ class MultipleList extends DropList {
         // 切换列表项
         this.node.on('click', '.ly-drop-list_item', (e, target) => {
             if (
-                this.maxCount != -1 &&
-                this.check.length == this.maxCount &&
+                this.maxCount !== -1 &&
+                this.check.length === this.maxCount &&
                 !target.hasClass('ly-drop-list_item-active')
             ) {
                 this.error(0);
@@ -180,14 +180,14 @@ class MultipleList extends DropList {
 
         // 鼠标滑入
         this.node.on('mouseover', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = true;
             }
         });
 
         // 鼠标滑出
         this.node.on('mouseout', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = false;
             }
         });
@@ -213,10 +213,10 @@ class MultipleList extends DropList {
         if (option.check != null) {
             this.check = option.check;
         }
-        if (typeof option.error == 'function') {
+        if (typeof option.error === 'function') {
             this.error = option.error;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }

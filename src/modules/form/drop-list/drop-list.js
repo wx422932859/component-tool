@@ -29,7 +29,7 @@ class DropList extends Form {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: option.template || DropList._template,
+            template: option.template || DropList._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -106,7 +106,7 @@ class DropList extends Form {
          * @inner
          */
         this._observe('pos', '-1', (value) => {
-            this.value = value != -1 ? this.list[value] : null;
+            this.value = value !== -1 ? this.list[value] : null;
         });
 
         /**
@@ -150,7 +150,7 @@ class DropList extends Form {
         if (option.check != null) {
             this.check = option.check;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -161,7 +161,7 @@ class DropList extends Form {
     on() {
         // 点击输入框
         this.node.on('click', '.ly-form_content', () => {
-            if (this.hover != true) {
+            if (this.hover !== true) {
                 let show = this.show;
                 DropList._hideAll();
                 this.show = !show;
@@ -175,14 +175,14 @@ class DropList extends Form {
 
         // 鼠标滑入
         this.node.on('mouseover', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = true;
             }
         });
 
         // 鼠标滑出
         this.node.on('mouseout', '.ly-form_content', () => {
-            if (this.hover == true) {
+            if (this.hover === true) {
                 this.show = false;
             }
         });
@@ -236,12 +236,12 @@ class DropList extends Form {
 }
 
 // 当点击的不是下拉列表的时候，关闭下拉列表
-if (typeof document != 'undefined') {
+if (typeof document !== 'undefined') {
     document.addEventListener('click', (e) => {
         let elem = new MyNode(e.target);
 
         // 当点击的不是下拉列表的时候
-        if (elem.parents('.ly-drop-list .ly-form_content').length == 0) {
+        if (elem.parents('.ly-drop-list .ly-form_content').length === 0) {
             DropList._hideAll();
         }
     });
