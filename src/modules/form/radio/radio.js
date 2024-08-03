@@ -28,7 +28,7 @@ class Radio extends Form {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Radio._template,
+            template: Radio._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -96,7 +96,7 @@ class Radio extends Form {
          * @inner
          */
         this._observe('pos', (value) => {
-            this.value = value != -1 ? this.list[value] : null;
+            this.value = value !== -1 ? this.list[value] : null;
         });
 
         /**
@@ -128,7 +128,7 @@ class Radio extends Form {
      */
     on() {
         this.node.on('click', '.ly-radio_item', (e, target) => {
-            if (this.required == false && target.hasClass('ly-radio_item-active')) {
+            if (this.required === false && target.hasClass('ly-radio_item-active')) {
                 this.check = null;
             } else {
                 this.check = target.posOfSiblings();
@@ -150,11 +150,11 @@ class Radio extends Form {
         this.check = option.check;
         this.required = option.required || this.required;
         if (this.required) {
-            if (this.value == null && this.list.length != 0) {
+            if (this.value == null && this.list.length !== 0) {
                 this.check = 0;
             }
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
