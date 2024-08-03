@@ -16,15 +16,16 @@ const Ajax = {};
 Ajax.filterHTML = function (object, rule) {
     rule = rule || {
         whiteList: {
-            a: ['href', 'target'],
+            a: ['href', 'target']
         },
         stripIgnoreTag: true, // 过滤所有非白名单中的 HTML，false 只对标签进行转义
-        stripIgnoreBody: ['script'], // 过滤标签和内容
+        stripIgnoreBody: ['script'] // 过滤标签和内容
     };
 
     switch (Object.prototype.toString.call(object)) {
         case '[object String]':
             if (typeof filterCSS !== 'undefined') {
+                // eslint-disable-next-line
                 object = filterXSS(object, rule);
             }
             break;
@@ -68,12 +69,12 @@ Ajax.req = function (opts) {
             header = opts.header || {}; // 请求头
 
         // 设置超时
-        if (Util.type(opts.timeout) == 'number') {
+        if (Util.type(opts.timeout) === 'number') {
             xhr.timeout = opts.timeout;
         }
 
         // 启动请求
-        if (type.toUpperCase() === 'GET' && JSON.stringify(data) != '{}') {
+        if (type.toUpperCase() === 'GET' && JSON.stringify(data) !== '{}') {
             xhr.open(type, `${url}?${new URLSearchParams(data).toString()}`, defer);
         } else {
             xhr.open(type, url, defer);
@@ -208,7 +209,7 @@ Ajax.formatParam = function (obj) {
             'complete',
             'success',
             'error',
-            'timeout',
+            'timeout'
         ],
         res = null;
 
@@ -251,7 +252,7 @@ Ajax.request = function () {
         error = opts.error || (() => {});
 
     if (Ajax.intercept != null) {
-        if (typeof Ajax.intercept == 'function') {
+        if (typeof Ajax.intercept === 'function') {
             let response = Ajax.intercept(opts);
             if (response != null) {
                 return new Promise((resolve) => {

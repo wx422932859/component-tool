@@ -2,13 +2,6 @@
  * XML 节点
  */
 class XMLNode {
-    static ROOT_NODE = 0;
-    static ELEMENT_NODE = 1;
-    static ATTRIBUTE_NODE = 2;
-    static TEXT_NODE = 3;
-    static CDATA_SECTION_NODE = 4;
-    static COMMENT_NODE = 8;
-
     constructor(data, nodeName) {
         if (typeof data === 'number') {
             this.nodeType = data;
@@ -38,7 +31,7 @@ class XMLNode {
      * 转为 JSON 格式
      */
     toJson(result = {}) {
-        if (this.children.length == 0) {
+        if (this.children.length === 0) {
             return this.text;
         }
         this.children.forEach((elementNode) => {
@@ -56,6 +49,13 @@ class XMLNode {
         return result;
     }
 }
+
+XMLNode.ROOT_NODE = 0;
+XMLNode.ELEMENT_NODE = 1;
+XMLNode.ATTRIBUTE_NODE = 2;
+XMLNode.TEXT_NODE = 3;
+XMLNode.CDATA_SECTION_NODE = 4;
+XMLNode.COMMENT_NODE = 8;
 
 /**
  * 根节点
@@ -157,7 +157,7 @@ function parseXML(data) {
                 6: comment,
                 7: cdataSectionNodeSign,
                 8: cdata,
-                index,
+                index
             } = result;
 
             if (lastIndex !== index) {
@@ -175,7 +175,7 @@ function parseXML(data) {
                 // ElementNode
                 let elementNode = new ElementNode(elementLabel, {
                     0: index,
-                    1: xmlRegExp.lastIndex,
+                    1: xmlRegExp.lastIndex
                 });
                 parseAttribute(elementNode, attribute);
                 if (singleLabelSign !== undefined) {
@@ -223,7 +223,7 @@ function parseXML(data) {
     function parseAttribute(elem, attribute) {
         let attributeReg = /([a-z\-:]+)(="([\s\S]*?)")?/gi;
 
-        if (attribute != undefined && attribute.trim() != '') {
+        if (attribute != null && attribute.trim() !== '') {
             attribute.replace(attributeReg, (item, key, value1, value2) => {
                 elem.attribute[key] = value1 !== undefined ? value2 : '';
                 return '';
@@ -241,7 +241,7 @@ function parseXML(data) {
 
         let text = '';
 
-        if (node.childNodes.length == 0) {
+        if (node.childNodes.length === 0) {
             return '';
         }
         node.childNodes.forEach((child) => {

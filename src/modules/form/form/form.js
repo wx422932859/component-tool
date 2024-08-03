@@ -64,7 +64,7 @@ class Form extends Component {
                         res.push({
                             key: item.key == null ? index + 1 : item.key, // 键
                             value: item.value, // 值
-                            info: item.info || '', // 附加信息
+                            info: item.info || '' // 附加信息
                         });
                     });
                     break;
@@ -75,7 +75,7 @@ class Form extends Component {
                         res.push({
                             key: index + 1, // 键
                             value: item, // 值
-                            info: '', // 附加信息
+                            info: '' // 附加信息
                         });
                     });
                     break;
@@ -120,7 +120,7 @@ class Form extends Component {
         } else if (Util.type(item) === 'array') {
             res = item.reduce((prev, cur) => {
                 let pos = this.findItem(cur, list);
-                if (pos != -1) {
+                if (pos !== -1) {
                     prev.push(pos);
                 }
                 return prev;

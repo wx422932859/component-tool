@@ -15,7 +15,7 @@ const VC = {
      * @property {string} [config.basicPath=''] 基地址
      */
     config: {
-        basicPath: '',
+        basicPath: ''
     },
 
     /**
@@ -90,7 +90,7 @@ const VC = {
         target.src = fullPath.includes('?ver') ? fullPath : `${fullPath}?ver=${new Date().getTime()}`;
         return new Promise((resolve, reject) => {
             let scriptList = [...document.scripts]
-                .filter((item) => typeof item.src == 'string')
+                .filter((item) => typeof item.src === 'string')
                 .map((item) => item.src.split('?')[0]);
 
             if (scriptList.includes(realPath)) {
@@ -127,7 +127,7 @@ const VC = {
         target.rel = 'stylesheet';
         return new Promise((resolve, reject) => {
             let styleList = [...document.styleSheets]
-                .filter((item) => typeof item.href == 'string')
+                .filter((item) => typeof item.href === 'string')
                 .map((item) => item.href.split('?')[0]);
 
             if (styleList.includes(realPath)) {
@@ -170,10 +170,10 @@ const VC = {
         globalName = alias || componentName;
 
         // 组件已引入的情况
-        if (realPath == undefined || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
+        if (realPath == null || eval(`typeof ${globalName} !== 'undefined'`) || VC.cache.includes(realPath)) {
             return new Promise((resolve) => {
                 callback.call(VC, {
-                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : '',
+                    template: eval(`typeof ${globalName} !== 'undefined'`) ? eval(globalName)._template : ''
                 });
                 resolve();
             });
@@ -238,7 +238,7 @@ const VC = {
                 taskQueue.add(() => {
                     return new Promise((resolve2) => {
                         callback.call(VC, {
-                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : '',
+                            template: eval(`typeof ${globalName} != 'undefined'`) ? eval(globalName)._template : ''
                         });
                         resolve2();
                         resolve();
@@ -288,7 +288,7 @@ const VC = {
         // 解析 template 节点
         VC.parseTemplateNode(taskQueue, myNode.children('template').html(), globalName, unique);
 
-        //解析 style 节点
+        // 解析 style 节点
         VC.parseStyleNode(taskQueue, myNode.children('style'), unique);
     },
 
@@ -317,7 +317,7 @@ const VC = {
                 alias = elem.attr('alias');
 
             // 是否添加随机数
-            if (elem.attr('random') != undefined) {
+            if (elem.attr('random') != null) {
                 src += `?ver=${Math.random()}`;
             }
 
@@ -362,10 +362,10 @@ const VC = {
                 let node = new MyNode(template);
 
                 if (eval(`typeof ${globalName} != 'undefined'`)) {
-                    if (node.length == 0) {
+                    if (node.length === 0) {
                         node = new MyNode(eval(`${globalName}._template`));
                     }
-                    if (node.length != 0) {
+                    if (node.length !== 0) {
                         node.attr(`vc-${unique}`, '');
                         eval(globalName)._template = node[0].outerHTML;
                     }
@@ -445,7 +445,7 @@ const VC = {
                 return selector.trim().replace(req, (item) => `${item}[vc-${unique}]`);
             })
             .join(',');
-    },
+    }
 };
 
 export default VC;

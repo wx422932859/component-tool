@@ -32,7 +32,7 @@ class Checkbox extends Form {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: Checkbox._template,
+            template: Checkbox._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -206,8 +206,8 @@ class Checkbox extends Form {
         // 单个选项
         this.node.on('click', '.ly-checkbox_item[data-type="single"]:not(.ly-checkbox_item-disabled)', (e, target) => {
             if (
-                this.maxCount != -1 &&
-                this.check.length == this.maxCount &&
+                this.maxCount !== -1 &&
+                this.check.length === this.maxCount &&
                 !target.hasClass('ly-checkbox_item-active')
             ) {
                 this.error(0);
@@ -250,16 +250,16 @@ class Checkbox extends Form {
         this.label = option.label;
         this.list = option.list || [];
         this.all = option.all || false;
-        this.check = option.check != undefined ? option.check : [];
-        this.disabled = option.disabled != undefined ? option.disabled : [];
+        this.check = option.check != null ? option.check : [];
+        this.disabled = option.disabled != null ? option.disabled : [];
         this.maxCount = option.maxCount || this.maxCount;
         if (this.all !== false && option.allCheck === true) {
             this.allCheck = true;
         }
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
-        if (typeof option.error == 'function') {
+        if (typeof option.error === 'function') {
             this.error = option.error;
         }
     }

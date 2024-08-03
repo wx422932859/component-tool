@@ -1,0 +1,135 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es6": true,
+        "amd": true,
+        "node": true
+    },
+    "settings": {
+        "html/html-extensions": [".html", ".vc"]
+    },
+    "plugins": ["html"],
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "globals": {},
+    "rules": {
+        // IF 语句必须要要写花括号
+        "curly": [2, "all"],
+        // 未使用变量，由于组件声明的都是全局变量，所以不检查
+        "no-unused-vars": 0,
+        // 要求使用 === 和 !==
+        "eqeqeq": [2, "allow-null"],
+        // 允许自我分配，即 a == a
+        "no-self-assign": 0,
+        "semi-spacing": [
+            2,
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        // 禁止修改const声明的变量
+        "no-const-assign": 2,
+        // 在创建对象字面量时不允许键重复 {a:1,a:1}
+        "no-dupe-keys": 2,
+        // 函数参数不能重复
+        "no-dupe-args": 2,
+        // switch中的case标签不能重复
+        "no-duplicate-case": 2,
+        // 正则表达式中的[]内容不能为空
+        "no-empty-character-class": 2,
+        "no-empty-pattern": 2,
+        // 禁止使用未申明的变量
+        "no-undef": 2,
+        // 禁止将变量初始化为 undefined
+        "no-undef-init": 2,
+        // 禁止多余的空格
+        "no-multi-spaces": 2,
+        // 字符串不能用\换行
+        "no-multi-str": 2,
+        // 禁止多余的空行
+        "no-multiple-empty-lines": [
+            2,
+            {
+                "max": 1
+            }
+        ],
+        // 禁止在 return、throw、continue 和 break 语句之后出现不可达代码
+        "no-unreachable": 2,
+        // 禁止在 finally 语句块中出现控制流语句
+        "no-unsafe-finally": 2,
+        // 强制在块之前使用一致的空格
+        "space-before-blocks": [2, "always"],
+        // 要求操作符周围有空格
+        "space-infix-ops": 2,
+        // 强制在注释中 // 或 /* 使用一致的空格
+        "spaced-comment": [
+            2,
+            "always",
+            {
+                "markers": ["global", "globals", "eslint", "eslint-disable", "*package", "!", ","]
+            }
+        ],
+        // 禁止在模板字符串和它们的字面量之间有空格
+        "template-curly-spacing": [2, "never"],
+        // 强制在大括号中使用一致的空格
+        "object-curly-spacing": [
+            2,
+            "always",
+            {
+                "objectsInObjects": false
+            }
+        ],
+        // 强制数组方括号中使用一致的空格
+        "array-bracket-spacing": [2, "never"],
+        // 禁止块语句和类的开始或末尾有空行
+        "padded-blocks": [2, "never"],
+        // 禁止属性前有空白
+        "no-whitespace-before-property": 2,
+        // 强制 getter 和 setter 在对象中成对出现
+        "accessor-pairs": 2,
+        // 强制箭头函数的箭头前后使用一致的空格
+        "arrow-spacing": [
+            2,
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        // 强制在代码块中开括号前和闭括号后有空格
+        "block-spacing": [2, "always"],
+        // 强制在代码块中使用一致的大括号风格
+        "brace-style": [
+            2,
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "comma-dangle": [2, "never"],
+        // 强制在逗号前后使用一致的空格
+        "comma-spacing": [
+            2,
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        // 强制使用一致的逗号风格
+        "comma-style": [2, "last"],
+        // 要求或禁止文件末尾存在空行
+        "eol-last": 2,
+        // 强制在点号之前和之后一致的换行
+        "dot-location": [2, "property"],
+        // 强制在对象字面量的属性中键和值之间使用一致的间距
+        "key-spacing": [
+            2,
+            {
+                "beforeColon": false,
+                "afterColon": true
+            }
+        ]
+    }
+}

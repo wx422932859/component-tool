@@ -76,7 +76,7 @@ class WaterMark extends Component {
          * @memberof WaterMark#
          */
         this._observe('markInfo', (value) => {
-            if (!Array.isArray(value) || value.length == 0) {
+            if (!Array.isArray(value) || value.length === 0) {
                 return;
             }
             this.mark.render(value);
@@ -151,7 +151,7 @@ class WaterMark extends Component {
      * 监听节点变化
      */
     listenNodeChange() {
-        if (typeof MutationObserver == 'undefined') {
+        if (typeof MutationObserver === 'undefined') {
             return;
         }
 
@@ -172,7 +172,7 @@ class WaterMark extends Component {
                 // 节点发生变化
                 if (targetNode[0] === this.node[0] || targetNode[0] === this.mark.node[0]) {
                     // 修改属性值，但是改变前后值没有变化
-                    if (elem.addedNodes.length == 0 && targetNode.attr(elem.attributeName) == elem.oldValue) {
+                    if (elem.addedNodes.length === 0 && targetNode.attr(elem.attributeName) === elem.oldValue) {
                         return;
                     }
 
@@ -199,7 +199,7 @@ class WaterMark extends Component {
             attributes: true,
             attributeOldValue: true,
             childList: true,
-            subtree: true,
+            subtree: true
         });
     }
 
@@ -307,15 +307,15 @@ class CanvasMark extends Component {
         let context = this.context,
             base = {
                 x: 50,
-                y: 50,
+                y: 50
             },
             padding = {
                 x: 240, // 行间距
-                y: 180, // 列间距
+                y: 180 // 列间距
             },
             count = {
                 x: this.height / padding.x,
-                y: this.width / padding.y,
+                y: this.width / padding.y
             }; // 个数
 
         this.node.css('display', 'block', 'important').css('visibility', 'visible', 'important');
@@ -368,7 +368,7 @@ class CanvasMark extends Component {
             return {
                 text: info,
                 x: (baseLength - context.measureText(info).width) / 2,
-                y: lineHeight * index,
+                y: lineHeight * index
             };
         });
     }

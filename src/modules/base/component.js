@@ -80,7 +80,7 @@ class Component {
                         self._reset_root(value);
                     }
                     return Reflect.set(target, prop, value);
-                },
+                }
             }
         );
 
@@ -97,8 +97,8 @@ class Component {
                     let res = Reflect.apply(...arguments);
                     self._after_destroyed();
                     return res;
-                },
-            }),
+                }
+            })
         });
 
         /**
@@ -126,8 +126,8 @@ class Component {
                     }
 
                     return Reflect.apply(...arguments);
-                },
-            }),
+                }
+            })
         });
 
         /**
@@ -139,8 +139,8 @@ class Component {
             value: new Observe({
                 target: this,
                 property: {},
-                callback: {},
-            }),
+                callback: {}
+            })
         });
 
         /**
@@ -164,8 +164,8 @@ class Component {
                     self._before_load(params);
                     let res = Reflect.apply(...arguments);
                     return res;
-                },
-            }),
+                }
+            })
         });
 
         this._mount_component();
@@ -235,7 +235,7 @@ class Component {
         this._bus.emit(componentName, {
             component: this,
             action,
-            data,
+            data
         });
     }
 
@@ -255,13 +255,13 @@ class Component {
      * @param {boolean} [deep=true] 是否深度监听
      */
     _observe(property, value, callback = () => {}, deep = true) {
-        if (arguments.length == 1) {
+        if (arguments.length === 1) {
             this._observe(property, undefined, callback);
         } else if (Util.type(value) === 'function') {
             this._observe(property, undefined, value);
         } else {
             if (property in this) {
-                if (value != undefined) {
+                if (value != null) {
                     this[property] = value;
                 }
                 this._o.addCallback(property, callback, this);
@@ -271,7 +271,7 @@ class Component {
                     property,
                     value,
                     callback: callback.bind(this),
-                    deep,
+                    deep
                 });
             }
         }
@@ -287,7 +287,20 @@ class Component {
         this.node.find('slot').forEach((elem, index, list) => {
             let slot = list.eq(index), // 插槽
                 src = slot.attr('data-src'), // 组件地址
-                componentName = slot.attr('data-component') || VC.parseComponentName(src); // 组件类名
+                componentName = slot.attr('data-component'), // 组件类名
+                authority = slot.attr('data-auth');
+
+            if (authority && (authority === 'false' || Util.eval(authority) === false)) {
+                return;
+            }
+
+            if (componentName && componentName.includes('${')) {
+                componentName = Util.eval(componentName);
+            }
+
+            if (componentName == null || componentName === '') {
+                componentName = VC.parseComponentName(src);
+            }
 
             if (componentName === '') {
                 console.log(`组件${src}获取失败！`);
@@ -300,8 +313,8 @@ class Component {
                         filePath: src,
                         handle: () => {
                             this._instantiate_component(slot, componentName);
-                        },
-                    },
+                        }
+                    }
                 ]);
             } else {
                 // 已存在指定的组件变量

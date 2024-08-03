@@ -30,7 +30,7 @@ class TaskQueue {
     add(fn, params = []) {
         this.queue.push({
             fn,
-            params,
+            params
         });
         this.free = this.free;
         return this;

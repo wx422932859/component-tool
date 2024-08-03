@@ -33,7 +33,7 @@ class Slider extends Form {
         super({
             elem: option.elem,
             relation: option.relation,
-            template: DropList._template,
+            template: Slider._template
         });
 
         // 若在缓存中则直接返回缓存中的实例
@@ -211,7 +211,7 @@ class Slider extends Form {
         this.max = option.max || 100;
         this.step = option.step || 1;
         this.valid = option.value || 0;
-        if (typeof option.change == 'function') {
+        if (typeof option.change === 'function') {
             this.change = option.change;
         }
     }
@@ -228,7 +228,7 @@ class Slider extends Form {
     }
 }
 
-if (typeof document != 'undefined') {
+if (typeof document !== 'undefined') {
     // 当滑块的拖动状态为 true，鼠标拖动
     document.addEventListener('mousemove', function (e) {
         Slider._cache.forEach((item) => {
