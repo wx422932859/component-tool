@@ -1,7 +1,7 @@
 /*!
  * name: component-tool
- * package: 2024-08-03 14:30:79
- * version: 1.1.2
+ * package: 2024-08-26 20:55:99
+ * version: 1.1.3
  * exports: LY
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -4065,7 +4065,7 @@ class Component {
             value: new Proxy(this._send_msg, {
                 apply(target, thisArg, params) {
                     let parent = self._parent,
-                        { action, data } = params[0];
+                        { action, data } = params[0] || {};
 
                     if (params[1] === true) {
                         while (parent instanceof Component) {
@@ -4145,7 +4145,9 @@ class Component {
     /**
      * 子组件实例化完成后执行的函数
      */
-    _mounted() {}
+    _mounted() {
+        this._load_children_component();
+    }
 
     /**
      * 销毁组件
@@ -4329,7 +4331,7 @@ class Component {
         }
 
         while (this._parent instanceof Component) {
-            return this._parent._is_parent(component);
+            return this._parent._has_parent(component);
         }
 
         return false;
@@ -4344,10 +4346,37 @@ class Component {
             if (this._children[child] === component) {
                 return true;
             }
-            this._children[child].$child(component);
+            this._children[child]._has_child(component);
         }
 
         return false;
+    }
+
+    /**
+     * 加载子组件（实例化后的加载）
+     */
+    _load_children_component() {
+        let componentList = this.node.attr('data-mounted');
+
+        if (componentList === null) {
+            return;
+        }
+
+        componentList = componentList.split(',');
+        componentList.forEach((componentName) => {
+            componentName = componentName.trim();
+
+            if (!this._children[componentName] instanceof Component) {
+                console.log(componentName, '没有实例化该组件！');
+                return;
+            }
+
+            if (typeof this._children[componentName].load === 'function') {
+                this._children[componentName].load();
+            } else {
+                console.log(componentName, '没有定义load方法！');
+            }
+        });
     }
 }
 
