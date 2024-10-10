@@ -37,7 +37,7 @@
             try {
                 this._send_msg({
                     action: 't',
-                    data: 1,
+                    data: 1
                 });
             } catch (err) {
                 console.log(err);
@@ -45,7 +45,7 @@
             this._bus.emit(['App', 'MyCheckbox'], {
                 component: this,
                 action: 'up',
-                data: {},
+                data: {}
             });
         }
     }
