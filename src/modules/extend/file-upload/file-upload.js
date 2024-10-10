@@ -126,6 +126,11 @@ class FileUpload extends Component {
          * @event 点击文件
          */
         this.node.on('click', '.fn_file-content', (e, target) => {
+            if (target.find('.fn_file-item').length === 0) {
+                this.errorCallback(3);
+                return;
+            }
+
             this._children.filePreview.load(target.find('.fn_file-item')[0], this.node.find('.fn_file-item'));
         });
     }
