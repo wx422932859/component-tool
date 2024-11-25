@@ -179,11 +179,35 @@ class FileNode extends Component {
                 htmlStr = this.renderAudio(filePath);
                 break;
 
+            case 'zip':
+            case '7z':
+            case 'rar':
+                htmlStr = this.renderZIP();
+                break;
+
+            case 'pdf':
+                htmlStr = this.renderPDF();
+                break;
+
+            case 'docx':
+                htmlStr = this.renderDOCX();
+                break;
+
+            case 'xlsx':
+                htmlStr = this.renderXLSX();
+                break;
+
+            case 'pptx':
+                htmlStr = this.renderPPTX();
+                break;
+
             default:
                 break;
         }
         this.node.html(
-            `<div class="fn_file-content">${htmlStr}</div>
+            `<div class="fn_file-content" title="${
+                this.file instanceof File ? this.file.name : this.file
+            }">${htmlStr}</div>
             <i class="fn_btn" data-action="remove"></i>`
         );
     }
@@ -204,7 +228,7 @@ class FileNode extends Component {
      */
     renderVideo(filePath) {
         return `<video class="fn_file-item" src="${filePath}"></video>
-                <svg class="ly-icon_svg fn_video-icon" aria-hidden="true">
+                <svg class="ly-icon_svg fn_normal-icon fn_video-icon" aria-hidden="true">
                     <use xlink:href="#ly-play"></use>
                 </svg>`;
     }
@@ -216,9 +240,59 @@ class FileNode extends Component {
      */
     renderAudio(filePath) {
         return `<audio class="fn_file-item" src="${filePath}"></audio>
-                <svg class="ly-icon_svg fn_audio-icon" aria-hidden="true">
+                <svg class="ly-icon_svg fn_normal-icon fn_audio-icon" aria-hidden="true">
                     <use xlink:href="#ly-file-audio-o"></use>
                 </svg>`;
+    }
+
+    /**
+     * 渲染ZIP
+     * @memberof FileNode
+     */
+    renderZIP() {
+        return `<svg class="ly-icon_svg fn_normal-icon fn_zip-icon" aria-hidden="true">
+                    <use xlink:href="#ly-zip"></use>
+                </svg>`;
+    }
+
+    /**
+     * 渲染PDF
+     * @memberof FileNode
+     */
+    renderPDF() {
+        return `<svg class="ly-icon_svg fn_normal-icon fn_pdf-icon" aria-hidden="true">
+                        <use xlink:href="#ly-pdf"></use>
+                    </svg>`;
+    }
+
+    /**
+     * 渲染DOCX
+     * @memberof FileNode
+     */
+    renderDOCX() {
+        return `<svg class="ly-icon_svg fn_normal-icon fn_docx-icon" aria-hidden="true">
+                        <use xlink:href="#ly-docx"></use>
+                    </svg>`;
+    }
+
+    /**
+     * 渲染PPTX
+     * @memberof FileNode
+     */
+    renderXLSX() {
+        return `<svg class="ly-icon_svg fn_normal-icon fn_xlsx-icon" aria-hidden="true">
+                        <use xlink:href="#ly-xlsx"></use>
+                    </svg>`;
+    }
+
+    /**
+     * 渲染PPTX
+     * @memberof FileNode
+     */
+    renderPPTX() {
+        return `<svg class="ly-icon_svg fn_normal-icon fn_pptx-icon" aria-hidden="true">
+                        <use xlink:href="#ly-pptx"></use>
+                    </svg>`;
     }
 }
 
@@ -247,13 +321,21 @@ FileNode.FILE_TYPE = {
         extension: ['mpeg', 'mpg', 'dat', 'mov', 'asf', 'wmv', 'mp4', 'avi', 'flv', 'amv', '3gp'],
         type: 'video/*'
     },
-    pdf: {
-        extension: ['pdf'],
-        type: 'application/pdf'
-    },
     zip: {
         extension: ['zip'],
         type: 'application/zip'
+    },
+    '7z': {
+        extension: ['7z'],
+        type: 'application/7z'
+    },
+    rar: {
+        extension: ['rar'],
+        type: 'application/rar'
+    },
+    pdf: {
+        extension: ['pdf'],
+        type: 'application/pdf'
     },
     docx: {
         extension: ['doc', 'docx'],

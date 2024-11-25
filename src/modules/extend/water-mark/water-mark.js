@@ -117,7 +117,8 @@ class WaterMark extends Component {
             .css('width', '100%', 'important')
             .css('height', '100%', 'important')
             .css('overflow', 'hidden', 'important')
-            .css('opacity', this.opacity, 'important');
+            .css('opacity', this.opacity, 'important')
+            .css('transform', 'none', 'important');
     }
 
     /**
@@ -318,7 +319,16 @@ class CanvasMark extends Component {
                 y: this.width / padding.y
             }; // 个数
 
-        this.node.css('display', 'block', 'important').css('visibility', 'visible', 'important');
+        this.node
+            .css('display', 'block', 'important')
+            .css('visibility', 'visible', 'important')
+            .css('position', 'absolute', 'important')
+            .css('top', '0', 'important')
+            .css('left', '0', 'important')
+            .css('width', 'unset', 'important')
+            .css('height', 'unset', 'important')
+            .css('opacity', 'unset', 'important')
+            .css('transform', 'none', 'important');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         context.font = `normal ${this.fontSize}px Regular`;

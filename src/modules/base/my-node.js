@@ -1039,7 +1039,9 @@ class MyNode {
             if (display === 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
-                cache.display = cache.display || 'block';
+                if (cache.display == null || cache.display === '' || cache.display === 'none') {
+                    cache.display = 'block';
+                }
                 MyNode._cache.set(item, cache);
                 new MyNode(item).css('display', cache.display);
             }

@@ -11,39 +11,39 @@ module.exports = {
         libraryExport: 'default',
         library: {
             name: 'LY',
-            type: 'umd',
-        },
+            type: 'umd'
+        }
     },
     module: {
         rules: [
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 loader: 'url-loader',
                 options: {
                     limit: 8 * 1024,
-                    name: 'img/[hash:10].[ext]',
-                },
-            },
-        ],
+                    name: 'img/[hash:10].[ext]'
+                }
+            }
+        ]
     },
     devServer: {
         open: {
-            target: ['index.html'],
+            target: ['index.html']
         },
         static: {
-            directory: path.join(__dirname, 'test'),
+            directory: path.join(__dirname, 'test')
         },
         port: 3000,
         hot: true,
-        proxy: {},
+        proxy: {}
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './test/index.html',
-        }),
-    ],
+            template: './test/index.html'
+        })
+    ]
 };

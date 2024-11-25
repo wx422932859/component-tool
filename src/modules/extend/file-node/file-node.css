@@ -80,15 +80,12 @@
     font-size: 12px;
 }
 
-.ly-file-node .fn_video-icon {
+.ly-file-node .fn_normal-icon {
     position: absolute;
-    width: 18px;
-    height: 18px;
-    fill: #fff;
+    width: 24px;
+    height: 24px;
 }
 
-.ly-file-node .fn_audio-icon {
-    position: absolute;
-    width: 18px;
-    height: 18px;
+.ly-file-node .fn_video-icon {
+    fill: #fff;
 }

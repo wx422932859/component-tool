@@ -4,36 +4,42 @@ const CPM = {
     MyCheckbox: '../component/MyCheckbox.vc'
 };
 
-// class App extends Component {
-//     constructor(selector) {
-//         super(selector);
-//     }
+class App extends Component {
+    constructor(selector) {
+        super(selector);
+    }
 
-//     _mounted() {
-//         this._children.t.load();
-//     }
+    _mounted() {
+        this._children.t.load();
+        this._children.fileUpload.load({
+            acceptType: ['zip', '7z', 'rar'],
+            errorCallback: (errorType) => {
+                console.log(errorType);
+            },
+            removeCallback: (fileNode) => {}
+        });
+    }
 
-//     load() {
-//         app._children.waterMark.load({
-//             parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
-//             show: true, // 是否显示水印
-//             position: 'absolute', // 水印显示方式，['fixed', 'absolute']
-//             getMarkInfo: () => {
-//                 return [new Time().format('yyyy-mm-dd HH:MM:SS')];
-//             }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
-//             interval: 1000, // 刷新频率，单位ms
-//         });
+    load() {
+        app._children.waterMark.load({
+            parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
+            show: true, // 是否显示水印
+            position: 'absolute', // 水印显示方式，['fixed', 'absolute']
+            getMarkInfo: () => {
+                return [new Time().format('yyyy-mm-dd HH:MM:SS')];
+            }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
+            interval: 1000 // 刷新频率，单位ms
+        });
 
-//         new Tip().warn('请重新输入！');
-//     }
+        new Tip().warn('请重新输入！');
+    }
 
-//     _listen_component(component, action, data) {
-//         console.log('App', component, action, data);
-//     }
-// }
+    _listen_component(component, action, data) {
+        console.log('App', component, action, data);
+    }
+}
 
-// var app = new App('#app');
+var app = new App('#app');
 
 // app.load();
-
-new Component('#app');
+// new Component('#app');

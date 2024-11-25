@@ -215,7 +215,7 @@ class Component {
     }
 
     /**
-     * 发送消息，仅限用于子组件给父组件传递消息，建议使用 _listen_component
+     * 发送消息，仅限用于子组件给父组件传递消息，建议使用 _send_component
      * @param {object} msg 消息
      */
     _send_msg(msg) {}
@@ -404,7 +404,7 @@ class Component {
     _load_children_component() {
         let componentList = this.node.attr('data-mounted');
 
-        if (componentList === null) {
+        if (componentList == null) {
             return;
         }
 
