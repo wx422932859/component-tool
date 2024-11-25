@@ -1,6 +1,6 @@
 {
     "name": "component-tool",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "description": "基于原生js的组件开发工具",
     "main": "index.js",
     "scripts": {

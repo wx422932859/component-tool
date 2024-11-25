@@ -1,7 +1,7 @@
 /*!
  * name: component-tool
- * package: 2024-10-10 23:09:03
- * version: 1.1.4
+ * package: 2024-11-25 08:05:96
+ * version: 1.1.5
  * exports: LY
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3439,7 +3439,9 @@ class MyNode {
             if (display === 'none') {
                 let cache = MyNode._cache.get(item) || {};
 
-                cache.display = cache.display || 'block';
+                if (cache.display == null || cache.display === '' || cache.display === 'none') {
+                    cache.display = 'block';
+                }
                 MyNode._cache.set(item, cache);
                 new MyNode(item).css('display', cache.display);
             }
@@ -7515,7 +7517,8 @@ class WaterMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
             .css('width', '100%', 'important')
             .css('height', '100%', 'important')
             .css('overflow', 'hidden', 'important')
-            .css('opacity', this.opacity, 'important');
+            .css('opacity', this.opacity, 'important')
+            .css('transform', 'none', 'important');
     }
 
     /**
@@ -7716,7 +7719,16 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"]
                 y: this.width / padding.y
             }; // 个数
 
-        this.node.css('display', 'block', 'important').css('visibility', 'visible', 'important');
+        this.node
+            .css('display', 'block', 'important')
+            .css('visibility', 'visible', 'important')
+            .css('position', 'absolute', 'important')
+            .css('top', '0', 'important')
+            .css('left', '0', 'important')
+            .css('width', 'unset', 'important')
+            .css('height', 'unset', 'important')
+            .css('opacity', 'unset', 'important')
+            .css('transform', 'none', 'important');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         context.font = `normal ${this.fontSize}px Regular`;
