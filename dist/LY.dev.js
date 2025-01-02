@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2024-11-25 08:05:96
+ * package: 2025-01-02 19:12:62
  * version: 1.1.5
  * exports: LY
  */
@@ -871,12 +871,20 @@ Ajax.load = function () {
         switch (Object.prototype.toString.call(data[key])) {
             case '[object Array]':
                 data[key].forEach((item) => {
-                    htmlStr += `<input name='${key}' value='${item}'/>`;
+                    if (typeof item === 'string' && item.includes("'")) {
+                        htmlStr += `<input name='${key}' value="${item}"/>`;
+                    } else {
+                        htmlStr += `<input name='${key}' value='${item}'/>`;
+                    }
                 });
                 break;
 
             default:
-                htmlStr += `<input name='${key}' value='${data[key]}'/>`;
+                if (typeof data[key] === 'string' && data[key].includes("'")) {
+                    htmlStr += `<input name='${key}' value="${data[key]}"/>`;
+                } else {
+                    htmlStr += `<input name='${key}' value='${data[key]}'/>`;
+                }
                 break;
         }
     }
@@ -3436,7 +3444,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display === 'none') {
+            if (display === 'none' || display === '') {
                 let cache = MyNode._cache.get(item) || {};
 
                 if (cache.display == null || cache.display === '' || cache.display === 'none') {
@@ -4046,21 +4054,23 @@ class Component {
     }
 
     /**
-     * 加载前操作
-     */
-    _before_load(...parameter) {
-        this._arguments = parameter;
-    }
-
-    /**
      * 加载
+     * @abstract
      */
     load() {}
 
     /**
      * 卸载
+     * @abstract
      */
     unload() {}
+
+    /**
+     * 加载前操作
+     */
+    _before_load(...parameter) {
+        this._arguments = parameter;
+    }
 
     /**
      * 子组件实例化完成后执行的函数
@@ -4297,6 +4307,31 @@ class Component {
                 console.log(componentName, '没有定义load方法！');
             }
         });
+    }
+
+    /**
+     * 新增生命周期函数，统一以 __ 为前缀
+     * 以下方法会根据组件的状态进行执行，无需手动触发，可以根据情况重写
+     */
+    /**
+     * 执行在 new () 之后，属性初始化、模板解析之前
+     */
+    __before_create() {
+        console.log(this.__proto__.constructor.name, '__before_create');
+    }
+
+    /**
+     * 执行在自身属性初始化、模板解析之后，挂载之前
+     */
+    __created() {
+        console.log(this.__proto__.constructor.name, '__created');
+    }
+
+    /**
+     * 执行在组件挂载之后
+     */
+    __mounted() {
+        console.log(this.__proto__.constructor.name, '__mounted');
     }
 }
 

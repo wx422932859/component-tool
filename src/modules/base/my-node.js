@@ -1036,7 +1036,7 @@ class MyNode {
         this.forEach((item) => {
             let display = window.getComputedStyle(item).display;
 
-            if (display === 'none') {
+            if (display === 'none' || display === '') {
                 let cache = MyNode._cache.get(item) || {};
 
                 if (cache.display == null || cache.display === '' || cache.display === 'none') {
