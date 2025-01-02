@@ -297,12 +297,20 @@ Ajax.load = function () {
         switch (Object.prototype.toString.call(data[key])) {
             case '[object Array]':
                 data[key].forEach((item) => {
-                    htmlStr += `<input name='${key}' value='${item}'/>`;
+                    if (typeof item === 'string' && item.includes("'")) {
+                        htmlStr += `<input name='${key}' value="${item}"/>`;
+                    } else {
+                        htmlStr += `<input name='${key}' value='${item}'/>`;
+                    }
                 });
                 break;
 
             default:
-                htmlStr += `<input name='${key}' value='${data[key]}'/>`;
+                if (typeof data[key] === 'string' && data[key].includes("'")) {
+                    htmlStr += `<input name='${key}' value="${data[key]}"/>`;
+                } else {
+                    htmlStr += `<input name='${key}' value='${data[key]}'/>`;
+                }
                 break;
         }
     }

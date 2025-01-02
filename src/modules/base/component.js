@@ -172,21 +172,23 @@ class Component {
     }
 
     /**
-     * 加载前操作
-     */
-    _before_load(...parameter) {
-        this._arguments = parameter;
-    }
-
-    /**
      * 加载
+     * @abstract
      */
     load() {}
 
     /**
      * 卸载
+     * @abstract
      */
     unload() {}
+
+    /**
+     * 加载前操作
+     */
+    _before_load(...parameter) {
+        this._arguments = parameter;
+    }
 
     /**
      * 子组件实例化完成后执行的函数
@@ -423,6 +425,31 @@ class Component {
                 console.log(componentName, '没有定义load方法！');
             }
         });
+    }
+
+    /**
+     * 新增生命周期函数，统一以 __ 为前缀
+     * 以下方法会根据组件的状态进行执行，无需手动触发，可以根据情况重写
+     */
+    /**
+     * 执行在 new () 之后，属性初始化、模板解析之前
+     */
+    __before_create() {
+        console.log(this.__proto__.constructor.name, '__before_create');
+    }
+
+    /**
+     * 执行在自身属性初始化、模板解析之后，挂载之前
+     */
+    __created() {
+        console.log(this.__proto__.constructor.name, '__created');
+    }
+
+    /**
+     * 执行在组件挂载之后
+     */
+    __mounted() {
+        console.log(this.__proto__.constructor.name, '__mounted');
     }
 }
 
