@@ -1,6 +1,10 @@
 import './fixed-thead-table.css';
 import Component from '../../base/component';
 
+/**
+ * 固定表头
+ * @deprecated
+ */
 class FixedTheadTable extends Component {
     constructor() {
         super();
