@@ -1,0 +1,77 @@
+.table-base {
+    --tb_border: 1px solid #ddd;
+    --tb_background-color_thead: #f5f4f9;
+    --tb_background-color_tbody: #fff;
+
+    position: relative;
+    min-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #333;
+    table-layout: fixed;
+}
+
+.table-base th {
+    font-size: 14px;
+    background-color: var(--tb_background-color_thead);
+}
+
+.table-base td {
+    background-color: var(--tb_background-color_tbody);
+}
+
+.table-base th,
+.table-base td {
+    position: relative;
+    height: 36px;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    border: none;
+}
+
+.table-base th::before,
+.table-base td::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: var(--tb_border);
+    border-left: var(--tb_border);
+    box-sizing: border-box;
+}
+
+/* 处理边框的显示 */
+.table-base th:last-child::before,
+.table-base td:last-child::before {
+    border-right: var(--tb_border);
+}
+
+.table-base > thead > tr:last-child > th::before,
+.table-base > tbody > tr:last-child > td::before {
+    border-bottom: var(--tb_border);
+}
+
+.table-base > tbody > tr:first-child > td::before {
+    border-top: none;
+}
+
+/* 无数据 */
+.table-base .tb_empty:empty::after {
+    content: '没有符合查询条件的结果！';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #bc4442 !important;
+}
