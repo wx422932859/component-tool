@@ -1,0 +1,91 @@
+.table-fixed-cell {
+    --tfc_background-color_thead: #f5f4f9;
+    --tfc_background-color_tbody: #fff;
+    --tfc_background-color_row: #f5f4f9;
+    --tfc_background-color_column: #fff;
+    --tfc_background-color_row-column: #f5f4f9;
+    --tfc_border: 1px solid #ddd;
+    --tfc_top_scroll: 0px;
+    --tfc_bottom_scroll: 0px;
+    --tfc_left_scroll: 0px;
+    --tfc_right_scroll: 0px;
+
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+.table-fixed-cell .tfc_table-base {
+    --tb_border: var(--tfc_border);
+    --tb_background-color_thead: var(--tfc_background-color_thead);
+    --tb_background-color_tbody: var(--tfc_background-color_tbody);
+}
+
+/* 固定行 */
+.table-fixed-cell .tfc_table-base .tfc_fixed-row {
+    position: relative;
+    top: var(--tfc_top_scroll);
+    z-index: 20;
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-last,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-last {
+    top: unset;
+    bottom: var(--tfc_bottom_scroll);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td {
+    background-color: var(--tfc_background-color_row);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split td::before {
+    border-bottom: var(--tfc_border);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split + tr > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split + tr > td::before,
+.table-fixed-cell .tfc_fixed-thead tbody > tr:first-child > td::before {
+    border-top: none;
+}
+
+/* 固定列 */
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column {
+    left: var(--tfc_left_scroll);
+    z-index: 10;
+    background-color: var(--tfc_background-color_column);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-last,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-last {
+    left: unset;
+    right: var(--tfc_right_scroll);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-split::before,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-split::before {
+    border-right: var(--tfc_border);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-split + th::before,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-split + td::before {
+    border-left: none;
+}
+
+/* 交叉位置 */
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th.tfc_fixed-column,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td.tfc_fixed-column {
+    background-color: var(--tfc_background-color_row-column);
+}
+
+/* 无数据 */
+.table-fixed-cell .tfc_table-base .tb_empty {
+    top: 0 !important;
+    left: 0 !important;
+    background-color: var(--tfc_background-color_tbody) !important;
+}

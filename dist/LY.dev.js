@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2025-01-14 19:19:15
+ * package: 2025-01-15 23:48:27
  * version: 1.1.7
  * exports: LY
  */
@@ -7338,13 +7338,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _file_preview_file_preview_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(46);
 /* harmony import */ var _file_upload_file_upload_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(49);
-/* harmony import */ var _fixed_table_cell_fixed_table_cell_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(55);
-/* harmony import */ var _fixed_thead_table_fixed_thead_table_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(58);
-/* harmony import */ var _pagination_pagination_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(61);
-/* harmony import */ var _popup_popup_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(64);
-/* harmony import */ var _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(67);
-/* harmony import */ var _scroll_top_scroll_top_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(70);
-/* harmony import */ var _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(73);
+/* harmony import */ var _fixed_thead_table_fixed_thead_table_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(55);
+/* harmony import */ var _pagination_pagination_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(58);
+/* harmony import */ var _popup_popup_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(61);
+/* harmony import */ var _scroll_bar_scroll_bar_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(64);
+/* harmony import */ var _scroll_top_scroll_top_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(67);
+/* harmony import */ var _table_base_table_base_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(70);
+/* harmony import */ var _table_fixed_cell_table_fixed_cell_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(73);
+/* harmony import */ var _water_mark_water_mark_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(76);
+
 
 
 
@@ -7374,46 +7376,52 @@ const Extend = {
     FileUpload: _file_upload_file_upload_js__WEBPACK_IMPORTED_MODULE_1__["default"],
 
     /**
-     * 固定单元格
-     * @see FixedTableCell
-     */
-    FixedTableCell: _fixed_table_cell_fixed_table_cell_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-
-    /**
      * 固定表头
      * @see FixedTheadTable
      */
-    FixedTheadTable: _fixed_thead_table_fixed_thead_table_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+    FixedTheadTable: _fixed_thead_table_fixed_thead_table_js__WEBPACK_IMPORTED_MODULE_2__["default"],
 
     /**
      * 页码
      * @see Pagination
      */
-    Pagination: _pagination_pagination_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+    Pagination: _pagination_pagination_js__WEBPACK_IMPORTED_MODULE_3__["default"],
 
     /**
      * 弹窗
      * @see Popup
      */
-    Popup: _popup_popup_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+    Popup: _popup_popup_js__WEBPACK_IMPORTED_MODULE_4__["default"],
 
     /**
      * 滚动条
      * @see ScrollBar
      */
-    ScrollBar: _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_6__["default"],
+    ScrollBar: _scroll_bar_scroll_bar_js__WEBPACK_IMPORTED_MODULE_5__["default"],
 
     /**
      * 置顶按钮
      * @see ScrollTop
      */
-    ScrollTop: _scroll_top_scroll_top_js__WEBPACK_IMPORTED_MODULE_7__["default"],
+    ScrollTop: _scroll_top_scroll_top_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+
+    /**
+     * 表格基类
+     * @see FixedTableCell
+     */
+    TableBase: _table_base_table_base_js__WEBPACK_IMPORTED_MODULE_7__["default"],
+
+    /**
+     * 固定单元格
+     * @see TableFixedCell
+     */
+    TableFixedCell: _table_fixed_cell_table_fixed_cell_js__WEBPACK_IMPORTED_MODULE_8__["default"],
 
     /**
      * 水印
      * @see WaterMark
      */
-    WaterMark: _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_8__["default"]
+    WaterMark: _water_mark_water_mark_js__WEBPACK_IMPORTED_MODULE_9__["default"]
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Extend);
@@ -8787,506 +8795,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56);
-/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
-
-
-
-class FixedTableCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
-    constructor() {
-        super();
-    }
-
-    /**
-     * 挂载成功
-     */
-    _mounted() {
-        this.monitor();
-        this.on();
-    }
-
-    /**
-     * 属性
-     */
-    monitor() {
-        /**
-         * @member {String[]} FIX_CELL_CLASS_NAME 固定单元格的类名
-         */
-        this.STYLE_CLASS_NAME = {
-            ROW: 'ftc_fixed-row',
-            ROW_LAST: 'ftc_fixed-row-last',
-            ROW_SPLIT: 'ftc_fixed-row-split',
-            COLUMN: 'ftc_fixed-column',
-            COLUMN_LAST: 'ftc_fixed-column-last',
-            COLUMN_SPLIT: 'ftc_fixed-column-split'
-        };
-
-        /**
-         * @member {String} thead 表头
-         */
-        this._observe('thead', (value) => {
-            this.node.find('thead').html(value);
-            this.columnCount = this.getThCount();
-        });
-
-        /**
-         * @member {string} tbody 表格内容
-         */
-        this._observe('tbody', (value) => {
-            if (value !== '') {
-                this.node.find('tbody').html(value);
-            } else {
-                this.node.find('tbody').html(`<tr><td class="ftc_empty" colspan="${this.columnCount}"></td></tr>`);
-            }
-            this.rowCount = this.node.find('tr').length;
-        });
-
-        /**
-         * @member {number} columnCount 列数
-         */
-        this._observe('columnCount', 0, (value) => {
-            this.fixedColumnList = this.formatFixedCellList(this.fixedColumn, value);
-        });
-
-        /**
-         * @member {number} rowCount 行数
-         */
-        this._observe('rowCount', 0, (value) => {
-            this.fixedRowList = this.formatFixedCellList(this.fixedRow, value);
-        });
-
-        /**
-         * @member {Object} fixedColumn 固定列
-         */
-        this._observe('fixedColumn', 0, (value) => {
-            this.fixedColumnList = this.formatFixedCellList(value, this.columnCount);
-        });
-
-        /**
-         * @member {Object[]} fixedColumnList 固定列数的位置
-         * @property {Number} fixedColumnList.start 起始位置
-         * @property {Number} fixedColumnList.end 结束位置
-         */
-        this._observe('fixedColumnList', [], () => {});
-
-        /**
-         * @member {Number} fixedRow 固定行
-         */
-        this._observe('fixedRow', 0, (value) => {
-            this.fixedRowList = this.formatFixedCellList(value, this.rowCount);
-        });
-
-        /**
-         * @member {Object[]} fixedRowList 固定列数的位置
-         * @property {Number} fixedRowList.start 起始位置
-         * @property {Number} fixedRowList.end 结束位置
-         */
-        this._observe('fixedRowList', [], () => {});
-    }
-
-    /**
-     * 事件
-     */
-    on() {
-        /**
-         * @event 监听滚动条
-         */
-        this.node.on('scroll', () => {
-            if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
-                return;
-            }
-
-            this.calcScroll();
-        });
-    }
-
-    /**
-     * 加载
-     * @param {Object} options 入参
-     * @param {Number} options.fixedColumn 固定列
-     * @param {Number} options.fixedRow 固定行
-     * @param {String} options.thead 表头
-     * @param {String} options.tbody 表格
-     */
-    load(options) {
-        this.fixedColumn = options.fixedColumn || 0;
-        this.fixedRow = options.fixedRow || 0;
-        this.thead = options.thead || '';
-        this.tbody = options.tbody || '';
-        this.renderFixedCell();
-    }
-
-    /**
-     * 格式化位置列表
-     */
-    formatFixedCellList(value, length) {
-        if (value === null) {
-            return [];
-        }
-
-        if (typeof value === 'number') {
-            if (value === 0 || length === 0 || Math.abs(value) === length) {
-                return [];
-            }
-            return [this.formatFixedCellListByNumber(value, length)];
-        }
-
-        if (Array.isArray(value)) {
-            return value.map((elem) => this.formatFixedCellListByNumber(elem, length));
-        }
-
-        return [value];
-    }
-
-    /**
-     * 格式化位置列表【数字类型】
-     */
-    formatFixedCellListByNumber(value, length) {
-        let start = 0,
-            end = value % length;
-
-        if (value < 0) {
-            start = (value + length) % length;
-            end = length;
-        }
-
-        return { start, end };
-    }
-
-    /**
-     * 获取列数
-     */
-    getThCount() {
-        let result = 0;
-
-        this.node.find('tr:first-child>th').forEach((item, index, list) => {
-            result += parseInt(list.eq(index).attr('colspan')) || 1;
-        });
-
-        return result;
-    }
-
-    /**
-     * 计算滚动位置
-     */
-    calcScroll() {
-        let { scrollWidth, scrollLeft, clientWidth, scrollHeight, scrollTop, clientHeight } = this.node[0];
-
-        this.node.css('--ftc_left_scroll', scrollLeft + 'px');
-        this.node.css('--ftc_right_scroll', scrollWidth - scrollLeft - clientWidth + 'px');
-        this.node.css('--ftc_top_scroll', scrollTop + 'px');
-        this.node.css('--ftc_bottom_scroll', scrollHeight - scrollTop - clientHeight + 'px');
-    }
-
-    /**
-     * 渲染固定位置
-     */
-    renderFixedCell() {
-        if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
-            return;
-        }
-
-        this.reset();
-        this.node.find('tr').forEach((trNode, index, trList) => {
-            this.renderFixedColumn(trList.eq(index).children());
-            this.renderFixedRow(trList);
-        });
-        this.calcScroll();
-    }
-
-    /**
-     * 渲染固定列
-     */
-    renderFixedColumn(nodeList) {
-        const { COLUMN, COLUMN_LAST, COLUMN_SPLIT } = this.STYLE_CLASS_NAME;
-
-        this.fixedColumnList.forEach((elem) => {
-            let direction = elem.end !== this.columnCount, // 方向，true => 从左往右，false => 从右往左
-                classList = direction ? [COLUMN] : [COLUMN, COLUMN_LAST];
-
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
-            }
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(COLUMN_SPLIT);
-        });
-    }
-
-    /**
-     * 渲染固定行
-     */
-    renderFixedRow(nodeList) {
-        const { ROW, ROW_LAST, ROW_SPLIT } = this.STYLE_CLASS_NAME;
-
-        this.fixedRowList.forEach((elem) => {
-            let direction = elem.end !== this.rowCount, // 方向，true => 从上往下，false => 从下往上
-                classList = direction ? [ROW] : [ROW, ROW_LAST];
-
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
-            }
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(ROW_SPLIT);
-        });
-
-        // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
-        if (this.node.find('thead>tr:last-child').hasClass(ROW_SPLIT)) {
-            this.node.find('.ftc_table').addClass('ftc_fixed-thead');
-        }
-    }
-
-    /**
-     * 重置
-     */
-    reset() {
-        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
-            this.node.find(`.${className}`).removeClass(className);
-        });
-    }
-}
-
-/**
- * @member {string} _template 模板
- */
-FixedTableCell._template = `<div class="fixed-table-cell"><table class="ftc_table"><thead></thead><tbody></tbody></table></div>`;
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FixedTableCell);
-
-
-/***/ }),
-/* 56 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(57);
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-
-var options = {};
-
-options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
-options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
-
-      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
-    
-options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
-options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
-
-
-
-
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_fixed_table_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
-
-
-/***/ }),
-/* 57 */
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-// Imports
-
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, `.fixed-table-cell {
-    --ftc_background-color_thead: #f5f4f9;
-    --ftc_background-color_tbody: #fff;
-    --ftc_background-color_row: #f5f4f9;
-    --ftc_background-color_column: #f5f4f9;
-    --ftc_border: 1px solid #ddd;
-    --ftc_top_scroll: 0px;
-    --ftc_bottom_scroll: 0px;
-    --ftc_left_scroll: 0px;
-    --ftc_right_scroll: 0px;
-
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    box-sizing: border-box;
-}
-
-.fixed-table-cell .ftc_table {
-    position: relative;
-    min-width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    color: #333;
-    table-layout: fixed;
-}
-
-.fixed-table-cell .ftc_table > thead > tr {
-    font-size: 14px;
-}
-
-.fixed-table-cell .ftc_table th {
-    font-family: 'Medium';
-    background-color: var(--ftc_background-color_thead);
-}
-
-.fixed-table-cell .ftc_table td {
-    background-color: var(--ftc_background-color_tbody);
-}
-
-.fixed-table-cell .ftc_table th,
-.fixed-table-cell .ftc_table td {
-    position: relative;
-    height: 36px;
-    padding: 8px;
-    text-align: center;
-    vertical-align: middle;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: default;
-    border: none;
-}
-
-/* 处理边框的显示 */
-.fixed-table-cell .ftc_table > thead > tr > th:last-child::after,
-.fixed-table-cell .ftc_table > tbody > tr > td:last-child::after {
-    border-right: var(--ftc_border);
-}
-
-.fixed-table-cell .ftc_table > tbody > tr:last-child > td::after {
-    border-bottom: var(--ftc_border);
-}
-
-.fixed-table-cell .ftc_table th::after,
-.fixed-table-cell .ftc_table td::after {
-    content: '';
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-top: var(--ftc_border);
-    border-left: var(--ftc_border);
-    box-sizing: border-box;
-}
-
-.fixed-table-cell .ftc_table .ftc_table-cell-hidden::after {
-    display: none;
-}
-
-/* 固定行 */
-.fixed-table-cell .ftc_table .ftc_fixed-row {
-    position: relative;
-    top: var(--ftc_top_scroll);
-    z-index: 18;
-}
-
-.fixed-table-cell .ftc_table .ftc_fixed-row-last,
-.fixed-table-cell .ftc_table .ftc_fixed-row-last {
-    top: unset;
-    bottom: var(--ftc_bottom_scroll);
-}
-
-.fixed-table-cell .ftc_table .ftc_fixed-row th,
-.fixed-table-cell .ftc_table .ftc_fixed-row td {
-    background-color: var(--ftc_background-color_row);
-}
-
-.fixed-table-cell .ftc_table .ftc_fixed-row-split th::after,
-.fixed-table-cell .ftc_table .ftc_fixed-row-split td::after {
-    border-bottom: var(--ftc_border);
-}
-
-.fixed-table-cell .ftc_table .ftc_fixed-row-split + tr > th::after,
-.fixed-table-cell .ftc_table .ftc_fixed-row-split + tr > td::after,
-.fixed-table-cell .ftc_fixed-thead tbody > tr:first-child > td::after {
-    border-top: none;
-}
-
-/* 固定列 */
-.fixed-table-cell .ftc_table th.ftc_fixed-column,
-.fixed-table-cell .ftc_table td.ftc_fixed-column {
-    left: var(--ftc_left_scroll);
-    z-index: 9;
-    background-color: var(--ftc_background-color_column);
-}
-
-.fixed-table-cell .ftc_table th.ftc_fixed-column-last,
-.fixed-table-cell .ftc_table td.ftc_fixed-column-last {
-    left: unset;
-    right: var(--ftc_right_scroll);
-}
-
-.fixed-table-cell .ftc_table th.ftc_fixed-column-split::after,
-.fixed-table-cell .ftc_table td.ftc_fixed-column-split::after {
-    border-right: var(--ftc_border);
-}
-
-.fixed-table-cell .ftc_table th.ftc_fixed-column-split + th::after,
-.fixed-table-cell .ftc_table td.ftc_fixed-column-split + td::after {
-    border-left: none;
-}
-
-/* 无数据 */
-.fixed-table-cell .ftc_table .ftc_empty {
-    top: 0 !important;
-    left: 0 !important;
-    background-color: var(--ftc_background-color_tbody) !important;
-}
-
-.fixed-table-cell .ftc_table .ftc_empty:empty::after {
-    content: '没有符合查询条件的结果！';
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    color: #bc4442 !important;
-}
-`, ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-/* 58 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(59);
+/* harmony import */ var _fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 
 
@@ -9420,7 +8929,7 @@ FixedTheadTable._template = `
 
 
 /***/ }),
-/* 59 */
+/* 56 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9440,7 +8949,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(60);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_fixed_thead_table_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(57);
 
       
       
@@ -9471,7 +8980,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /***/ }),
-/* 60 */
+/* 57 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9553,7 +9062,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.fixed-thead-table {
 
 
 /***/ }),
-/* 61 */
+/* 58 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9561,7 +9070,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _pagination_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(62);
+/* harmony import */ var _pagination_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(59);
 /* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 
 
@@ -9899,7 +9408,7 @@ class Pagination extends _base_component_js__WEBPACK_IMPORTED_MODULE_1__["defaul
 
 
 /***/ }),
-/* 62 */
+/* 59 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9919,7 +9428,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_pagination_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(63);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_pagination_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(60);
 
       
       
@@ -9950,7 +9459,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /***/ }),
-/* 63 */
+/* 60 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10038,7 +9547,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-pagination {
 
 
 /***/ }),
-/* 64 */
+/* 61 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10046,7 +9555,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(65);
+/* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(62);
 /* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 
 
@@ -10375,7 +9884,7 @@ Popup._hideAll = function () {
 
 
 /***/ }),
-/* 65 */
+/* 62 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10395,7 +9904,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_popup_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(66);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_popup_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(63);
 
       
       
@@ -10426,7 +9935,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /***/ }),
-/* 66 */
+/* 63 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10591,7 +10100,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-popup {
 
 
 /***/ }),
-/* 67 */
+/* 64 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10599,7 +10108,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _scroll_bar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(68);
+/* harmony import */ var _scroll_bar_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(65);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 /* harmony import */ var _base_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
 /* harmony import */ var _base_my_node__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
@@ -10918,7 +10427,7 @@ ScrollBar._template = `<div class="scroll-bar">
 
 
 /***/ }),
-/* 68 */
+/* 65 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10938,7 +10447,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(69);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_scroll_bar_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(66);
 
       
       
@@ -10969,7 +10478,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /***/ }),
-/* 69 */
+/* 66 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11029,7 +10538,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.scroll-bar {
 
 
 /***/ }),
-/* 70 */
+/* 67 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11037,7 +10546,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _scroll_top_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
+/* harmony import */ var _scroll_top_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(68);
 /* harmony import */ var _base_component_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
 
 
@@ -11130,7 +10639,7 @@ ScrollTop._template = `<div class="ly-form ly-scroll-top"><i class="ly-icon_arro
 
 
 /***/ }),
-/* 71 */
+/* 68 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11150,7 +10659,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_scroll_top_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(72);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_scroll_top_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(69);
 
       
       
@@ -11181,7 +10690,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /***/ }),
-/* 72 */
+/* 69 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11230,7 +10739,746 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.ly-scroll-top {
 
 
 /***/ }),
+/* 70 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _table_base_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
+
+
+
+/**
+ * 表格基类
+ */
+class TableBase extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    constructor() {
+        super();
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {Number} columnCount 列数
+         */
+        this._observe('columnCount', 0, () => {});
+
+        /**
+         * @member {Number} rowCount 行数
+         */
+        this._observe('rowCount', 0, () => {});
+
+        /**
+         * @member {String} thead 表头
+         */
+        this._observe('thead', '', (value) => {
+            this.node.find('thead').html(value || '');
+            this.columnCount = this.getThCount();
+        });
+
+        /**
+         * @member {Object[]} thList 表头数据
+         */
+        this._observe('thList', [], () => {
+            this.setThead();
+        });
+
+        /**
+         * @member {String} tbody 表格内容
+         */
+        this._observe('tbody', (value) => {
+            if (value !== '') {
+                this.node.find('tbody').html(value);
+            } else {
+                this.node.find('tbody').html(`<tr><td class="tb_empty" colspan="${this.columnCount}"></td></tr>`);
+            }
+            this.rowCount = this.node.find('tr').length;
+        });
+    }
+
+    /**
+     * 设置表头
+     */
+    setThead() {
+        if (!Array.isArray(this.thList) || this.thList.length === 0) {
+            return;
+        }
+
+        let htmlStr = '';
+
+        if (Array.isArray(this.thList[0])) {
+            // 多行
+            this.thList.forEach((elem) => {
+                htmlStr += this.setTheadTr(elem);
+            });
+        } else {
+            // 单行
+            htmlStr = this.setTheadTr(this.thList);
+        }
+
+        this.thead = htmlStr;
+    }
+
+    /**
+     * 渲染单行
+     */
+    setTheadTr(thList) {
+        if (!Array.isArray(thList) || thList.length === 0) {
+            return '';
+        }
+
+        let htmlStr = '';
+
+        thList.forEach((elem) => {
+            if (typeof elem === 'string') {
+                htmlStr += `<th title="${elem}">${elem}</th>`;
+            } else {
+                let propertyStr = '';
+
+                for (let key in elem) {
+                    if (key === 'title') {
+                        propertyStr += this.setDOMProperty(key, elem.title === null ? elem.content : elem.title);
+                    } else {
+                        propertyStr += this.setDOMProperty(key, elem[key]);
+                    }
+                }
+                htmlStr += `<th ${propertyStr} >${elem.content}</th>`;
+            }
+        });
+
+        return `<tr>${htmlStr}</tr>`;
+    }
+
+    /**
+     * 给元素添加属性
+     */
+    setDOMProperty(key, value) {
+        if (typeof value !== 'string' || (value.includes('"') && value.includes("'"))) {
+            return '';
+        }
+
+        if (value.includes('"') && !value.includes("'")) {
+            return ` ${key}='${value}' `;
+        }
+
+        return ` ${key}="${value}" `;
+    }
+
+    /**
+     * 获取列数
+     */
+    getThCount() {
+        let result = 0;
+
+        this.node.find('tr:first-child>th').forEach((item, index, list) => {
+            result += parseInt(list.eq(index).attr('colspan')) || 1;
+        });
+
+        return result;
+    }
+
+    /**
+     * 加载
+     * @param {Object} options 入参
+     * @param {String} options.thead 表头
+     */
+    load(options) {
+        if (options.thead !== null) {
+            this.thead = options.thead;
+        }
+        if (options.thList !== null) {
+            this.thList = options.thList;
+        }
+    }
+}
+
+/**
+ * @member {string} _template 模板
+ */
+TableBase._template = '<table class="table-base"><thead></thead><tbody></tbody></table>';
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableBase);
+
+
+/***/ }),
+/* 71 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_table_base_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(72);
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_table_base_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_table_base_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_table_base_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_table_base_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+/* 72 */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.table-base {
+    --tb_border: 1px solid #ddd;
+    --tb_background-color_thead: #f5f4f9;
+    --tb_background-color_tbody: #fff;
+
+    position: relative;
+    min-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #333;
+    table-layout: fixed;
+}
+
+.table-base th {
+    font-size: 14px;
+    background-color: var(--tb_background-color_thead);
+}
+
+.table-base td {
+    background-color: var(--tb_background-color_tbody);
+}
+
+.table-base th,
+.table-base td {
+    position: relative;
+    height: 36px;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    border: none;
+}
+
+.table-base th::before,
+.table-base td::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: var(--tb_border);
+    border-left: var(--tb_border);
+    box-sizing: border-box;
+}
+
+/* 处理边框的显示 */
+.table-base th:last-child::before,
+.table-base td:last-child::before {
+    border-right: var(--tb_border);
+}
+
+.table-base > thead > tr:last-child > th::before,
+.table-base > tbody > tr:last-child > td::before {
+    border-bottom: var(--tb_border);
+}
+
+.table-base > tbody > tr:first-child > td::before {
+    border-top: none;
+}
+
+/* 无数据 */
+.table-base .tb_empty:empty::after {
+    content: '没有符合查询条件的结果！';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #bc4442 !important;
+}
+`, ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
 /* 73 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(74);
+/* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
+/* harmony import */ var _table_base_table_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+
+
+
+
+class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] {
+    constructor() {
+        super();
+    }
+
+    /**
+     * 挂载成功
+     */
+    _mounted() {
+        this.monitor();
+        this.on();
+    }
+
+    /**
+     * 属性
+     */
+    monitor() {
+        /**
+         * @member {String[]} FIX_CELL_CLASS_NAME 固定单元格的类名
+         */
+        this.STYLE_CLASS_NAME = {
+            ROW: 'tfc_fixed-row',
+            ROW_LAST: 'tfc_fixed-row-last',
+            ROW_SPLIT: 'tfc_fixed-row-split',
+            COLUMN: 'tfc_fixed-column',
+            COLUMN_LAST: 'tfc_fixed-column-last',
+            COLUMN_SPLIT: 'tfc_fixed-column-split'
+        };
+
+        /**
+         * @member {Object} fixedColumn 固定列
+         */
+        this._observe('fixedColumn', 0, (value) => {
+            this.fixedColumnList = this.formatFixedCellList(value, this._children.tableBase.columnCount);
+        });
+
+        /**
+         * @member {Object[]} fixedColumnList 固定列数的位置
+         * @property {Number} fixedColumnList.start 起始位置
+         * @property {Number} fixedColumnList.end 结束位置
+         */
+        this._observe('fixedColumnList', [], () => {});
+
+        /**
+         * @member {Number} fixedRow 固定行
+         */
+        this._observe('fixedRow', 0, (value) => {
+            this.fixedRowList = this.formatFixedCellList(value, this._children.tableBase.rowCount);
+        });
+
+        /**
+         * @member {Object[]} fixedRowList 固定列数的位置
+         * @property {Number} fixedRowList.start 起始位置
+         * @property {Number} fixedRowList.end 结束位置
+         */
+        this._observe('fixedRowList', [], () => {});
+    }
+
+    /**
+     * 事件
+     */
+    on() {
+        /**
+         * @event 监听滚动条
+         */
+        this.node.on('scroll', () => {
+            if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
+                return;
+            }
+
+            this.calcScroll();
+        });
+    }
+
+    /**
+     * 加载
+     * @param {Object} options 入参
+     * @param {Number} options.fixedColumn 固定列
+     * @param {Number} options.fixedRow 固定行
+     * @param {String} options.thead 表头
+     * @param {String} options.tbody 表格
+     */
+    load(options) {
+        this.storage = options;
+        this.renderThead();
+    }
+
+    /**
+     * 渲染标题
+     */
+    renderThead() {
+        if (this.storage.thead !== null) {
+            this._children.tableBase.thead = this.storage.thead;
+        }
+        if (this.storage.thList !== null) {
+            this._children.tableBase.thList = this.storage.thList;
+        }
+        this.fixedColumn = this.storage.fixedColumn || 0;
+        this.renderFixedCell();
+    }
+
+    /**
+     * 渲染内容
+     */
+    renderTbody(tbody) {
+        this._children.tableBase.tbody = tbody;
+        this.fixedRow = this.storage.fixedRow || 0;
+        this.renderFixedCell();
+    }
+
+    /**
+     * 格式化位置列表
+     */
+    formatFixedCellList(value, length) {
+        if (value === null) {
+            return [];
+        }
+
+        if (typeof value === 'number') {
+            if (value === 0 || length === 0 || Math.abs(value) === length) {
+                return [];
+            }
+            return [this.formatFixedCellListByNumber(value, length)];
+        }
+
+        if (Array.isArray(value)) {
+            return value.map((elem) => this.formatFixedCellListByNumber(elem, length));
+        }
+
+        return [value];
+    }
+
+    /**
+     * 格式化位置列表【数字类型】
+     */
+    formatFixedCellListByNumber(value, length) {
+        let start = 0,
+            end = value % length;
+
+        if (value < 0) {
+            start = (value + length) % length;
+            end = length;
+        }
+
+        return { start, end };
+    }
+
+    /**
+     * 计算滚动位置
+     */
+    calcScroll() {
+        let { scrollWidth, scrollLeft, clientWidth, scrollHeight, scrollTop, clientHeight } = this.node[0];
+
+        this.node.css('--tfc_left_scroll', scrollLeft + 'px');
+        this.node.css('--tfc_right_scroll', scrollWidth - scrollLeft - clientWidth + 'px');
+        this.node.css('--tfc_top_scroll', scrollTop + 'px');
+        this.node.css('--tfc_bottom_scroll', scrollHeight - scrollTop - clientHeight + 'px');
+    }
+
+    /**
+     * 渲染固定位置
+     */
+    renderFixedCell() {
+        if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
+            return;
+        }
+
+        this.reset();
+        this.node.find('tr').forEach((trNode, index, trList) => {
+            this.renderFixedColumn(trList.eq(index).children());
+            this.renderFixedRow(trList);
+        });
+        this.calcScroll();
+    }
+
+    /**
+     * 渲染固定列
+     */
+    renderFixedColumn(nodeList) {
+        const { COLUMN, COLUMN_LAST, COLUMN_SPLIT } = this.STYLE_CLASS_NAME;
+
+        this.fixedColumnList.forEach((elem) => {
+            let direction = elem.end !== this._children.tableBase.columnCount, // 方向，true => 从左往右，false => 从右往左
+                classList = direction ? [COLUMN] : [COLUMN, COLUMN_LAST];
+
+            for (let i = elem.start; i < elem.end; i++) {
+                nodeList.eq(i).addClass(classList);
+            }
+            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(COLUMN_SPLIT);
+        });
+    }
+
+    /**
+     * 渲染固定行
+     */
+    renderFixedRow(nodeList) {
+        const { ROW, ROW_LAST, ROW_SPLIT } = this.STYLE_CLASS_NAME;
+
+        this.fixedRowList.forEach((elem) => {
+            let direction = elem.end !== this._children.tableBase.rowCount, // 方向，true => 从上往下，false => 从下往上
+                classList = direction ? [ROW] : [ROW, ROW_LAST];
+
+            for (let i = elem.start; i < elem.end; i++) {
+                nodeList.eq(i).addClass(classList);
+            }
+            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(ROW_SPLIT);
+        });
+
+        // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
+        if (this.node.find('thead>tr:last-child').hasClass(ROW_SPLIT)) {
+            this.node.find('.tfc_table').addClass('tfc_fixed-thead');
+        }
+    }
+
+    /**
+     * 重置
+     */
+    reset() {
+        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
+            this.node.find(`.${className}`).removeClass(className);
+        });
+    }
+}
+
+/**
+ * @member {string} _template 模板
+ */
+TableFixedCell._template = `<div class="table-fixed-cell"><slot class="tfc_table-base" data-component="TableBase"></slot></div>`;
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableFixedCell);
+
+
+/***/ }),
+/* 74 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(6);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(75);
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_table_fixed_cell_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+/* 75 */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.table-fixed-cell {
+    --tfc_background-color_thead: #f5f4f9;
+    --tfc_background-color_tbody: #fff;
+    --tfc_background-color_row: #f5f4f9;
+    --tfc_background-color_column: #fff;
+    --tfc_background-color_row-column: #f5f4f9;
+    --tfc_border: 1px solid #ddd;
+    --tfc_top_scroll: 0px;
+    --tfc_bottom_scroll: 0px;
+    --tfc_left_scroll: 0px;
+    --tfc_right_scroll: 0px;
+
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+.table-fixed-cell .tfc_table-base {
+    --tb_border: var(--tfc_border);
+    --tb_background-color_thead: var(--tfc_background-color_thead);
+    --tb_background-color_tbody: var(--tfc_background-color_tbody);
+}
+
+/* 固定行 */
+.table-fixed-cell .tfc_table-base .tfc_fixed-row {
+    position: relative;
+    top: var(--tfc_top_scroll);
+    z-index: 20;
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-last,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-last {
+    top: unset;
+    bottom: var(--tfc_bottom_scroll);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td {
+    background-color: var(--tfc_background-color_row);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split td::before {
+    border-bottom: var(--tfc_border);
+}
+
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split + tr > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-split + tr > td::before,
+.table-fixed-cell .tfc_fixed-thead tbody > tr:first-child > td::before {
+    border-top: none;
+}
+
+/* 固定列 */
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column {
+    left: var(--tfc_left_scroll);
+    z-index: 10;
+    background-color: var(--tfc_background-color_column);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-last,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-last {
+    left: unset;
+    right: var(--tfc_right_scroll);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-split::before,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-split::before {
+    border-right: var(--tfc_border);
+}
+
+.table-fixed-cell .tfc_table-base th.tfc_fixed-column-split + th::before,
+.table-fixed-cell .tfc_table-base td.tfc_fixed-column-split + td::before {
+    border-left: none;
+}
+
+/* 交叉位置 */
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th.tfc_fixed-column,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td.tfc_fixed-column {
+    background-color: var(--tfc_background-color_row-column);
+}
+
+/* 无数据 */
+.table-fixed-cell .tfc_table-base .tb_empty {
+    top: 0 !important;
+    left: 0 !important;
+    background-color: var(--tfc_background-color_tbody) !important;
+}
+`, ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+/* 76 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11631,7 +11879,7 @@ class CanvasMark extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"]
 
 
 /***/ }),
-/* 74 */
+/* 77 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11998,7 +12246,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_base_watcher_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(22);
 /* harmony import */ var _modules_form_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(23);
 /* harmony import */ var _modules_extend_index_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(45);
-/* harmony import */ var _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(74);
+/* harmony import */ var _modules_base_xml_node_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(77);
 
 
 

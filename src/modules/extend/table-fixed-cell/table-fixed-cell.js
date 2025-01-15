@@ -1,7 +1,8 @@
-import './fixed-table-cell.css';
+import './table-fixed-cell.css';
 import Component from '../../base/component';
+import TableBase from '../table-base/table-base';
 
-class FixedTableCell extends Component {
+class TableFixedCell extends Component {
     constructor() {
         super();
     }
@@ -22,53 +23,19 @@ class FixedTableCell extends Component {
          * @member {String[]} FIX_CELL_CLASS_NAME 固定单元格的类名
          */
         this.STYLE_CLASS_NAME = {
-            ROW: 'ftc_fixed-row',
-            ROW_LAST: 'ftc_fixed-row-last',
-            ROW_SPLIT: 'ftc_fixed-row-split',
-            COLUMN: 'ftc_fixed-column',
-            COLUMN_LAST: 'ftc_fixed-column-last',
-            COLUMN_SPLIT: 'ftc_fixed-column-split'
+            ROW: 'tfc_fixed-row',
+            ROW_LAST: 'tfc_fixed-row-last',
+            ROW_SPLIT: 'tfc_fixed-row-split',
+            COLUMN: 'tfc_fixed-column',
+            COLUMN_LAST: 'tfc_fixed-column-last',
+            COLUMN_SPLIT: 'tfc_fixed-column-split'
         };
-
-        /**
-         * @member {String} thead 表头
-         */
-        this._observe('thead', (value) => {
-            this.node.find('thead').html(value);
-            this.columnCount = this.getThCount();
-        });
-
-        /**
-         * @member {string} tbody 表格内容
-         */
-        this._observe('tbody', (value) => {
-            if (value !== '') {
-                this.node.find('tbody').html(value);
-            } else {
-                this.node.find('tbody').html(`<tr><td class="ftc_empty" colspan="${this.columnCount}"></td></tr>`);
-            }
-            this.rowCount = this.node.find('tr').length;
-        });
-
-        /**
-         * @member {number} columnCount 列数
-         */
-        this._observe('columnCount', 0, (value) => {
-            this.fixedColumnList = this.formatFixedCellList(this.fixedColumn, value);
-        });
-
-        /**
-         * @member {number} rowCount 行数
-         */
-        this._observe('rowCount', 0, (value) => {
-            this.fixedRowList = this.formatFixedCellList(this.fixedRow, value);
-        });
 
         /**
          * @member {Object} fixedColumn 固定列
          */
         this._observe('fixedColumn', 0, (value) => {
-            this.fixedColumnList = this.formatFixedCellList(value, this.columnCount);
+            this.fixedColumnList = this.formatFixedCellList(value, this._children.tableBase.columnCount);
         });
 
         /**
@@ -82,7 +49,7 @@ class FixedTableCell extends Component {
          * @member {Number} fixedRow 固定行
          */
         this._observe('fixedRow', 0, (value) => {
-            this.fixedRowList = this.formatFixedCellList(value, this.rowCount);
+            this.fixedRowList = this.formatFixedCellList(value, this._children.tableBase.rowCount);
         });
 
         /**
@@ -118,10 +85,30 @@ class FixedTableCell extends Component {
      * @param {String} options.tbody 表格
      */
     load(options) {
-        this.fixedColumn = options.fixedColumn || 0;
-        this.fixedRow = options.fixedRow || 0;
-        this.thead = options.thead || '';
-        this.tbody = options.tbody || '';
+        this.storage = options;
+        this.renderThead();
+    }
+
+    /**
+     * 渲染标题
+     */
+    renderThead() {
+        if (this.storage.thead !== null) {
+            this._children.tableBase.thead = this.storage.thead;
+        }
+        if (this.storage.thList !== null) {
+            this._children.tableBase.thList = this.storage.thList;
+        }
+        this.fixedColumn = this.storage.fixedColumn || 0;
+        this.renderFixedCell();
+    }
+
+    /**
+     * 渲染内容
+     */
+    renderTbody(tbody) {
+        this._children.tableBase.tbody = tbody;
+        this.fixedRow = this.storage.fixedRow || 0;
         this.renderFixedCell();
     }
 
@@ -163,28 +150,15 @@ class FixedTableCell extends Component {
     }
 
     /**
-     * 获取列数
-     */
-    getThCount() {
-        let result = 0;
-
-        this.node.find('tr:first-child>th').forEach((item, index, list) => {
-            result += parseInt(list.eq(index).attr('colspan')) || 1;
-        });
-
-        return result;
-    }
-
-    /**
      * 计算滚动位置
      */
     calcScroll() {
         let { scrollWidth, scrollLeft, clientWidth, scrollHeight, scrollTop, clientHeight } = this.node[0];
 
-        this.node.css('--ftc_left_scroll', scrollLeft + 'px');
-        this.node.css('--ftc_right_scroll', scrollWidth - scrollLeft - clientWidth + 'px');
-        this.node.css('--ftc_top_scroll', scrollTop + 'px');
-        this.node.css('--ftc_bottom_scroll', scrollHeight - scrollTop - clientHeight + 'px');
+        this.node.css('--tfc_left_scroll', scrollLeft + 'px');
+        this.node.css('--tfc_right_scroll', scrollWidth - scrollLeft - clientWidth + 'px');
+        this.node.css('--tfc_top_scroll', scrollTop + 'px');
+        this.node.css('--tfc_bottom_scroll', scrollHeight - scrollTop - clientHeight + 'px');
     }
 
     /**
@@ -210,7 +184,7 @@ class FixedTableCell extends Component {
         const { COLUMN, COLUMN_LAST, COLUMN_SPLIT } = this.STYLE_CLASS_NAME;
 
         this.fixedColumnList.forEach((elem) => {
-            let direction = elem.end !== this.columnCount, // 方向，true => 从左往右，false => 从右往左
+            let direction = elem.end !== this._children.tableBase.columnCount, // 方向，true => 从左往右，false => 从右往左
                 classList = direction ? [COLUMN] : [COLUMN, COLUMN_LAST];
 
             for (let i = elem.start; i < elem.end; i++) {
@@ -227,7 +201,7 @@ class FixedTableCell extends Component {
         const { ROW, ROW_LAST, ROW_SPLIT } = this.STYLE_CLASS_NAME;
 
         this.fixedRowList.forEach((elem) => {
-            let direction = elem.end !== this.rowCount, // 方向，true => 从上往下，false => 从下往上
+            let direction = elem.end !== this._children.tableBase.rowCount, // 方向，true => 从上往下，false => 从下往上
                 classList = direction ? [ROW] : [ROW, ROW_LAST];
 
             for (let i = elem.start; i < elem.end; i++) {
@@ -238,7 +212,7 @@ class FixedTableCell extends Component {
 
         // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
         if (this.node.find('thead>tr:last-child').hasClass(ROW_SPLIT)) {
-            this.node.find('.ftc_table').addClass('ftc_fixed-thead');
+            this.node.find('.tfc_table').addClass('tfc_fixed-thead');
         }
     }
 
@@ -255,6 +229,6 @@ class FixedTableCell extends Component {
 /**
  * @member {string} _template 模板
  */
-FixedTableCell._template = `<div class="fixed-table-cell"><table class="ftc_table"><thead></thead><tbody></tbody></table></div>`;
+TableFixedCell._template = `<div class="table-fixed-cell"><slot class="tfc_table-base" data-component="TableBase"></slot></div>`;
 
-export default FixedTableCell;
+export default TableFixedCell;
