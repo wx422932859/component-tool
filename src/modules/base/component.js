@@ -16,28 +16,56 @@ class Component {
      * @param {String|Node|MyNode} selector 选择器
      */
     constructor(selector) {
-        let self = this,
-            _constructor = this.__proto__.constructor;
-
-        selector = selector || _constructor._template.trim();
-
         /**
          * @member {MyNode} node 组件根节点
          * @memberof Component
          * @inner
          */
-        this.node = new MyNode(selector);
+        this.node = new MyNode(selector || this.constructor._template.trim());
 
-        /**
-         * 添加版本号
-         */
-        let tempConstructor = _constructor;
-        while (tempConstructor !== Component) {
-            if (tempConstructor._version !== undefined) {
-                this.node.attr(`vc-${tempConstructor._version}`, '');
-            }
-            tempConstructor = tempConstructor.__proto__;
+        try {
+            this._init_extends_property();
+            this._mount_component();
+        } catch (err) {
+            console.log(err);
         }
+    }
+
+    /**
+     * 初始化继承属性和版本号
+     */
+    _init_extends_property() {
+        let extendsClass = this.__proto__,
+            extendsStack = [];
+
+        while (extendsClass) {
+            // 确保执行的是自己定义的方法，避免重复执行
+            if (
+                extendsClass.hasOwnProperty('_extends_property') &&
+                typeof extendsClass._extends_property === 'function'
+            ) {
+                extendsStack.push(extendsClass._extends_property);
+            }
+
+            // _version 是类的属性
+            if (extendsClass.constructor.hasOwnProperty('_version')) {
+                this.node.attr(`vc-${extendsClass.constructor._version}`, '');
+            }
+
+            extendsClass = extendsClass.__proto__;
+        }
+        // 让方法按继承顺序执行
+        for (let i = extendsStack.length - 1; i > -1; i--) {
+            extendsStack[i].call(this);
+        }
+    }
+
+    /**
+     * 继承属性
+     * @abstract
+     */
+    _extends_property() {
+        let self = this;
 
         /**
          * @member {EventBus} _bus 事件总线
@@ -86,8 +114,7 @@ class Component {
 
         /**
          * @member {Function} _destroyed 销毁
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         Object.defineProperty(this, '_destroyed', {
             writable: false,
@@ -132,8 +159,7 @@ class Component {
 
         /**
          * @member {Function} _o 监听器
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         Object.defineProperty(this, '_o', {
             value: new Observe({
@@ -144,17 +170,8 @@ class Component {
         });
 
         /**
-         * @event 增加默认全局事件监听
-         */
-        this._bus.on(_constructor.name, (msg) => {
-            const { component, action, data } = msg;
-            this._listen_component(component, action, data);
-        });
-
-        /**
          * @member {Proxy} load 加载
-         * @memberof Component
-         * @inner
+         * @memberof Component#
          */
         Object.defineProperty(this, 'load', {
             writable: false,
@@ -168,7 +185,13 @@ class Component {
             })
         });
 
-        this._mount_component();
+        /**
+         * @event 增加默认全局事件监听
+         */
+        this._bus.on(this.constructor.name, (msg) => {
+            const { component, action, data } = msg;
+            this._listen_component(component, action, data);
+        });
     }
 
     /**
@@ -186,9 +209,7 @@ class Component {
     /**
      * 加载前操作
      */
-    _before_load(...parameter) {
-        this._arguments = parameter;
-    }
+    _before_load() {}
 
     /**
      * 子组件实例化完成后执行的函数
@@ -340,8 +361,12 @@ class Component {
         let instantiateName = slot.attr('data-name'), // 实例化名称
             className = slot.attr('class'); // 插槽绑定的类
 
-        // 定义实例化名称
-        instantiateName = instantiateName || componentName.replace(componentName[0], componentName[0].toLowerCase());
+        // 若没有定义实例化名称，则将类名首字母小写作为为、实例化名称
+        if (instantiateName === null || instantiateName === '') {
+            let realComponentName = /[A-Za-z]*$/.exec(componentName)[0];
+
+            instantiateName = realComponentName.replace(realComponentName[0], realComponentName[0].toLowerCase());
+        }
 
         if (
             eval(`typeof ${componentName} == 'undefined'`) ||
@@ -435,21 +460,21 @@ class Component {
      * 执行在 new () 之后，属性初始化、模板解析之前
      */
     __before_create() {
-        console.log(this.__proto__.constructor.name, '__before_create');
+        console.log(this.constructor.name, '__before_create');
     }
 
     /**
      * 执行在自身属性初始化、模板解析之后，挂载之前
      */
     __created() {
-        console.log(this.__proto__.constructor.name, '__created');
+        console.log(this.constructor.name, '__created');
     }
 
     /**
      * 执行在组件挂载之后
      */
     __mounted() {
-        console.log(this.__proto__.constructor.name, '__mounted');
+        console.log(this.constructor.name, '__mounted');
     }
 }
 

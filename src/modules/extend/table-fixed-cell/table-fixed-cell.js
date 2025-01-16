@@ -1,6 +1,6 @@
 import './table-fixed-cell.css';
 import Component from '../../base/component';
-import TableBase from '../table-base/table-base';
+import Util from '../../base/util';
 
 class TableFixedCell extends Component {
     constructor() {
@@ -34,8 +34,8 @@ class TableFixedCell extends Component {
         /**
          * @member {Object} fixedColumn 固定列
          */
-        this._observe('fixedColumn', 0, (value) => {
-            this.fixedColumnList = this.formatFixedCellList(value, this._children.tableBase.columnCount);
+        this._observe('fixedColumn', 0, () => {
+            this.delayRenderFixedCell();
         });
 
         /**
@@ -48,8 +48,8 @@ class TableFixedCell extends Component {
         /**
          * @member {Number} fixedRow 固定行
          */
-        this._observe('fixedRow', 0, (value) => {
-            this.fixedRowList = this.formatFixedCellList(value, this._children.tableBase.rowCount);
+        this._observe('fixedRow', 0, () => {
+            this.delayRenderFixedCell();
         });
 
         /**
@@ -58,6 +58,11 @@ class TableFixedCell extends Component {
          * @property {Number} fixedRowList.end 结束位置
          */
         this._observe('fixedRowList', [], () => {});
+
+        /**
+         * 触发渲染固定单元可能会频发，采用防抖的形式处理
+         */
+        this.delayRenderFixedCell = Util.debounce(() => this.renderFixedCell(), 50);
     }
 
     /**
@@ -79,37 +84,34 @@ class TableFixedCell extends Component {
     /**
      * 加载
      * @param {Object} options 入参
-     * @param {Number} options.fixedColumn 固定列
-     * @param {Number} options.fixedRow 固定行
      * @param {String} options.thead 表头
      * @param {String} options.tbody 表格
+     * @param {Number} options.fixedColumn 固定列
+     * @param {Number} options.fixedRow 固定行
      */
     load(options) {
-        this.storage = options;
-        this.renderThead();
+        this.fixedColumn = options.fixedColumn || 0;
+        this.fixedRow = options.fixedRow || 0;
+        this.renderThead(options.thead);
+        this.renderTbody(options.tbody);
     }
 
     /**
      * 渲染标题
      */
-    renderThead() {
-        if (this.storage.thead !== null) {
-            this._children.tableBase.thead = this.storage.thead;
-        }
-        if (this.storage.thList !== null) {
-            this._children.tableBase.thList = this.storage.thList;
-        }
-        this.fixedColumn = this.storage.fixedColumn || 0;
-        this.renderFixedCell();
+    renderThead(thead) {
+        this._children.tableBase.thead = thead || '';
+        this.delayRenderFixedCell();
     }
 
     /**
      * 渲染内容
+     * @param {Object} tbody 内容
+     * @param {Number} fixedRow 固定行数
      */
     renderTbody(tbody) {
-        this._children.tableBase.tbody = tbody;
-        this.fixedRow = this.storage.fixedRow || 0;
-        this.renderFixedCell();
+        this._children.tableBase.tbody = tbody || '';
+        this.delayRenderFixedCell();
     }
 
     /**
@@ -128,7 +130,12 @@ class TableFixedCell extends Component {
         }
 
         if (Array.isArray(value)) {
-            return value.map((elem) => this.formatFixedCellListByNumber(elem, length));
+            return value.map((elem) => {
+                if (typeof elem === 'number') {
+                    return this.formatFixedCellListByNumber(elem, length);
+                }
+                return elem;
+            });
         }
 
         return [value];
@@ -165,11 +172,15 @@ class TableFixedCell extends Component {
      * 渲染固定位置
      */
     renderFixedCell() {
+        this.fixedRowList = this.formatFixedCellList(this.fixedRow, this._children.tableBase.rowCount);
+        this.fixedColumnList = this.formatFixedCellList(this.fixedColumn, this._children.tableBase.columnCount);
         if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
             return;
         }
 
-        this.reset();
+        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
+            this.node.find(`.${className}`).removeClass(className);
+        });
         this.node.find('tr').forEach((trNode, index, trList) => {
             this.renderFixedColumn(trList.eq(index).children());
             this.renderFixedRow(trList);
@@ -190,6 +201,10 @@ class TableFixedCell extends Component {
             for (let i = elem.start; i < elem.end; i++) {
                 nodeList.eq(i).addClass(classList);
             }
+
+            // 处理单元格隐藏的情况
+            let fixedColumn;
+
             nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(COLUMN_SPLIT);
         });
     }
@@ -211,24 +226,18 @@ class TableFixedCell extends Component {
         });
 
         // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
-        if (this.node.find('thead>tr:last-child').hasClass(ROW_SPLIT)) {
+        if (
+            this.node.find('thead>tr:last-child').hasClass(ROW) &&
+            !this.node.find('tbody>tr:first-child').hasClass(ROW)
+        ) {
             this.node.find('.tfc_table').addClass('tfc_fixed-thead');
         }
-    }
-
-    /**
-     * 重置
-     */
-    reset() {
-        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
-            this.node.find(`.${className}`).removeClass(className);
-        });
     }
 }
 
 /**
  * @member {string} _template 模板
  */
-TableFixedCell._template = `<div class="table-fixed-cell"><slot class="tfc_table-base" data-component="TableBase"></slot></div>`;
+TableFixedCell._template = `<div class="table-fixed-cell"><slot class="tfc_table-base" data-component="LY.Extend.TableBase"></slot></div>`;
 
 export default TableFixedCell;
