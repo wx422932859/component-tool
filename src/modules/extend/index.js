@@ -1,13 +1,12 @@
 import FilePreview from './file-preview/file-preview.js';
 import FileUpload from './file-upload/file-upload.js';
+import FixedTableCell from './fixed-table-cell/fixed-table-cell.js';
 import FixedTheadTable from './fixed-thead-table/fixed-thead-table.js';
 import Pagination from './pagination/pagination.js';
 import Popup from './popup/popup.js';
-import ScrollBar from './scroll-bar/scroll-bar.js';
+import ScrollBar from './scroll-bar/scroll-bar';
 import ScrollTop from './scroll-top/scroll-top.js';
-import TableBase from './table-base/table-base.js';
-import TableFixedCell from './table-fixed-cell/table-fixed-cell.js';
-import WaterMark from './water-mark/water-mark.js';
+import WaterMark from './water-mark/water-mark';
 
 /**
  * 扩展功能
@@ -26,6 +25,12 @@ const Extend = {
      * @see FileUpload
      */
     FileUpload,
+
+    /**
+     * 固定单元格
+     * @see FixedTableCell
+     */
+    FixedTableCell,
 
     /**
      * 固定表头
@@ -56,18 +61,6 @@ const Extend = {
      * @see ScrollTop
      */
     ScrollTop,
-
-    /**
-     * 表格基类
-     * @see FixedTableCell
-     */
-    TableBase,
-
-    /**
-     * 固定单元格
-     * @see TableFixedCell
-     */
-    TableFixedCell,
 
     /**
      * 水印
