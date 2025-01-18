@@ -26,9 +26,11 @@ class TableFixedCell extends Component {
             ROW: 'tfc_fixed-row',
             ROW_LAST: 'tfc_fixed-row-last',
             ROW_SPLIT: 'tfc_fixed-row-split',
+            ROW_SPLIT_NEXT: 'tfc_fixed-row-split-next',
             COLUMN: 'tfc_fixed-column',
             COLUMN_LAST: 'tfc_fixed-column-last',
-            COLUMN_SPLIT: 'tfc_fixed-column-split'
+            COLUMN_SPLIT: 'tfc_fixed-column-split',
+            COLUMN_SPLIT_NEXT: 'tfc_fixed-column-split-next'
         };
 
         /**
@@ -116,17 +118,27 @@ class TableFixedCell extends Component {
 
     /**
      * 格式化位置列表
+     * @param {String} type 类型（ROW / COLUMN）
      */
-    formatFixedCellList(value, length) {
-        if (value === null) {
+    formatFixedCellList(type) {
+        let value = this.fixedColumn,
+            length = this._children.tableBase.columnCount;
+
+        if (type === 'ROW') {
+            value = this.fixedRow;
+            length = this._children.tableBase.rowCount;
+        }
+
+        if (value === null || value === 0 || length === 0 || Math.abs(value) === length) {
             return [];
         }
 
         if (typeof value === 'number') {
-            if (value === 0 || length === 0 || Math.abs(value) === length) {
-                return [];
-            }
             return [this.formatFixedCellListByNumber(value, length)];
+        }
+
+        if (typeof value === 'string') {
+            return this.formatFixedCellListBySelector(value, type);
         }
 
         if (Array.isArray(value)) {
@@ -142,7 +154,7 @@ class TableFixedCell extends Component {
     }
 
     /**
-     * 格式化位置列表【数字类型】
+     * 格式化位置列表【数字】
      */
     formatFixedCellListByNumber(value, length) {
         let start = 0,
@@ -154,6 +166,44 @@ class TableFixedCell extends Component {
         }
 
         return { start, end };
+    }
+
+    /**
+     * 格式化位置列表【选择器】
+     * @param {String} selector 选择器
+     * @param {String} type 类型
+     */
+    formatFixedCellListBySelector(selector, type) {
+        let nodeList = this.node.find(selector),
+            positionStack = [];
+
+        if (type === 'ROW') {
+            // 针对的是行
+            let trList = this.node.find('tr');
+
+            nodeList = nodeList.matches('tr');
+            nodeList.forEach((elem) => {
+                let position = trList.indexOf(elem);
+                if (!positionStack.includes(position)) {
+                    positionStack.push(position);
+                }
+            });
+        } else {
+            // 针对的是列
+            nodeList = nodeList.matches('th').concat(nodeList.matches('td'));
+            console.log(nodeList);
+            nodeList.forEach((elem, index) => {
+                let position = nodeList.eq(index).posOfSiblings();
+                if (!positionStack.includes(position)) {
+                    positionStack.push(position);
+                }
+            });
+        }
+
+        return positionStack.map((position) => ({
+            start: position,
+            end: position + 1
+        }));
     }
 
     /**
@@ -172,8 +222,8 @@ class TableFixedCell extends Component {
      * 渲染固定位置
      */
     renderFixedCell() {
-        this.fixedRowList = this.formatFixedCellList(this.fixedRow, this._children.tableBase.rowCount);
-        this.fixedColumnList = this.formatFixedCellList(this.fixedColumn, this._children.tableBase.columnCount);
+        this.fixedRowList = this.formatFixedCellList('ROW');
+        this.fixedColumnList = this.formatFixedCellList('COLUMN');
         if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
             return;
         }
@@ -192,7 +242,7 @@ class TableFixedCell extends Component {
      * 渲染固定列
      */
     renderFixedColumn(nodeList) {
-        const { COLUMN, COLUMN_LAST, COLUMN_SPLIT } = this.STYLE_CLASS_NAME;
+        const { COLUMN, COLUMN_LAST } = this.STYLE_CLASS_NAME;
 
         this.fixedColumnList.forEach((elem) => {
             let direction = elem.end !== this._children.tableBase.columnCount, // 方向，true => 从左往右，false => 从右往左
@@ -201,11 +251,30 @@ class TableFixedCell extends Component {
             for (let i = elem.start; i < elem.end; i++) {
                 nodeList.eq(i).addClass(classList);
             }
+        });
+        this.renderFixedColumnSplit(nodeList);
+    }
 
-            // 处理单元格隐藏的情况
-            let fixedColumn;
+    /**
+     * 渲染分隔列
+     */
+    renderFixedColumnSplit(nodeList) {
+        const { COLUMN_SPLIT, COLUMN_SPLIT_NEXT } = this.STYLE_CLASS_NAME;
+        let pos = -1;
 
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(COLUMN_SPLIT);
+        nodeList.matches('.tb_display-cell').forEach((elem, index, displayNodeList) => {
+            let currentNode = displayNodeList.eq(index);
+
+            if (currentNode.hasClass('tfc_fixed-column')) {
+                // 固定列
+                pos = index;
+            }
+            if (!currentNode.hasClass('tfc_fixed-column') && pos !== -1) {
+                // 非固定列，且前面有固定行，则添加分隔
+                displayNodeList.eq(pos).addClass(COLUMN_SPLIT);
+                currentNode.addClass(COLUMN_SPLIT_NEXT);
+                pos = -1;
+            }
         });
     }
 
@@ -213,7 +282,7 @@ class TableFixedCell extends Component {
      * 渲染固定行
      */
     renderFixedRow(nodeList) {
-        const { ROW, ROW_LAST, ROW_SPLIT } = this.STYLE_CLASS_NAME;
+        const { ROW, ROW_LAST } = this.STYLE_CLASS_NAME;
 
         this.fixedRowList.forEach((elem) => {
             let direction = elem.end !== this._children.tableBase.rowCount, // 方向，true => 从上往下，false => 从下往上
@@ -222,16 +291,43 @@ class TableFixedCell extends Component {
             for (let i = elem.start; i < elem.end; i++) {
                 nodeList.eq(i).addClass(classList);
             }
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(ROW_SPLIT);
+        });
+        this.renderFixedRowSplit(nodeList);
+    }
+
+    /**
+     * 渲染分隔行
+     */
+    renderFixedRowSplit(nodeList) {
+        const { ROW_SPLIT, ROW_SPLIT_NEXT } = this.STYLE_CLASS_NAME;
+        let pos = -1;
+
+        nodeList.matches('.tb_display-row').forEach((elem, index, displayNodeList) => {
+            let currentNode = displayNodeList.eq(index);
+
+            if (currentNode.hasClass('tfc_fixed-row')) {
+                // 固定行
+                pos = index;
+            }
+            if (!currentNode.hasClass('tfc_fixed-row') && pos !== -1) {
+                // 非固定行，且前面有固定行，则添加分隔
+                displayNodeList.eq(pos).addClass(ROW_SPLIT);
+                currentNode.addClass(ROW_SPLIT_NEXT);
+                pos = -1;
+            }
         });
 
-        // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
-        if (
-            this.node.find('thead>tr:last-child').hasClass(ROW) &&
-            !this.node.find('tbody>tr:first-child').hasClass(ROW)
-        ) {
-            this.node.find('.tfc_table').addClass('tfc_fixed-thead');
-        }
+        // 处理假性分隔行
+        this.node.find('.tfc_fixed-row-split').forEach((elem) => {});
+    }
+
+    /**
+     * 合并单元格
+     * @param {Number} column 列数
+     */
+    mergeRowCell(column) {
+        this._children.tableBase.mergeRowCell(column);
+        this.renderFixedCell();
     }
 }
 

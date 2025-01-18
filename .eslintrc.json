@@ -13,7 +13,12 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "globals": {},
+    "globals": {
+        "LY": true,
+        "Ajax": true,
+        "Component": true,
+        "TableFixedCell": true
+    },
     "rules": {
         // IF 语句必须要要写花括号
         "curly": [2, "all"],

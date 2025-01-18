@@ -5,16 +5,15 @@
     "main": "index.js",
     "scripts": {
         "test": "webpack-dev-server --config webpack.config.dev.js",
-        "build": "webpack --mode=none && npm run build:pro && npm run docs",
-        "build:pro": "webpack --mode=production",
+        "build": "webpack --mode=none && webpack --mode=production",
         "docs": "jsdoc -c ./jsdoc.conf.json"
     },
     "repository": {
         "type": "git",
-        "url": "git@gitee.com:ly325/component-tool.git"
+        "url": ""
     },
     "keywords": [
-        "Component"
+        "LY"
     ],
     "author": "wang.xin",
     "license": "MIT",

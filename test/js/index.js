@@ -1,45 +1,84 @@
-const CPM = {
-    TestForm: '../component/TestForm.vc',
-    T: '../component/T.vc',
-    MyCheckbox: '../component/MyCheckbox.vc'
-};
-
 class App extends Component {
     constructor(selector) {
         super(selector);
     }
 
-    _mounted() {
-        this._children.t.load();
-        this._children.fileUpload.load({
-            acceptType: ['zip', '7z', 'rar'],
-            errorCallback: (errorType) => {
-                console.log(errorType);
-            },
-            removeCallback: (fileNode) => {}
-        });
-    }
-
     load() {
-        app._children.waterMark.load({
-            parent: '#app', // 水印容器，即水印添加到哪个元素中，建议与iframe并列
-            show: true, // 是否显示水印
-            position: 'absolute', // 水印显示方式，['fixed', 'absolute']
-            getMarkInfo: () => {
-                return [new Time().format('yyyy-mm-dd HH:MM:SS')];
-            }, // 获取水印内容，函数返回字符串数组，代表每一行显示的内容
-            interval: 1000 // 刷新频率，单位ms
-        });
-
-        new Tip().warn('请重新输入！');
+        this.initTableFixedCell();
     }
 
-    _listen_component(component, action, data) {
-        console.log('App', component, action, data);
+    // style="display: none"
+    initTableFixedCell() {
+        this._children.tableFixedCell.load({
+            fixedRow: [2, -2],
+            fixedColumn: [2, -2],
+            thead: `<tr>
+                        <th title="序号">序号</th>
+                        <th title="车辆">车辆</th>
+                        <th content="车厢">车厢</th>
+                        <th title="系统">系统</th>
+                        <th title="位置">位置</th>
+                        <th title="部件名称">部件名称</th>
+                        <th title="维修类型">维修类型</th>
+                        <th title="具体原因">具体原因</th>
+                        <th title="旧件序列号">旧件序列号</th>
+                        <th title="旧件硫化号">旧件硫化号</th>
+                        <th title="旧件批次号">旧件批次号</th>
+                        <th title="内片剩余厚度">内片剩余厚度</th>
+                        <th title="外片剩余厚度(mm)">外片剩余厚度(mm)</th>
+                        <th title="闸片偏磨">闸片偏磨</th>
+                        <th title="服务时长(天)">服务时长(天)</th>
+                        <th title="服务里程(km)">服务里程(km)</th>
+                        <th title="新件序列号">新件序列号</th>
+                        <th title="新件硫化号">新件硫化号</th>
+                        <th title="新件批次号">新件批次号</th>
+                        <th title="物料编码">物料编码</th>
+                        <th title="新件数量">新件数量</th>
+                        <th title="修时里程(km)">修时里程(km)</th>
+                        <th title="施工时间">施工时间</th>
+                        <th title="施工负责人">施工负责人</th>
+                        <th title="工单编码">工单编码</th>
+                        <th content="工单类型">工单类型</th>
+                    </tr>`
+        });
+        console.log(this._children.tableFixedCell);
+        let htmlStr = '';
+
+        for (let i = 0; i < 10; i++) {
+            htmlStr += `<tr  class="${[2].includes(i) ? 'hidden' : ''}">
+                            <td >${i + 1}</td>
+                            <td title="C210">C210</td>
+                            <td title="2">2</td>
+                            <td title="司控系统">司控系统</td>
+                            <td title="C210-2-司控系统-档位开关">C210-2-司控系统-档位开关</td>
+                            <td title="档位开关">档位开关</td>
+                            <td title="产品更换">产品更换</td>
+                            <td title="超次数">超次数</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="--">--</td>
+                            <td title="2024-12-24 09:22:45">2024-12-24 09:22:45</td>
+                            <td title="刘飞">刘飞</td>
+                            <td title="02CL142412240002">
+                                <span style="cursor: pointer">02CL142412240002</span>
+                            </td>
+                            <td title="故障修工单">故障修工单</td>
+                        </tr>`;
+        }
+        this._children.tableFixedCell.renderTbody(htmlStr);
     }
 }
 
 var app = new App('#app');
-
-// app.load();
-// new Component('#app');
+app.load();

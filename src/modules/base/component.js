@@ -7,6 +7,8 @@ import TaskQueue from './task-queue.js';
 
 /**
  * 组件基类
+ * 生命周期函数：统一以 __ 为前缀
+ * 内置函数：统一以 _ 为前缀
  *
  * @author wang.xin
  */
@@ -29,6 +31,27 @@ class Component {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    /**
+     * 执行在 new () 之后，属性初始化、模板解析之前
+     */
+    __before_create() {
+        console.log(this.constructor.name, '__before_create');
+    }
+
+    /**
+     * 执行在自身属性初始化、模板解析之后，挂载之前
+     */
+    __created() {
+        console.log(this.constructor.name, '__created');
+    }
+
+    /**
+     * 执行在组件挂载之后
+     */
+    __mounted() {
+        console.log(this.constructor.name, '__mounted');
     }
 
     /**
@@ -193,18 +216,6 @@ class Component {
             this._listen_component(component, action, data);
         });
     }
-
-    /**
-     * 加载
-     * @abstract
-     */
-    load() {}
-
-    /**
-     * 卸载
-     * @abstract
-     */
-    unload() {}
 
     /**
      * 加载前操作
@@ -453,29 +464,16 @@ class Component {
     }
 
     /**
-     * 新增生命周期函数，统一以 __ 为前缀
-     * 以下方法会根据组件的状态进行执行，无需手动触发，可以根据情况重写
+     * 加载
+     * @abstract
      */
-    /**
-     * 执行在 new () 之后，属性初始化、模板解析之前
-     */
-    __before_create() {
-        console.log(this.constructor.name, '__before_create');
-    }
+    load() {}
 
     /**
-     * 执行在自身属性初始化、模板解析之后，挂载之前
+     * 卸载
+     * @abstract
      */
-    __created() {
-        console.log(this.constructor.name, '__created');
-    }
-
-    /**
-     * 执行在组件挂载之后
-     */
-    __mounted() {
-        console.log(this.constructor.name, '__mounted');
-    }
+    unload() {}
 }
 
 /**

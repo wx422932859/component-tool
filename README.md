@@ -10,12 +10,12 @@ src 源码
 
 ## 使用说明
 
-- 运行 npm run docs 可以自动生成说明文档，需要全局安装 jsdoc 依赖
-  npm install -g jsdoc
-- 提交的时候不要提交以下文件夹
-  node_modules // 执行
-  docs // 执行 npm run docs 会自动生成
-  test // 用于本地功能测试，不需要提交
+-   运行 npm run docs 可以自动生成说明文档，需要全局安装 jsdoc 依赖
+    npm install -g jsdoc
+-   提交的时候不要提交以下文件夹
+    node_modules // 执行
+    docs // 执行 npm run docs 会自动生成
+    test // 用于本地功能测试
 
 ## 安装依赖
 
@@ -35,6 +35,6 @@ src 源码
 
 处理导出的时候参数值带单引号的情况
 
-### V1.1.7（2024-01-15）
+### V1.1.7（2024-01-14）
 
-新增固定单元格组件 TableFixedCell
+新增固定单元格组件 FixedTableCell

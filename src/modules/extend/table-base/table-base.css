@@ -50,18 +50,24 @@
 }
 
 /* 处理边框的显示 */
-.table-base th:last-child::before,
-.table-base td:last-child::before {
-    border-right: var(--tb_border);
+.table-base tr.tb_display-row-first > th::before,
+.table-base tr.tb_display-row-first > td::before {
+    border-top: var(--tb_border) !important;
 }
 
-.table-base > thead > tr:last-child > th::before,
-.table-base > tbody > tr:last-child > td::before {
-    border-bottom: var(--tb_border);
+.table-base tr.tb_display-row-last > th::before,
+.table-base tr.tb_display-row-last > td::before {
+    border-bottom: var(--tb_border) !important;
 }
 
-.table-base > tbody > tr:first-child > td::before {
-    border-top: none;
+.table-base th.tb_display-cell-first::before,
+.table-base td.tb_display-cell-first::before {
+    border-left: var(--tb_border) !important;
+}
+
+.table-base th.tb_display-cell-last::before,
+.table-base td.tb_display-cell-last::before {
+    border-right: var(--tb_border) !important;
 }
 
 /* 无数据 */
