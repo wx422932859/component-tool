@@ -41,7 +41,7 @@ class TableBase extends Component {
          */
         this._observe('thead', '', (value) => {
             if (typeof value === 'string') {
-                this.node.find('thead').html(value || '');
+                this.node.find('.tb_thead').html(value || '');
                 this.setColumnCount();
             }
 
@@ -55,15 +55,17 @@ class TableBase extends Component {
          * @member {String} tbody 表格内容
          */
         this._observe('tbody', (value) => {
+            let html = '';
+
             if (value !== '') {
-                this.node.find('tbody').html(value);
+                html = value;
             } else {
-                this.node
-                    .find('tbody')
-                    .html(`<tr><td class="tb_empty" colspan="${this.displayColumnCount}"></td></tr>`);
+                html = `<tr><td class="tb_empty" colspan="${this.displayColumnCount}"></td></tr>`;
             }
-            this.rowCount = this.node.find('tr').length;
+            this.node.find('.tb_tbody').html(html);
+            this.rowCount = this.node.find('.tb_tr-container>tr').length;
             this.delayHandleDisplayRow();
+            this.signCellColumn();
         });
 
         /**
@@ -143,7 +145,7 @@ class TableBase extends Component {
         let columnCount = 0,
             displayColumnCount = 0;
 
-        this.node.find('tr:first-child>th').forEach((item, index, list) => {
+        this.node.find('.tb_thead>tr:first-child>th').forEach((item, index, list) => {
             let thNode = list.eq(index),
                 count = parseInt(thNode.attr('colspan')) || 1;
 
@@ -165,11 +167,11 @@ class TableBase extends Component {
         let rowspan = 1, // rowspan
             lastTd = null, // 单元格
             lastContent = '', // 单元格内容
-            trList = this.node.find('tbody>tr'),
+            trList = this.node.find('.tb_tbody>tr'),
             trCount = trList.length; // 总行数
 
         trList.forEach((item, index, list) => {
-            let curTd = list.eq(index).find('td').eq(column),
+            let curTd = list.eq(index).children().eq(column),
                 curContent = curTd.html().trim();
 
             if (index === 0) {
@@ -216,7 +218,7 @@ class TableBase extends Component {
         for (let key in className) {
             this.node.find(`.${className[key]}`).removeClass(`${className[key]}`);
         }
-        this.node.find('tr').forEach((item, trIndex, trList) => {
+        this.node.find('.tb_tr-container>tr').forEach((item, trIndex, trList) => {
             let trNode = trList.eq(trIndex);
 
             if (trNode.css('display') !== 'none') {
@@ -253,7 +255,7 @@ class TableBase extends Component {
         // 处理假性最后单元格
         this.node.find('.tb_display-cell-last[rowspan]').forEach((elem, index, lastCellList) => {
             let lastCell = lastCellList.eq(index),
-                parentNode = lastCell.parents('tr'),
+                parentNode = lastCell.parent(),
                 rowspan = parseInt(lastCell.attr('rowspan')),
                 nextSibling = parentNode.nextSiblings();
 
@@ -264,11 +266,52 @@ class TableBase extends Component {
             }
         });
     }
+
+    /**
+     * 标记单元格在第几列
+     */
+    signCellColumn() {
+        let trList = this.node.find('.tb_thead>tr'),
+            table = [];
+
+        for (let i = 0; i < trList.length; i++) {
+            table.push([]);
+        }
+
+        this.node.find('.tb_thead>tr').forEach((elem, trIndex, list) => {
+            list.eq(trIndex)
+                .children()
+                .forEach((item, cellIndex, cellList) => {
+                    let cellNode = cellList.eq(cellIndex),
+                        colspan = parseInt(cellNode.attr('colspan') || 1),
+                        rowspan = Math.min(trList.length, parseInt(cellNode.attr('rowspan') || 1)),
+                        column = cellIndex;
+
+                    while (table[trIndex][column] && column < this.columnCount) {
+                        // 代表该位置被占了
+                        column++;
+                    }
+
+                    for (let i = 0; i < rowspan; i++) {
+                        for (let j = 0; j < colspan; j++) {
+                            console.log(trIndex + i, column + j, item);
+                            table[trIndex + i][column + j] = item;
+                        }
+                    }
+                });
+            return false;
+        });
+        console.log(table);
+    }
 }
 
 /**
  * @member {string} _template 模板
  */
-TableBase._template = '<table class="table-base"><thead></thead><tbody></tbody></table>';
+TableBase._template = `
+<table class="table-base">
+    <thead class="tb_thead tb_tr-container"></thead>
+    <tbody class="tb_tbody tb_tr-container"></tbody>
+</table>`;
 
 export default TableBase;

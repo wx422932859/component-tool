@@ -70,6 +70,14 @@
     border-right: var(--tb_border) !important;
 }
 
+.table-base .tb_border-bottom::before {
+    border-bottom: var(--tb_border) !important;
+}
+
+.table-base .tb_border-right::before {
+    border-right: var(--tb_border) !important;
+}
+
 /* 无数据 */
 .table-base .tb_empty:empty::after {
     content: '没有符合查询条件的结果！';
