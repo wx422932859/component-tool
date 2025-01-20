@@ -22,14 +22,35 @@ class TableBase extends Component {
      */
     monitor() {
         /**
+         * @member {Object} STYLE_CLASS_NAME 显示单元格类名
+         */
+        this.STYLE_CLASS_NAME = {
+            ROW_SHOW: 'tb_show-row',
+            COLUMN_SHOW: 'tb_show_column',
+            BORDER_TOP: 'tb_border-top',
+            BORDER_BOTTOM: 'tb_border-bottom',
+            BORDER_LEFT: 'tb_border-left',
+            BORDER_RIGHT: 'tb_border-right'
+        };
+
+        /**
+         * 存储单元格实际位置
+         */
+        this.tableMap = {
+            thead: [],
+            tbody: []
+        };
+        this.tableList = [];
+
+        /**
          * @member {Number} columnCount 列数
          */
         this._observe('columnCount', 0, () => {});
 
         /**
-         * @member {Number} displayColumnCount 显示的列数
+         * @member {Number} showColumnCount 显示的列数
          */
-        this._observe('displayColumnCount', 0, () => {});
+        this._observe('showColumnCount', 0, () => {});
 
         /**
          * @member {Number} rowCount 行数
@@ -48,7 +69,7 @@ class TableBase extends Component {
             if (Array.isArray(value) && value.length > 0) {
                 this.setThead(value);
             }
-            this.delayHandleDisplayRow();
+            this.delaySetTableMap();
         });
 
         /**
@@ -60,18 +81,17 @@ class TableBase extends Component {
             if (value !== '') {
                 html = value;
             } else {
-                html = `<tr><td class="tb_empty" colspan="${this.displayColumnCount}"></td></tr>`;
+                html = `<tr><td class="tb_empty" colspan="${this.showColumnCount}">没有符合查询条件的结果！</td></tr>`;
             }
             this.node.find('.tb_tbody').html(html);
             this.rowCount = this.node.find('.tb_tr-container>tr').length;
-            this.delayHandleDisplayRow();
-            this.signCellColumn();
+            this.delaySetTableMap();
         });
 
         /**
-         * 触发渲染边框，采用防抖的形式处理
+         * 触发设置单元格位置
          */
-        this.delayHandleDisplayRow = Util.debounce(() => this.handleDisplayRow(), 50);
+        this.delaySetTableMap = Util.debounce(() => this.setTableMap(), 50);
     }
 
     /**
@@ -143,20 +163,20 @@ class TableBase extends Component {
      */
     setColumnCount() {
         let columnCount = 0,
-            displayColumnCount = 0;
+            showColumnCount = 0;
 
         this.node.find('.tb_thead>tr:first-child>th').forEach((item, index, list) => {
             let thNode = list.eq(index),
                 count = parseInt(thNode.attr('colspan')) || 1;
 
-            if (thNode.css('display') !== 'none') {
-                displayColumnCount += count;
+            if (thNode.css('display') !== 'none' && thNode.css('visibility') !== 'hidden') {
+                showColumnCount += count;
             }
             columnCount += count;
         });
 
         this.columnCount = columnCount;
-        this.displayColumnCount = displayColumnCount;
+        this.showColumnCount = showColumnCount;
     }
 
     /**
@@ -198,88 +218,33 @@ class TableBase extends Component {
                 }
             }
         });
-        this.handleDisplayRow();
-    }
-
-    /**
-     * 处理显示行
-     */
-    handleDisplayRow() {
-        let displayRow = [],
-            className = {
-                ROW_DISPLAY: 'tb_display-row',
-                ROW_FIRST: 'tb_display-row-first',
-                ROW_LAST: 'tb_display-row-last',
-                CELL_DISPLAY: 'tb_display-cell',
-                CELL_FIRST: 'tb_display-cell-first',
-                CELL_LAST: 'tb_display-cell-last'
-            };
-
-        for (let key in className) {
-            this.node.find(`.${className[key]}`).removeClass(`${className[key]}`);
-        }
-        this.node.find('.tb_tr-container>tr').forEach((item, trIndex, trList) => {
-            let trNode = trList.eq(trIndex);
-
-            if (trNode.css('display') !== 'none') {
-                trNode.addClass(className.ROW_DISPLAY);
-                displayRow.push(trNode);
-            }
-            this.handleDisplayCell(trNode, className);
-        });
-        if (displayRow.length > 0) {
-            displayRow[0].addClass(className.ROW_FIRST);
-            displayRow[displayRow.length - 1].addClass(className.ROW_LAST);
-        }
-    }
-
-    /**
-     * 处理显示单元格
-     */
-    handleDisplayCell(trNode, className) {
-        let displayCell = [];
-
-        trNode.children().forEach((elem, cellIndex, cellList) => {
-            let cellNode = cellList.eq(cellIndex);
-
-            if (cellNode.css('display') !== 'none') {
-                cellNode.addClass(className.CELL_DISPLAY);
-                displayCell.push(cellNode);
-            }
-        });
-        if (displayCell.length > 0) {
-            displayCell[0].addClass(className.CELL_FIRST);
-            displayCell[displayCell.length - 1].addClass(className.CELL_LAST);
-        }
-
-        // 处理假性最后单元格
-        this.node.find('.tb_display-cell-last[rowspan]').forEach((elem, index, lastCellList) => {
-            let lastCell = lastCellList.eq(index),
-                parentNode = lastCell.parent(),
-                rowspan = parseInt(lastCell.attr('rowspan')),
-                nextSibling = parentNode.nextSiblings();
-
-            while (rowspan > 1 && nextSibling.length > 0) {
-                nextSibling.find(`.${className.CELL_LAST}`).removeClass(className.CELL_LAST);
-                nextSibling = nextSibling.nextSiblings();
-                rowspan--;
-            }
-        });
+        this.setTableMap();
     }
 
     /**
      * 标记单元格在第几列
      */
-    signCellColumn() {
-        let trList = this.node.find('.tb_thead>tr'),
-            table = [];
+    setTableMap() {
+        this.tableMap = {
+            thead: this.signCellColumn(this.node.find('.tb_thead>tr')),
+            tbody: this.signCellColumn(this.node.find('.tb_tbody>tr'))
+        };
+        this.tableList = this.tableMap.thead.concat(this.tableMap.tbody);
+        this.setShowRow();
+    }
+
+    /**
+     * 标记单元格在第几列
+     */
+    signCellColumn(trList) {
+        let table = [];
 
         for (let i = 0; i < trList.length; i++) {
             table.push([]);
         }
-
-        this.node.find('.tb_thead>tr').forEach((elem, trIndex, list) => {
-            list.eq(trIndex)
+        trList.forEach((elem, trIndex) => {
+            trList
+                .eq(trIndex)
                 .children()
                 .forEach((item, cellIndex, cellList) => {
                     let cellNode = cellList.eq(cellIndex),
@@ -288,20 +253,72 @@ class TableBase extends Component {
                         column = cellIndex;
 
                     while (table[trIndex][column] && column < this.columnCount) {
-                        // 代表该位置被占了
+                        // 代表该位置被占了，需要去下一位
                         column++;
                     }
 
                     for (let i = 0; i < rowspan; i++) {
                         for (let j = 0; j < colspan; j++) {
-                            console.log(trIndex + i, column + j, item);
-                            table[trIndex + i][column + j] = item;
+                            table[trIndex + i][column + j] = cellNode;
                         }
                     }
                 });
-            return false;
         });
-        console.log(table);
+
+        return table;
+    }
+
+    /**
+     * 设置显示行
+     */
+    setShowRow() {
+        const { ROW_SHOW, BORDER_TOP, BORDER_BOTTOM } = this.STYLE_CLASS_NAME;
+        let firstRow = -1,
+            lastRow = -1;
+
+        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
+            this.node.find(`.${className}`).removeClass(className);
+        });
+        let tableList = this.tableList;
+
+        this.node.find('.tb_tr-container>tr').forEach((item, trIndex, trList) => {
+            let trNode = trList.eq(trIndex);
+
+            if (trNode.css('display') === 'none' || trNode.css('visibility') === 'hidden') {
+                return;
+            }
+            if (firstRow === -1) {
+                firstRow = trIndex;
+            }
+            lastRow = trIndex;
+            trNode.addClass(ROW_SHOW);
+            this.setShowColumn(tableList[trIndex]);
+        });
+
+        tableList[firstRow] && tableList[firstRow].forEach((node) => node.addClass(BORDER_TOP));
+        tableList[lastRow] && tableList[lastRow].forEach((node) => node.addClass(BORDER_BOTTOM));
+    }
+
+    /**
+     * 设置显示列
+     */
+    setShowColumn(cellList) {
+        const { COLUMN_SHOW, BORDER_LEFT, BORDER_RIGHT } = this.STYLE_CLASS_NAME;
+        let firstColumn = -1,
+            lastColumn = -1;
+
+        cellList.forEach((cellNode, cellIndex) => {
+            if (cellNode.css('display') === 'none' || cellNode.css('visibility') === 'hidden') {
+                return;
+            }
+            if (firstColumn === -1) {
+                firstColumn = cellIndex;
+            }
+            lastColumn = cellIndex;
+            cellNode.addClass(COLUMN_SHOW);
+        });
+        cellList[firstColumn] && cellList[firstColumn].addClass(BORDER_LEFT);
+        cellList[lastColumn] && cellList[lastColumn].addClass(BORDER_RIGHT);
     }
 }
 

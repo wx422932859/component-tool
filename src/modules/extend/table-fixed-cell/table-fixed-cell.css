@@ -42,43 +42,40 @@
     background-color: var(--tfc_background-color_row);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-row-split > th::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row-split > td::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td::before {
     border-bottom: var(--tfc_border);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-row-split-next > th::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row-split-next > td::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-next > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-next > td::before {
     border-top: none;
 }
 
 /* 固定列 */
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column {
     left: var(--tfc_left_scroll);
     z-index: 10;
     background-color: var(--tfc_background-color_column);
 }
 
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column-last,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column-last {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-last {
     left: unset;
     right: var(--tfc_right_scroll);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-column-split::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-column-split::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-column::before {
     border-right: var(--tfc_border);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-column-split-next::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-column-split-next::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-next::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-next::before {
     border-left: none;
 }
 
 /* 交叉位置 */
-.table-fixed-cell .tfc_table-base .tfc_fixed-row > th.tfc_fixed-column,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row > td.tfc_fixed-column {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > .tfc_fixed-column {
     background-color: var(--tfc_background-color_row-column);
 }
 

@@ -1,6 +1,6 @@
 /*!
  * name: component-tool
- * package: 2025-01-16 18:53:88
+ * package: 2025-01-21 00:01:05
  * version: 1.1.7
  * exports: LY
  */
@@ -2738,7 +2738,7 @@ class MyNode {
     matches(selector) {
         let result = new MyNode([], this);
 
-        this.node.forEach((elem) => {
+        this.forEach((elem) => {
             if (selector instanceof Node && elem === selector) {
                 result.push(elem);
             }
@@ -3533,49 +3533,6 @@ class MyNode {
             return Math.max(res, +window.getComputedStyle(elem).zIndex || 0);
         }, 0);
     }
-
-    /**
-     * 合并单元格，针对表格单元格合并
-     * @param {Number} col 第 col 列合并
-     */
-    mergeCell(col) {
-        if (this.node.matches('tr').length !== this.node.length) {
-            return;
-        }
-
-        let content = '',
-            rowSpan = 1,
-            td = null, // 单元格
-            trCount = this.node.length; // 总行数
-
-        this.node.forEach((item, index, list) => {
-            let curTd = list.eq(index).find('td').eq(col),
-                curContent = curTd.html();
-
-            if (index === 0) {
-                // 遍历第一行的时候
-                content = curContent;
-                td = curTd;
-            } else {
-                if (curContent === content) {
-                    // 当前行与上一行内容相同
-                    rowSpan++; // 行数累加
-                    curTd.remove(); // 移除单元格
-
-                    // 最后一行的时候，设置 rowSpan 属性
-                    index + 1 === trCount && td.attr('rowSpan', rowSpan);
-                } else {
-                    // 当前行与上一行内容不同，设置 rowSpan 属性
-                    td.attr('rowSpan', rowSpan);
-
-                    // 从新计算
-                    content = curContent;
-                    td = curTd;
-                    rowSpan = 1;
-                }
-            }
-        });
-    }
 }
 
 /**
@@ -3889,6 +3846,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * 组件基类
+ * 生命周期函数：统一以 __ 为前缀
+ * 内置函数：统一以 _ 为前缀
  *
  * @author wang.xin
  */
@@ -3911,6 +3870,27 @@ class Component {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    /**
+     * 执行在 new () 之后，属性初始化、模板解析之前
+     */
+    __before_create() {
+        console.log(this.constructor.name, '__before_create');
+    }
+
+    /**
+     * 执行在自身属性初始化、模板解析之后，挂载之前
+     */
+    __created() {
+        console.log(this.constructor.name, '__created');
+    }
+
+    /**
+     * 执行在组件挂载之后
+     */
+    __mounted() {
+        console.log(this.constructor.name, '__mounted');
     }
 
     /**
@@ -4075,18 +4055,6 @@ class Component {
             this._listen_component(component, action, data);
         });
     }
-
-    /**
-     * 加载
-     * @abstract
-     */
-    load() {}
-
-    /**
-     * 卸载
-     * @abstract
-     */
-    unload() {}
 
     /**
      * 加载前操作
@@ -4335,29 +4303,16 @@ class Component {
     }
 
     /**
-     * 新增生命周期函数，统一以 __ 为前缀
-     * 以下方法会根据组件的状态进行执行，无需手动触发，可以根据情况重写
+     * 加载
+     * @abstract
      */
-    /**
-     * 执行在 new () 之后，属性初始化、模板解析之前
-     */
-    __before_create() {
-        console.log(this.constructor.name, '__before_create');
-    }
+    load() {}
 
     /**
-     * 执行在自身属性初始化、模板解析之后，挂载之前
+     * 卸载
+     * @abstract
      */
-    __created() {
-        console.log(this.constructor.name, '__created');
-    }
-
-    /**
-     * 执行在组件挂载之后
-     */
-    __mounted() {
-        console.log(this.constructor.name, '__mounted');
-    }
+    unload() {}
 }
 
 /**
@@ -7366,11 +7321,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fixed_thead_table_fixed_thead_table_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(55);
 /* harmony import */ var _pagination_pagination_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(58);
 /* harmony import */ var _popup_popup_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(61);
-/* harmony import */ var _scroll_bar_scroll_bar_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(64);
+/* harmony import */ var _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(64);
 /* harmony import */ var _scroll_top_scroll_top_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(67);
 /* harmony import */ var _table_base_table_base_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(70);
 /* harmony import */ var _table_fixed_cell_table_fixed_cell_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(73);
-/* harmony import */ var _water_mark_water_mark_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(76);
+/* harmony import */ var _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(76);
 
 
 
@@ -7422,7 +7377,7 @@ const Extend = {
      * 滚动条
      * @see ScrollBar
      */
-    ScrollBar: _scroll_bar_scroll_bar_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+    ScrollBar: _scroll_bar_scroll_bar__WEBPACK_IMPORTED_MODULE_5__["default"],
 
     /**
      * 置顶按钮
@@ -7432,13 +7387,11 @@ const Extend = {
 
     /**
      * 表格基类
-     * @see FixedTableCell
      */
     TableBase: _table_base_table_base_js__WEBPACK_IMPORTED_MODULE_7__["default"],
 
     /**
      * 固定单元格
-     * @see TableFixedCell
      */
     TableFixedCell: _table_fixed_cell_table_fixed_cell_js__WEBPACK_IMPORTED_MODULE_8__["default"],
 
@@ -7446,7 +7399,7 @@ const Extend = {
      * 水印
      * @see WaterMark
      */
-    WaterMark: _water_mark_water_mark_js__WEBPACK_IMPORTED_MODULE_9__["default"]
+    WaterMark: _water_mark_water_mark__WEBPACK_IMPORTED_MODULE_9__["default"]
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Extend);
@@ -10774,6 +10727,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _table_base_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
 /* harmony import */ var _base_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
+/* harmony import */ var _base_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
+
 
 
 
@@ -10797,14 +10752,35 @@ class TableBase extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      */
     monitor() {
         /**
+         * @member {Object} STYLE_CLASS_NAME 显示单元格类名
+         */
+        this.STYLE_CLASS_NAME = {
+            ROW_SHOW: 'tb_show-row',
+            COLUMN_SHOW: 'tb_show_column',
+            BORDER_TOP: 'tb_border-top',
+            BORDER_BOTTOM: 'tb_border-bottom',
+            BORDER_LEFT: 'tb_border-left',
+            BORDER_RIGHT: 'tb_border-right'
+        };
+
+        /**
+         * 存储单元格实际位置
+         */
+        this.tableMap = {
+            thead: [],
+            tbody: []
+        };
+        this.tableList = [];
+
+        /**
          * @member {Number} columnCount 列数
          */
         this._observe('columnCount', 0, () => {});
 
         /**
-         * @member {Number} displayColumnCount 显示的列数
+         * @member {Number} showColumnCount 显示的列数
          */
-        this._observe('displayColumnCount', 0, () => {});
+        this._observe('showColumnCount', 0, () => {});
 
         /**
          * @member {Number} rowCount 行数
@@ -10816,28 +10792,36 @@ class TableBase extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
          */
         this._observe('thead', '', (value) => {
             if (typeof value === 'string') {
-                this.node.find('thead').html(value || '');
+                this.node.find('.tb_thead').html(value || '');
                 this.setColumnCount();
             }
 
             if (Array.isArray(value) && value.length > 0) {
                 this.setThead(value);
             }
+            this.delaySetTableMap();
         });
 
         /**
          * @member {String} tbody 表格内容
          */
         this._observe('tbody', (value) => {
+            let html = '';
+
             if (value !== '') {
-                this.node.find('tbody').html(value);
+                html = value;
             } else {
-                this.node
-                    .find('tbody')
-                    .html(`<tr><td class="tb_empty" colspan="${this.displayColumnCount}"></td></tr>`);
+                html = `<tr><td class="tb_empty" colspan="${this.showColumnCount}">没有符合查询条件的结果！</td></tr>`;
             }
-            this.rowCount = this.node.find('tr').length;
+            this.node.find('.tb_tbody').html(html);
+            this.rowCount = this.node.find('.tb_tr-container>tr').length;
+            this.delaySetTableMap();
         });
+
+        /**
+         * 触发设置单元格位置
+         */
+        this.delaySetTableMap = _base_util__WEBPACK_IMPORTED_MODULE_2__["default"].debounce(() => this.setTableMap(), 50);
     }
 
     /**
@@ -10909,40 +10893,173 @@ class TableBase extends _base_component__WEBPACK_IMPORTED_MODULE_1__["default"] 
      */
     setColumnCount() {
         let columnCount = 0,
-            displayColumnCount = 0;
+            showColumnCount = 0;
 
-        this.node.find('tr:first-child>th').forEach((item, index, list) => {
+        this.node.find('.tb_thead>tr:first-child>th').forEach((item, index, list) => {
             let thNode = list.eq(index),
                 count = parseInt(thNode.attr('colspan')) || 1;
 
-            if (thNode.css('display') !== 'none') {
-                displayColumnCount += count;
+            if (thNode.css('display') !== 'none' && thNode.css('visibility') !== 'hidden') {
+                showColumnCount += count;
             }
             columnCount += count;
         });
 
         this.columnCount = columnCount;
-        this.displayColumnCount = displayColumnCount;
+        this.showColumnCount = showColumnCount;
     }
 
     /**
-     * 渲染边框
+     * 合并单元格【纵向】
+     * @param {Number} column 列数
      */
-    renderBorder() {
-        this.node.find('tr').forEach((item, trIndex, trList) => {
+    mergeRowCell(column) {
+        let rowspan = 1, // rowspan
+            lastTd = null, // 单元格
+            lastContent = '', // 单元格内容
+            trList = this.node.find('.tb_tbody>tr'),
+            trCount = trList.length; // 总行数
+
+        trList.forEach((item, index, list) => {
+            let curTd = list.eq(index).children().eq(column),
+                curContent = curTd.html().trim();
+
+            if (index === 0) {
+                // 遍历第一行的时候
+                lastContent = curContent;
+                lastTd = curTd;
+                rowspan = parseInt(curTd.attr('rowspan') || 1);
+            } else {
+                if (curContent === lastContent) {
+                    // 当前行与上一行内容相同
+                    rowspan += parseInt(curTd.attr('rowspan') || 1); // 行数累加
+                    curTd.remove(); // 移除单元格
+
+                    // 最后一行的时候，设置rowspan属性
+                    index + 1 === trCount && lastTd.attr('rowspan', rowspan);
+                } else if (curContent !== '') {
+                    // 当前行与上一行内容不同，设置上一行rowspan属性
+                    lastTd.attr('rowspan', rowspan);
+
+                    // 从新计算
+                    lastContent = curContent;
+                    lastTd = curTd;
+                    rowspan = parseInt(curTd.attr('rowspan') || 1); // 当前行占的行数
+                }
+            }
+        });
+        this.setTableMap();
+    }
+
+    /**
+     * 标记单元格在第几列
+     */
+    setTableMap() {
+        this.tableMap = {
+            thead: this.signCellColumn(this.node.find('.tb_thead>tr')),
+            tbody: this.signCellColumn(this.node.find('.tb_tbody>tr'))
+        };
+        this.tableList = this.tableMap.thead.concat(this.tableMap.tbody);
+        this.setShowRow();
+    }
+
+    /**
+     * 标记单元格在第几列
+     */
+    signCellColumn(trList) {
+        let table = [];
+
+        for (let i = 0; i < trList.length; i++) {
+            table.push([]);
+        }
+        trList.forEach((elem, trIndex) => {
+            trList
+                .eq(trIndex)
+                .children()
+                .forEach((item, cellIndex, cellList) => {
+                    let cellNode = cellList.eq(cellIndex),
+                        colspan = parseInt(cellNode.attr('colspan') || 1),
+                        rowspan = Math.min(trList.length, parseInt(cellNode.attr('rowspan') || 1)),
+                        column = cellIndex;
+
+                    while (table[trIndex][column] && column < this.columnCount) {
+                        // 代表该位置被占了，需要去下一位
+                        column++;
+                    }
+
+                    for (let i = 0; i < rowspan; i++) {
+                        for (let j = 0; j < colspan; j++) {
+                            table[trIndex + i][column + j] = cellNode;
+                        }
+                    }
+                });
+        });
+
+        return table;
+    }
+
+    /**
+     * 设置显示行
+     */
+    setShowRow() {
+        const { ROW_SHOW, BORDER_TOP, BORDER_BOTTOM } = this.STYLE_CLASS_NAME;
+        let firstRow = -1,
+            lastRow = -1;
+
+        Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
+            this.node.find(`.${className}`).removeClass(className);
+        });
+        let tableList = this.tableList;
+
+        this.node.find('.tb_tr-container>tr').forEach((item, trIndex, trList) => {
             let trNode = trList.eq(trIndex);
 
-            trNode.children().forEach((elem, cellIndex, cellList) => {
-                let cellNode = cellList.eq(cellIndex);
-            });
+            if (trNode.css('display') === 'none' || trNode.css('visibility') === 'hidden') {
+                return;
+            }
+            if (firstRow === -1) {
+                firstRow = trIndex;
+            }
+            lastRow = trIndex;
+            trNode.addClass(ROW_SHOW);
+            this.setShowColumn(tableList[trIndex]);
         });
+
+        tableList[firstRow] && tableList[firstRow].forEach((node) => node.addClass(BORDER_TOP));
+        tableList[lastRow] && tableList[lastRow].forEach((node) => node.addClass(BORDER_BOTTOM));
+    }
+
+    /**
+     * 设置显示列
+     */
+    setShowColumn(cellList) {
+        const { COLUMN_SHOW, BORDER_LEFT, BORDER_RIGHT } = this.STYLE_CLASS_NAME;
+        let firstColumn = -1,
+            lastColumn = -1;
+
+        cellList.forEach((cellNode, cellIndex) => {
+            if (cellNode.css('display') === 'none' || cellNode.css('visibility') === 'hidden') {
+                return;
+            }
+            if (firstColumn === -1) {
+                firstColumn = cellIndex;
+            }
+            lastColumn = cellIndex;
+            cellNode.addClass(COLUMN_SHOW);
+        });
+        cellList[firstColumn] && cellList[firstColumn].addClass(BORDER_LEFT);
+        cellList[lastColumn] && cellList[lastColumn].addClass(BORDER_RIGHT);
     }
 }
 
 /**
  * @member {string} _template 模板
  */
-TableBase._template = '<table class="table-base"><thead></thead><tbody></tbody></table>';
+TableBase._template = `
+<table class="table-base">
+    <thead class="tb_thead tb_tr-container"></thead>
+    <tbody class="tb_tbody tb_tr-container"></tbody>
+</table>`;
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TableBase);
 
@@ -11029,17 +11146,17 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.table-base {
     table-layout: fixed;
 }
 
-.table-base th {
+.table-base > .tb_thead > tr > th {
     font-size: 14px;
     background-color: var(--tb_background-color_thead);
 }
 
-.table-base td {
+.table-base > .tb_tbody > tr > td {
     background-color: var(--tb_background-color_tbody);
 }
 
-.table-base th,
-.table-base td {
+.table-base > .tb_thead > tr > th,
+.table-base > .tb_tbody > tr > td {
     position: relative;
     height: 36px;
     padding: 8px;
@@ -11052,8 +11169,8 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.table-base {
     border: none;
 }
 
-.table-base th::before,
-.table-base td::before {
+.table-base > .tb_thead > tr > th::before,
+.table-base > .tb_tbody > tr > td::before {
     content: '';
     position: absolute;
     z-index: 0;
@@ -11068,29 +11185,24 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.table-base {
 }
 
 /* 处理边框的显示 */
-.table-base th:last-child::before,
-.table-base td:last-child::before {
-    border-right: var(--tb_border);
+.table-base .tb_border-top::before {
+    border-top: var(--tb_border) !important;
 }
 
-.table-base > thead > tr:last-child > th::before,
-.table-base > tbody > tr:last-child > td::before {
-    border-bottom: var(--tb_border);
+.table-base .tb_border-bottom::before {
+    border-bottom: var(--tb_border) !important;
 }
 
-.table-base > tbody > tr:first-child > td::before {
-    border-top: none;
+.table-base .tb_border-left::before {
+    border-left: var(--tb_border) !important;
+}
+
+.table-base .tb_border-right::before {
+    border-right: var(--tb_border) !important;
 }
 
 /* 无数据 */
-.table-base .tb_empty:empty::after {
-    content: '没有符合查询条件的结果！';
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    text-align: center;
+.table-base .tb_empty {
     color: #bc4442 !important;
 }
 `, ""]);
@@ -11132,15 +11244,15 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
      */
     monitor() {
         /**
-         * @member {String[]} FIX_CELL_CLASS_NAME 固定单元格的类名
+         * @member {Object} STYLE_CLASS_NAME 固定单元格的类名
          */
         this.STYLE_CLASS_NAME = {
             ROW: 'tfc_fixed-row',
             ROW_LAST: 'tfc_fixed-row-last',
-            ROW_SPLIT: 'tfc_fixed-row-split',
+            ROW_NEXT: 'tfc_fixed-row-next',
             COLUMN: 'tfc_fixed-column',
             COLUMN_LAST: 'tfc_fixed-column-last',
-            COLUMN_SPLIT: 'tfc_fixed-column-split'
+            COLUMN_NEXT: 'tfc_fixed-column-next'
         };
 
         /**
@@ -11228,17 +11340,27 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
 
     /**
      * 格式化位置列表
+     * @param {String} type 类型（ROW / COLUMN）
      */
-    formatFixedCellList(value, length) {
-        if (value === null) {
+    formatFixedCellList(type) {
+        let value = this.fixedColumn,
+            length = this._children.tableBase.columnCount;
+
+        if (type === 'ROW') {
+            value = this.fixedRow;
+            length = this._children.tableBase.rowCount;
+        }
+
+        if (value === null || value === 0 || length === 0 || Math.abs(value) === length) {
             return [];
         }
 
         if (typeof value === 'number') {
-            if (value === 0 || length === 0 || Math.abs(value) === length) {
-                return [];
-            }
             return [this.formatFixedCellListByNumber(value, length)];
+        }
+
+        if (typeof value === 'string') {
+            return this.formatFixedCellListBySelector(value, type);
         }
 
         if (Array.isArray(value)) {
@@ -11254,7 +11376,7 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
     }
 
     /**
-     * 格式化位置列表【数字类型】
+     * 格式化位置列表【数字】
      */
     formatFixedCellListByNumber(value, length) {
         let start = 0,
@@ -11266,6 +11388,43 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
         }
 
         return { start, end };
+    }
+
+    /**
+     * 格式化位置列表【选择器】
+     * @param {String} selector 选择器
+     * @param {String} type 类型
+     */
+    formatFixedCellListBySelector(selector, type) {
+        let nodeList = this.node.find(selector),
+            positionStack = [];
+
+        if (type === 'ROW') {
+            // 针对的是行
+            let trList = this.node.find('tr');
+
+            nodeList = nodeList.matches('tr');
+            nodeList.forEach((elem) => {
+                let position = trList.indexOf(elem);
+                if (!positionStack.includes(position)) {
+                    positionStack.push(position);
+                }
+            });
+        } else {
+            // 针对的是列
+            nodeList = nodeList.matches('th').concat(nodeList.matches('td'));
+            nodeList.forEach((elem, index) => {
+                let position = nodeList.eq(index).posOfSiblings();
+                if (!positionStack.includes(position)) {
+                    positionStack.push(position);
+                }
+            });
+        }
+
+        return positionStack.map((position) => ({
+            start: position,
+            end: position + 1
+        }));
     }
 
     /**
@@ -11284,8 +11443,8 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
      * 渲染固定位置
      */
     renderFixedCell() {
-        this.fixedRowList = this.formatFixedCellList(this.fixedRow, this._children.tableBase.rowCount);
-        this.fixedColumnList = this.formatFixedCellList(this.fixedColumn, this._children.tableBase.columnCount);
+        this.fixedRowList = this.formatFixedCellList('ROW');
+        this.fixedColumnList = this.formatFixedCellList('COLUMN');
         if (this.fixedColumnList.length === 0 && this.fixedRowList.length === 0) {
             return;
         }
@@ -11293,57 +11452,123 @@ class TableFixedCell extends _base_component__WEBPACK_IMPORTED_MODULE_1__["defau
         Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
             this.node.find(`.${className}`).removeClass(className);
         });
-        this.node.find('tr').forEach((trNode, index, trList) => {
-            this.renderFixedColumn(trList.eq(index).children());
-            this.renderFixedRow(trList);
+
+        // 渲染固定位
+        let trNodeList = this.node.find('.tb_tr-container>tr');
+        this._children.tableBase.tableList.forEach((cellList, rowIndex) => {
+            this.renderFixedRow(trNodeList.eq(rowIndex), rowIndex);
+            cellList.forEach((cellNode, cellIndex) => {
+                this.renderFixedColumn(cellNode, cellIndex);
+            });
+            this.renderFixedColumnNext(cellList);
         });
+        this.renderFixedRowNext(trNodeList);
         this.calcScroll();
     }
 
     /**
-     * 渲染固定列
+     * 判断该位置是否需要固定
+     * @param {Number} index 在表格中的位置（第 index 行/第 index 列）
+     * @param {String} type 类型（行/列）
+     * @return {Number}
+     * -1：非固定位
+     * 0：固定位，前
+     * 1：固定位，后
      */
-    renderFixedColumn(nodeList) {
-        const { COLUMN, COLUMN_LAST, COLUMN_SPLIT } = this.STYLE_CLASS_NAME;
+    isFixedCell(index, type) {
+        let fixedList = this.fixedRowList,
+            count = this._children.tableBase.rowCount;
 
-        this.fixedColumnList.forEach((elem) => {
-            let direction = elem.end !== this._children.tableBase.columnCount, // 方向，true => 从左往右，false => 从右往左
-                classList = direction ? [COLUMN] : [COLUMN, COLUMN_LAST];
+        if (type === 'COLUMN') {
+            fixedList = this.fixedColumnList;
+            count = this._children.tableBase.columnCount;
+        }
 
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
+        for (let i = 0; i < fixedList.length; i++) {
+            if (fixedList[i].start <= index && index < fixedList[i].end) {
+                return fixedList[i].end !== count ? 0 : 1;
             }
+        }
 
-            // 处理单元格隐藏的情况
-            let fixedColumn;
-
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(COLUMN_SPLIT);
-        });
+        return -1;
     }
 
     /**
      * 渲染固定行
      */
-    renderFixedRow(nodeList) {
-        const { ROW, ROW_LAST, ROW_SPLIT } = this.STYLE_CLASS_NAME;
+    renderFixedRow(rowNode, rowIndex) {
+        const { ROW, ROW_LAST } = this.STYLE_CLASS_NAME;
+        const CLASS_LIST = [[ROW], [ROW, ROW_LAST]];
+        let fixedRow = this.isFixedCell(rowIndex, 'ROW');
 
-        this.fixedRowList.forEach((elem) => {
-            let direction = elem.end !== this._children.tableBase.rowCount, // 方向，true => 从上往下，false => 从下往上
-                classList = direction ? [ROW] : [ROW, ROW_LAST];
+        if (fixedRow !== -1) {
+            rowNode.addClass(CLASS_LIST[fixedRow]);
+            this.setMaxRowspan(rowNode);
+        }
+    }
 
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
-            }
-            nodeList.eq(direction ? elem.end - 1 : elem.start).addClass(ROW_SPLIT);
+    /**
+     * 设置当前行的 z-index
+     */
+    setMaxRowspan(trNode) {
+        let zIndex = 0;
+
+        trNode.children().forEach((elem, index, cellList) => {
+            zIndex = Math.max(zIndex, parseInt(cellList.eq(index).attr('rowspan') || 0));
         });
 
-        // 当分隔行是表头最后一行时，需要将表格内容第一行的 border-top 隐藏
-        if (
-            this.node.find('thead>tr:last-child').hasClass(ROW) &&
-            !this.node.find('tbody>tr:first-child').hasClass(ROW)
-        ) {
-            this.node.find('.tfc_table').addClass('tfc_fixed-thead');
+        trNode.css('z-index', parseInt(trNode.css('zIndex') || 0) + zIndex);
+    }
+
+    /**
+     * 渲染固定行的下一行（显示的下一行）
+     */
+    renderFixedRowNext(nodeList) {
+        const { ROW_NEXT } = this.STYLE_CLASS_NAME;
+        nodeList.matches('.tb_show-row').forEach((elem, index, showNodeList) => {
+            // 固定行
+            if (showNodeList.eq(index).hasClass('tfc_fixed-row')) {
+                showNodeList.eq(index + 1).addClass(ROW_NEXT);
+            }
+        });
+    }
+
+    /**
+     * 渲染固定列
+     */
+    renderFixedColumn(cellNode, cellIndex) {
+        const { COLUMN, COLUMN_LAST } = this.STYLE_CLASS_NAME;
+        const CLASS_LIST = [[COLUMN], [COLUMN, COLUMN_LAST]];
+
+        let fixedColumn = this.isFixedCell(cellIndex, 'COLUMN');
+        if (fixedColumn !== -1) {
+            cellNode && cellNode.addClass(CLASS_LIST[fixedColumn]);
         }
+    }
+
+    /**
+     * 渲染固定列的下一列（显示的下一列）
+     */
+    renderFixedColumnNext(cellList) {
+        const { COLUMN, COLUMN_NEXT } = this.STYLE_CLASS_NAME;
+        let lastCellFixed = false;
+
+        cellList.forEach((cellNode) => {
+            if (!cellNode.hasClass('tb_show_column')) {
+                return;
+            }
+            lastCellFixed && cellNode.addClass(COLUMN_NEXT);
+            lastCellFixed = cellNode.hasClass(COLUMN);
+        });
+    }
+
+    /**
+     * 合并单元格
+     * @param {Number} column 列数
+     */
+    mergeRowCell(column) {
+        this._children.tableBase.mergeRowCell(column);
+        this.renderFixedCell();
     }
 }
 
@@ -11468,44 +11693,40 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.table-fixed-cell {
     background-color: var(--tfc_background-color_row);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-row th::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row td::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > td::before {
     border-bottom: var(--tfc_border);
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-row + tr > th::before,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row + tr > td::before,
-.table-fixed-cell .tfc_fixed-thead tbody > tr:first-child > td::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-next > th::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-row-next > td::before {
     border-top: none;
 }
 
 /* 固定列 */
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column {
     left: var(--tfc_left_scroll);
     z-index: 10;
     background-color: var(--tfc_background-color_column);
 }
 
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column-last,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column-last {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-last {
     left: unset;
     right: var(--tfc_right_scroll);
 }
 
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column::before,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-column::before {
     border-right: var(--tfc_border);
 }
 
-.table-fixed-cell .tfc_table-base th.tfc_fixed-column + th::before,
-.table-fixed-cell .tfc_table-base td.tfc_fixed-column + td::before {
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-next::before,
+.table-fixed-cell .tfc_table-base .tfc_fixed-column-next::before {
     border-left: none;
 }
 
 /* 交叉位置 */
-.table-fixed-cell .tfc_table-base .tfc_fixed-row > th.tfc_fixed-column,
-.table-fixed-cell .tfc_table-base .tfc_fixed-row > td.tfc_fixed-column {
+.table-fixed-cell .tfc_table-base .tfc_fixed-row > .tfc_fixed-column {
     background-color: var(--tfc_background-color_row-column);
 }
 

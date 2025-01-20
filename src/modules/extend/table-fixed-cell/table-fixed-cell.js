@@ -20,17 +20,15 @@ class TableFixedCell extends Component {
      */
     monitor() {
         /**
-         * @member {String[]} FIX_CELL_CLASS_NAME 固定单元格的类名
+         * @member {Object} STYLE_CLASS_NAME 固定单元格的类名
          */
         this.STYLE_CLASS_NAME = {
             ROW: 'tfc_fixed-row',
             ROW_LAST: 'tfc_fixed-row-last',
-            ROW_SPLIT: 'tfc_fixed-row-split',
-            ROW_SPLIT_NEXT: 'tfc_fixed-row-split-next',
+            ROW_NEXT: 'tfc_fixed-row-next',
             COLUMN: 'tfc_fixed-column',
             COLUMN_LAST: 'tfc_fixed-column-last',
-            COLUMN_SPLIT: 'tfc_fixed-column-split',
-            COLUMN_SPLIT_NEXT: 'tfc_fixed-column-split-next'
+            COLUMN_NEXT: 'tfc_fixed-column-next'
         };
 
         /**
@@ -191,7 +189,6 @@ class TableFixedCell extends Component {
         } else {
             // 针对的是列
             nodeList = nodeList.matches('th').concat(nodeList.matches('td'));
-            console.log(nodeList);
             nodeList.forEach((elem, index) => {
                 let position = nodeList.eq(index).posOfSiblings();
                 if (!positionStack.includes(position)) {
@@ -231,94 +228,114 @@ class TableFixedCell extends Component {
         Object.values(this.STYLE_CLASS_NAME).forEach((className) => {
             this.node.find(`.${className}`).removeClass(className);
         });
-        this.node.find('tr').forEach((trNode, index, trList) => {
-            this.renderFixedColumn(trList.eq(index).children());
-            this.renderFixedRow(trList);
+
+        // 渲染固定位
+        let trNodeList = this.node.find('.tb_tr-container>tr');
+        this._children.tableBase.tableList.forEach((cellList, rowIndex) => {
+            this.renderFixedRow(trNodeList.eq(rowIndex), rowIndex);
+            cellList.forEach((cellNode, cellIndex) => {
+                this.renderFixedColumn(cellNode, cellIndex);
+            });
+            this.renderFixedColumnNext(cellList);
         });
+        this.renderFixedRowNext(trNodeList);
         this.calcScroll();
     }
 
     /**
-     * 渲染固定列
+     * 判断该位置是否需要固定
+     * @param {Number} index 在表格中的位置（第 index 行/第 index 列）
+     * @param {String} type 类型（行/列）
+     * @return {Number}
+     * -1：非固定位
+     * 0：固定位，前
+     * 1：固定位，后
      */
-    renderFixedColumn(nodeList) {
-        const { COLUMN, COLUMN_LAST } = this.STYLE_CLASS_NAME;
+    isFixedCell(index, type) {
+        let fixedList = this.fixedRowList,
+            count = this._children.tableBase.rowCount;
 
-        this.fixedColumnList.forEach((elem) => {
-            let direction = elem.end !== this._children.tableBase.columnCount, // 方向，true => 从左往右，false => 从右往左
-                classList = direction ? [COLUMN] : [COLUMN, COLUMN_LAST];
+        if (type === 'COLUMN') {
+            fixedList = this.fixedColumnList;
+            count = this._children.tableBase.columnCount;
+        }
 
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
+        for (let i = 0; i < fixedList.length; i++) {
+            if (fixedList[i].start <= index && index < fixedList[i].end) {
+                return fixedList[i].end !== count ? 0 : 1;
             }
-        });
-        this.renderFixedColumnSplit(nodeList);
-    }
+        }
 
-    /**
-     * 渲染分隔列
-     */
-    renderFixedColumnSplit(nodeList) {
-        const { COLUMN_SPLIT, COLUMN_SPLIT_NEXT } = this.STYLE_CLASS_NAME;
-        let pos = -1;
-
-        nodeList.matches('.tb_display-cell').forEach((elem, index, displayNodeList) => {
-            let currentNode = displayNodeList.eq(index);
-
-            if (currentNode.hasClass('tfc_fixed-column')) {
-                // 固定列
-                pos = index;
-            }
-            if (!currentNode.hasClass('tfc_fixed-column') && pos !== -1) {
-                // 非固定列，且前面有固定行，则添加分隔
-                displayNodeList.eq(pos).addClass(COLUMN_SPLIT);
-                currentNode.addClass(COLUMN_SPLIT_NEXT);
-                pos = -1;
-            }
-        });
+        return -1;
     }
 
     /**
      * 渲染固定行
      */
-    renderFixedRow(nodeList) {
+    renderFixedRow(rowNode, rowIndex) {
         const { ROW, ROW_LAST } = this.STYLE_CLASS_NAME;
+        const CLASS_LIST = [[ROW], [ROW, ROW_LAST]];
+        let fixedRow = this.isFixedCell(rowIndex, 'ROW');
 
-        this.fixedRowList.forEach((elem) => {
-            let direction = elem.end !== this._children.tableBase.rowCount, // 方向，true => 从上往下，false => 从下往上
-                classList = direction ? [ROW] : [ROW, ROW_LAST];
-
-            for (let i = elem.start; i < elem.end; i++) {
-                nodeList.eq(i).addClass(classList);
-            }
-        });
-        this.renderFixedRowSplit(nodeList);
+        if (fixedRow !== -1) {
+            rowNode.addClass(CLASS_LIST[fixedRow]);
+            this.setMaxRowspan(rowNode);
+        }
     }
 
     /**
-     * 渲染分隔行
+     * 设置当前行的 z-index
      */
-    renderFixedRowSplit(nodeList) {
-        const { ROW_SPLIT, ROW_SPLIT_NEXT } = this.STYLE_CLASS_NAME;
-        let pos = -1;
+    setMaxRowspan(trNode) {
+        let zIndex = 0;
 
-        nodeList.matches('.tb_display-row').forEach((elem, index, displayNodeList) => {
-            let currentNode = displayNodeList.eq(index);
-
-            if (currentNode.hasClass('tfc_fixed-row')) {
-                // 固定行
-                pos = index;
-            }
-            if (!currentNode.hasClass('tfc_fixed-row') && pos !== -1) {
-                // 非固定行，且前面有固定行，则添加分隔
-                displayNodeList.eq(pos).addClass(ROW_SPLIT);
-                currentNode.addClass(ROW_SPLIT_NEXT);
-                pos = -1;
-            }
+        trNode.children().forEach((elem, index, cellList) => {
+            zIndex = Math.max(zIndex, parseInt(cellList.eq(index).attr('rowspan') || 0));
         });
 
-        // 处理假性分隔行
-        this.node.find('.tfc_fixed-row-split').forEach((elem) => {});
+        trNode.css('z-index', parseInt(trNode.css('zIndex') || 0) + zIndex);
+    }
+
+    /**
+     * 渲染固定行的下一行（显示的下一行）
+     */
+    renderFixedRowNext(nodeList) {
+        const { ROW_NEXT } = this.STYLE_CLASS_NAME;
+        nodeList.matches('.tb_show-row').forEach((elem, index, showNodeList) => {
+            // 固定行
+            if (showNodeList.eq(index).hasClass('tfc_fixed-row')) {
+                showNodeList.eq(index + 1).addClass(ROW_NEXT);
+            }
+        });
+    }
+
+    /**
+     * 渲染固定列
+     */
+    renderFixedColumn(cellNode, cellIndex) {
+        const { COLUMN, COLUMN_LAST } = this.STYLE_CLASS_NAME;
+        const CLASS_LIST = [[COLUMN], [COLUMN, COLUMN_LAST]];
+
+        let fixedColumn = this.isFixedCell(cellIndex, 'COLUMN');
+        if (fixedColumn !== -1) {
+            cellNode && cellNode.addClass(CLASS_LIST[fixedColumn]);
+        }
+    }
+
+    /**
+     * 渲染固定列的下一列（显示的下一列）
+     */
+    renderFixedColumnNext(cellList) {
+        const { COLUMN, COLUMN_NEXT } = this.STYLE_CLASS_NAME;
+        let lastCellFixed = false;
+
+        cellList.forEach((cellNode) => {
+            if (!cellNode.hasClass('tb_show_column')) {
+                return;
+            }
+            lastCellFixed && cellNode.addClass(COLUMN_NEXT);
+            lastCellFixed = cellNode.hasClass(COLUMN);
+        });
     }
 
     /**

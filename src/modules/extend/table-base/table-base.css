@@ -11,17 +11,17 @@
     table-layout: fixed;
 }
 
-.table-base th {
+.table-base > .tb_thead > tr > th {
     font-size: 14px;
     background-color: var(--tb_background-color_thead);
 }
 
-.table-base td {
+.table-base > .tb_tbody > tr > td {
     background-color: var(--tb_background-color_tbody);
 }
 
-.table-base th,
-.table-base td {
+.table-base > .tb_thead > tr > th,
+.table-base > .tb_tbody > tr > td {
     position: relative;
     height: 36px;
     padding: 8px;
@@ -34,8 +34,8 @@
     border: none;
 }
 
-.table-base th::before,
-.table-base td::before {
+.table-base > .tb_thead > tr > th::before,
+.table-base > .tb_tbody > tr > td::before {
     content: '';
     position: absolute;
     z-index: 0;
@@ -50,28 +50,16 @@
 }
 
 /* 处理边框的显示 */
-.table-base tr.tb_display-row-first > th::before,
-.table-base tr.tb_display-row-first > td::before {
+.table-base .tb_border-top::before {
     border-top: var(--tb_border) !important;
-}
-
-.table-base tr.tb_display-row-last > th::before,
-.table-base tr.tb_display-row-last > td::before {
-    border-bottom: var(--tb_border) !important;
-}
-
-.table-base th.tb_display-cell-first::before,
-.table-base td.tb_display-cell-first::before {
-    border-left: var(--tb_border) !important;
-}
-
-.table-base th.tb_display-cell-last::before,
-.table-base td.tb_display-cell-last::before {
-    border-right: var(--tb_border) !important;
 }
 
 .table-base .tb_border-bottom::before {
     border-bottom: var(--tb_border) !important;
+}
+
+.table-base .tb_border-left::before {
+    border-left: var(--tb_border) !important;
 }
 
 .table-base .tb_border-right::before {
@@ -79,13 +67,6 @@
 }
 
 /* 无数据 */
-.table-base .tb_empty:empty::after {
-    content: '没有符合查询条件的结果！';
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    text-align: center;
+.table-base .tb_empty {
     color: #bc4442 !important;
 }
