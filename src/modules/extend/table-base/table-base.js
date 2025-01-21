@@ -180,45 +180,104 @@ class TableBase extends Component {
     }
 
     /**
-     * 合并单元格【纵向】
-     * @param {Number} column 列数
+     * 合并单元格
+     * @param {Object} position 位置
+     * @param {Number[]} position.row 合并行
+     * @param {Number[]} position.column 合并列
+     * @param {Boolean} mergeThead 表头是否进行合并
      */
-    mergeRowCell(column) {
-        let rowspan = 1, // rowspan
-            lastTd = null, // 单元格
-            lastContent = '', // 单元格内容
-            trList = this.node.find('.tb_tbody>tr'),
-            trCount = trList.length; // 总行数
-
-        trList.forEach((item, index, list) => {
-            let curTd = list.eq(index).children().eq(column),
-                curContent = curTd.html().trim();
-
-            if (index === 0) {
-                // 遍历第一行的时候
-                lastContent = curContent;
-                lastTd = curTd;
-                rowspan = parseInt(curTd.attr('rowspan') || 1);
-            } else {
-                if (curContent === lastContent) {
-                    // 当前行与上一行内容相同
-                    rowspan += parseInt(curTd.attr('rowspan') || 1); // 行数累加
-                    curTd.remove(); // 移除单元格
-
-                    // 最后一行的时候，设置rowspan属性
-                    index + 1 === trCount && lastTd.attr('rowspan', rowspan);
-                } else if (curContent !== '') {
-                    // 当前行与上一行内容不同，设置上一行rowspan属性
-                    lastTd.attr('rowspan', rowspan);
-
-                    // 从新计算
-                    lastContent = curContent;
-                    lastTd = curTd;
-                    rowspan = parseInt(curTd.attr('rowspan') || 1); // 当前行占的行数
-                }
-            }
-        });
+    mergeCell(position, mergeThead = false) {
+        if (position === null) {
+            return;
+        }
         this.setTableMap();
+
+        if (Array.isArray(position.row)) {
+            position.row.forEach((row) => this.mergeCellByColspan(row, mergeThead));
+        } else {
+            this.mergeCellByColspan(position.row, mergeThead);
+        }
+
+        if (Array.isArray(position.column)) {
+            position.column.forEach((column) => this.mergeCellByRowspan(column, mergeThead));
+        } else if (typeof position.column === 'number') {
+            this.mergeCellByRowspan(position.column, mergeThead);
+        }
+
+        this.setTableMap();
+    }
+
+    /**
+     * 横向合并单元格
+     * @param {Number} position 位置
+     * @param {Boolean} mergeThead 表头是否进行合并
+     */
+    mergeCellByColspan(position, mergeThead = false) {
+        if (typeof position !== 'number' || position >= this.columnCount) {
+            return;
+        }
+        this.mergeCellList(mergeThead ? this.tableList[position] : this.tableMap.tbody[position], 'colspan');
+    }
+
+    /**
+     * 纵向合并单元格
+     * @param {Number} position 位置
+     * @param {Boolean} mergeThead 表头是否进行合并
+     */
+    mergeCellByRowspan(position, mergeThead = false) {
+        if (typeof position !== 'number' || position >= this.rowCount) {
+            return;
+        }
+
+        this.mergeCellList(
+            this.tableMap.tbody.map((nodeList) => nodeList[position]),
+            'rowspan'
+        );
+        mergeThead &&
+            this.mergeCellList(
+                this.tableMap.thead.map((nodeList) => nodeList[position]),
+                'rowspan'
+            );
+    }
+
+    /**
+     * 合并单元格
+     */
+    mergeCellList(cellList, property) {
+        if (!Array.isArray(cellList) || cellList.length === 0) {
+            return;
+        }
+
+        let length = cellList.length,
+            cellNode = cellList[0],
+            count = parseInt(cellNode.attr(property) || 1),
+            lastCell = cellNode,
+            lastContent = cellNode.html().trim();
+
+        for (let i = 1; i < length; i++) {
+            cellNode = cellList[i];
+            if (cellNode === lastCell) {
+                continue;
+            }
+
+            let content = cellNode.html().trim();
+            if (content === lastContent) {
+                /**
+                 * 单元格内容相同，增加占位格数，移除单元格
+                 */
+                count += parseInt(cellNode.attr(property) || 1);
+                cellNode.remove();
+            } else if (content !== '') {
+                /**
+                 * 单元格内容不为空，设置上一单元格的占位格数
+                 */
+                lastCell.attr(property, count);
+                lastCell = cellNode;
+                lastContent = content;
+                count = parseInt(cellNode.attr(property) || 1);
+            }
+        }
+        lastCell.attr(property, count);
     }
 
     /**

@@ -340,10 +340,13 @@ class TableFixedCell extends Component {
 
     /**
      * 合并单元格
-     * @param {Number} column 列数
+     * @param {Object} position 位置
+     * @param {Number[]} position.row 合并行
+     * @param {Number[]} position.column 合并列
+     * @param {Boolean} mergeThead 表头是否进行合并
      */
-    mergeRowCell(column) {
-        this._children.tableBase.mergeRowCell(column);
+    mergeCell(position, mergeThead = false) {
+        this._children.tableBase.mergeCell(position, mergeThead);
         this.renderFixedCell();
     }
 }
