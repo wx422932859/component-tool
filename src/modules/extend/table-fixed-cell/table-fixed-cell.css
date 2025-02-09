@@ -27,12 +27,20 @@
 /* 固定行 */
 .table-fixed-cell .tfc_table-base .tfc_fixed-row {
     position: relative;
-    top: var(--tfc_top_scroll);
     z-index: 20;
+    transform: translateY(var(--tfc_top_scroll));
 }
 
-.table-fixed-cell .tfc_table-base .tfc_fixed-row-last,
 .table-fixed-cell .tfc_table-base .tfc_fixed-row-last {
+    transform: translateY(calc(-1 * var(--tfc_bottom_scroll)));
+}
+
+.table-fixed-cell[data-fixedType='position'] .tfc_table-base .tfc_fixed-row {
+    transform: unset;
+    top: var(--tfc_top_scroll);
+}
+
+.table-fixed-cell[data-fixedType='position'] .tfc_table-base .tfc_fixed-row-last {
     top: unset;
     bottom: var(--tfc_bottom_scroll);
 }
@@ -54,12 +62,21 @@
 
 /* 固定列 */
 .table-fixed-cell .tfc_table-base .tfc_fixed-column {
-    left: var(--tfc_left_scroll);
     z-index: 10;
     background-color: var(--tfc_background-color_column);
+    transform: translateX(var(--tfc_left_scroll));
 }
 
 .table-fixed-cell .tfc_table-base .tfc_fixed-column-last {
+    transform: translateX(calc(-1 * var(--tfc_right_scroll)));
+}
+
+.table-fixed-cell[data-fixedType='position'] .tfc_table-base .tfc_fixed-column {
+    transform: unset;
+    left: var(--tfc_left_scroll);
+}
+
+.table-fixed-cell[data-fixedType='position'] .tfc_table-base .tfc_fixed-column-last {
     left: unset;
     right: var(--tfc_right_scroll);
 }

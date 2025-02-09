@@ -7,11 +7,10 @@ class App extends Component {
         this.initTableFixedCell();
     }
 
-    // style="display: none"
     initTableFixedCell() {
         this._children.tableFixedCell.load({
-            // fixedRow: [2, -2],
-            // fixedColumn: [2, -2],
+            fixedRow: [2, -2],
+            fixedColumn: [2, -2],
             thead: `<tr>
                         <th title="序号" rowspan="2" >序号</th>
                         <th title="车辆">车辆</th>
@@ -95,9 +94,7 @@ class App extends Component {
                             <td title="--">--</td>
                             <td title="2024-12-24 09:22:45">2024-12-24 09:22:45</td>
                             <td title="刘飞">刘飞</td>
-                            <td title="02CL142412240002" rowspan="${i === 8 ? 2 : 1}" class="${
-                i === 9 ? 'hidden' : ''
-            }">
+                            <td title="02CL142412240002">
                                 <span style="cursor: pointer">02CL142412240002</span>
                             </td>
                             <td title="故障修工单">故障修工单</td>

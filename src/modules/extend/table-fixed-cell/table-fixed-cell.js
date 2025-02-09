@@ -60,6 +60,13 @@ class TableFixedCell extends Component {
         this._observe('fixedRowList', [], () => {});
 
         /**
+         * @member {String} fixedType 固定形式
+         */
+        this._observe('fixedType', 'transform', (value) => {
+            this.node.attr('data-fixedType', value);
+        });
+
+        /**
          * 触发渲染固定单元可能会频发，采用防抖的形式处理
          */
         this.delayRenderFixedCell = Util.debounce(() => this.renderFixedCell(), 50);
@@ -88,10 +95,12 @@ class TableFixedCell extends Component {
      * @param {String} options.tbody 表格
      * @param {Number} options.fixedColumn 固定列
      * @param {Number} options.fixedRow 固定行
+     * @param {String} options.fixedType 固定形式
      */
     load(options) {
         this.fixedColumn = options.fixedColumn || 0;
         this.fixedRow = options.fixedRow || 0;
+        this.fixedType = options.fixedType || this.fixedType;
         this.renderThead(options.thead);
         this.renderTbody(options.tbody);
     }
